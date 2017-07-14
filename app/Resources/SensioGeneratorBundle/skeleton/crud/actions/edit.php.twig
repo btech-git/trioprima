@@ -1,0 +1,41 @@
+
+    /**
+{% block phpdoc_method_header %}{% endblock phpdoc_method_header -%}
+
+{% block phpdoc_method_annotations %}
+{% if 'annotation' == format %}
+     * @Route("/{id}/edit", name="{{ route_name_prefix }}_edit")
+     * @Method({"GET", "POST"})
+     * @Security("has_role('ROLE_{{ entity_namespace|replace({'\\': '_'})|upper }}')")
+{% endif %}
+{% endblock phpdoc_method_annotations %}
+     */
+{% block method_definition %}
+    public function editAction(Request $request, {{ entity_class }} ${{ entity_singularized }})
+{% endblock method_definition %}
+    {
+{% block method_body %}
+        $form = $this->createForm({{ entity_class }}Type::class, ${{ entity_singularized }});
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $repository = $em->getRepository({{ entity_class }}::class);
+            $repository->update(${{ entity_singularized }});
+
+            {% if 'show' in actions -%}
+                return $this->redirectToRoute('{{ route_name_prefix }}_show', array('id' => ${{ entity_singularized }}->getId()));
+            {%- else -%}
+                return $this->redirectToRoute('{{ route_name_prefix }}_index'));
+            {%- endif %}
+
+        }
+{% endblock method_body %}
+
+{% block method_return %}
+        return $this->render('{{ route_prefix }}/edit.html.twig', array(
+            '{{ entity_singularized }}' => ${{ entity_singularized }},
+            'form' => $form->createView(),
+        ));
+{% endblock method_return %}
+    }

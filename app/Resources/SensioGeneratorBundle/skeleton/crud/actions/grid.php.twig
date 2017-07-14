@@ -1,0 +1,29 @@
+    /**
+{% block phpdoc_method_header %}{% endblock phpdoc_method_header -%}
+
+{% block phpdoc_method_annotations %}
+{% if 'annotation' == format %}
+     * @Route("/grid", name="{{ route_name_prefix }}_grid", condition="request.isXmlHttpRequest()")
+     * @Method("POST")
+     * @Security("has_role('ROLE_{{ entity_namespace|replace({'\\': '_'})|upper }}')")
+{% endif %}
+{% endblock phpdoc_method_annotations %}
+     */
+{% block method_definition %}
+    public function gridAction(Request $request)
+{% endblock method_definition %}
+    {
+{% block method_body %}
+        $em = $this->getDoctrine()->getManager();
+        $repository = $em->getRepository({{ entity_class }}::class);
+
+        $grid = $this->get('lib.grid.datagrid');
+        $grid->build({{ entity_class }}GridType::class, $repository, $request);
+{% endblock method_body %}
+
+{% block method_return %}
+        return $this->render('{{ route_prefix }}/grid.html.twig', array(
+            'grid' => $grid->createView(),
+        ));
+{% endblock method_return %}
+    }

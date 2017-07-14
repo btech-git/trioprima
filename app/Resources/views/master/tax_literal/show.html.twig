@@ -1,0 +1,18 @@
+{% extends 'master/layout.html.twig' %}
+
+{% block title 'Show Tax Literal' %}
+
+{% block actions %}
+    {{ include('master/actions.html.twig') }}
+{% endblock %}
+
+{% block content %}
+    <table class="table table-bordered table-striped">
+        <tbody>
+            <tr>
+                <th>Code</th>
+                <td>{{ taxLiteral.code|default }}</td>
+            </tr>
+        </tbody>
+    </table>
+{% endblock %}

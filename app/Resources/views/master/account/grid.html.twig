@@ -1,0 +1,42 @@
+{% set grid_layout = 'datagrid.html.twig' %}
+
+{{ grid_top(grid) }}
+
+<table data-role="table" class="table table-bordered table-striped table-condensed table-hover">
+    <thead>
+        <tr data-action="sort" class="alert alert-info">
+            <th data-group="account" data-field="code">Code</th>
+            <th data-group="account" data-field="name">Name</th>
+            <th data-group="account" data-field="isActive">Is Active</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for account in grid.data %}
+            <tr data-field-id="{{ account.id }}">
+                <td class="text-left">{{ account.code|default }}</td>
+                <td class="text-left">{{ account.name|default }}</td>
+                <td class="text-left">{{ account.isActive|default ? 'Yes' : 'No' }}</td>
+                <td class="text-left">
+                    {{ include('master/actions.html.twig', {
+                        'contents': {
+                            '{index}': null,
+                            '{new}': null,
+                            '{show}': include('action.html.twig', {'url': path('master_account_show', {'id': account.id}), 'button': 'btn btn-info btn-sm', 'icon': 'glyphicon glyphicon-info-sign'}),
+                            '{edit}': include('action.html.twig', {'url': path('master_account_edit', {'id': account.id}), 'button': 'btn btn-warning btn-sm', 'icon': 'glyphicon glyphicon-edit'}),
+                            '{delete}': include('action.html.twig', {'url': path('master_account_delete', {'id': account.id}), 'button': 'btn btn-danger btn-sm', 'icon': 'glyphicon glyphicon-remove'}),
+                        }
+                    }) }}
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="4" class="alert alert-warning">
+                    <strong>There are no items to display.</strong>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{{ grid_bottom(grid) }}

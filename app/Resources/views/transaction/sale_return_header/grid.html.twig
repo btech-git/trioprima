@@ -1,0 +1,46 @@
+{% set grid_layout = 'datagrid.html.twig' %}
+
+{{ grid_top(grid) }}
+
+<table data-role="table" class="table table-bordered table-striped table-condensed table-hover">
+    <thead>
+        <tr data-action="sort" class="alert alert-info">
+            <th data-group="saleReturnHeader" data-field="codeNumber">Retur #</th>
+            <th data-group="saleReturnHeader" data-field="transactionDate">Tanggal</th>
+            <th>Invoice #</th>
+            <th>Customer</th>
+            <th data-group="saleReturnHeader" data-field="note">Note</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for saleReturnHeader in grid.data %}
+            <tr data-field-id="{{ saleReturnHeader.id }}">
+                <td class="text-left">{{ saleReturnHeader.codeNumber|default }}</td>
+                <td class="text-left">{{ saleReturnHeader.transactionDate|default ? saleReturnHeader.transactionDate|date('j F Y') }}</td>
+                <td class="text-left">{{ saleReturnHeader.saleInvoiceHeader.codeNumber|default }}</td>
+                <td class="text-left">{{ saleReturnHeader.saleInvoiceHeader.customer.company|default }}</td>
+                <td class="text-left">{{ saleReturnHeader.note|default }}</td>
+                <td class="text-left">
+                    {{ include('transaction/actions.html.twig', {
+                        'contents': {
+                            '{index}': null,
+                            '{new}': null,
+                            '{show}': include('action.html.twig', {'url': path('transaction_sale_return_header_show', {'id': saleReturnHeader.id}), 'button': 'btn btn-info btn-sm', 'icon': 'glyphicon glyphicon-info-sign'}),
+                            '{edit}': include('action.html.twig', {'url': path('transaction_sale_return_header_edit', {'id': saleReturnHeader.id}), 'button': 'btn btn-warning btn-sm', 'icon': 'glyphicon glyphicon-edit'}),
+                            '{delete}': include('action.html.twig', {'url': path('transaction_sale_return_header_delete', {'id': saleReturnHeader.id}), 'button': 'btn btn-danger btn-sm', 'icon': 'glyphicon glyphicon-remove'}),
+                        }
+                    }) }}
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="6" class="alert alert-warning">
+                    <strong>There are no items to display.</strong>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{{ grid_bottom(grid) }}

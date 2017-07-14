@@ -1,0 +1,97 @@
+{% extends 'report/export.xml.twig' %}
+
+{% block data %}
+    <ss:Worksheet>
+        <ss:Table ss:StyleID="Data">
+            <ss:Column ss:Span="6" ss:AutoFitWidth="1" />
+            <ss:Row ss:AutoFitHeight="1" ss:StyleID="Title">
+                <ss:Cell ss:MergeAcross="6">
+                    <ss:Data ss:Type="String">PT. Trio Prima</ss:Data>
+                </ss:Cell>
+            </ss:Row>
+            <ss:Row ss:AutoFitHeight="1" ss:StyleID="Title">
+                <ss:Cell ss:MergeAcross="6">
+                    <ss:Data ss:Type="String">Laporan Penjualan Invoice Summary</ss:Data>
+                </ss:Cell>
+            </ss:Row>
+            <ss:Row ss:AutoFitHeight="1" ss:StyleID="Title">
+                <ss:Cell ss:MergeAcross="6">
+                    {% set startDate = grid.searchVals['saleInvoiceHeader']['transactionDate'][1]|default %}
+                    {% set endDate = grid.searchVals['saleInvoiceHeader']['transactionDate'][2]|default %}
+                    <ss:Data ss:Type="String">{{ startDate ? startDate|date('j F Y') }}  -  {{ endDate ? endDate|date('j F Y') }}</ss:Data>
+                </ss:Cell>
+            </ss:Row>
+            <ss:Row ss:Span="1" />
+            <ss:Row ss:StyleID="Level1|Bold|Center|Bottom">
+                <ss:Cell>
+                    <ss:Data ss:Type="String">Invoice #</ss:Data>
+                </ss:Cell>
+                <ss:Cell>
+                    <ss:Data ss:Type="String">Tanggal</ss:Data>
+                </ss:Cell>
+                <ss:Cell>
+                    <ss:Data ss:Type="String">Customer</ss:Data>
+                </ss:Cell>
+                <ss:Cell>
+                    <ss:Data ss:Type="String">Sale</ss:Data>
+                </ss:Cell>
+                <ss:Cell>
+                    <ss:Data ss:Type="String">Cost</ss:Data>
+                </ss:Cell>
+                <ss:Cell>
+                    <ss:Data ss:Type="String">Laba / Rugi</ss:Data>
+                </ss:Cell>
+                <ss:Cell>
+                    <ss:Data ss:Type="String">Pelunasan</ss:Data>
+                </ss:Cell>
+            </ss:Row>
+            {% set grandTotalBeforeDownpaymentSum = 0.00 %}
+            {% set averagePurchaseGrandTotalSum = 0.00 %}
+            {% set profitLossSum = 0.00 %}
+            {% set totalPaymentSum = 0.00 %}
+            {% for saleInvoiceHeader in grid.data %}
+                <ss:Row ss:StyleID="Level1">
+                    <ss:Cell>
+                        <ss:Data ss:Type="String">{{ saleInvoiceHeader.codeNumber|default }}</ss:Data>
+                    </ss:Cell>
+                    <ss:Cell>
+                        <ss:Data ss:Type="String">{{ saleInvoiceHeader.transactionDate|default ? saleInvoiceHeader.transactionDate|date('j F Y') }}</ss:Data>
+                    </ss:Cell>
+                    <ss:Cell>
+                        <ss:Data ss:Type="String">{{ saleInvoiceHeader.customer.company|default }}</ss:Data>
+                    </ss:Cell>
+                    <ss:Cell>
+                        <ss:Data ss:Type="Number">{{ saleInvoiceHeader.grandTotalBeforeDownpayment|default|number_format(2, '.', '') }}</ss:Data>
+                    </ss:Cell>
+                    <ss:Cell>
+                        <ss:Data ss:Type="Number">{{ saleInvoiceHeader.averagePurchaseGrandTotal|default|number_format(2, '.', '') }}</ss:Data>
+                    </ss:Cell>
+                    <ss:Cell>
+                        <ss:Data ss:Type="Number">{{ saleInvoiceHeader.profitLoss|default|number_format(2, '.', '') }}</ss:Data>
+                    </ss:Cell>
+                    <ss:Cell>
+                        <ss:Data ss:Type="Number">{{ saleInvoiceHeader.totalPayment|default|number_format(2, '.', '') }}</ss:Data>
+                    </ss:Cell>
+                </ss:Row>
+                {% set grandTotalBeforeDownpaymentSum = grandTotalBeforeDownpaymentSum + saleInvoiceHeader.grandTotalBeforeDownpayment %}
+                {% set averagePurchaseGrandTotalSum = averagePurchaseGrandTotalSum + saleInvoiceHeader.averagePurchaseGrandTotal %}
+                {% set profitLossSum = profitLossSum + saleInvoiceHeader.profitLoss %}
+                {% set totalPaymentSum = totalPaymentSum + saleInvoiceHeader.totalPayment %}
+            {% endfor %}
+            <ss:Row ss:StyleID="Level1|Bold|Top">
+                <ss:Cell ss:Index="4">
+                    <ss:Data ss:Type="Number">{{ grandTotalBeforeDownpaymentSum|default|number_format(2, '.', '') }}</ss:Data>
+                </ss:Cell>
+                <ss:Cell>
+                    <ss:Data ss:Type="Number">{{ averagePurchaseGrandTotalSum|default|number_format(2, '.', '') }}</ss:Data>
+                </ss:Cell>
+                <ss:Cell>
+                    <ss:Data ss:Type="Number">{{ profitLossSum|default|number_format(2, '.', '') }}</ss:Data>
+                </ss:Cell>
+                <ss:Cell>
+                    <ss:Data ss:Type="Number">{{ totalPaymentSum|default|number_format(2, '.', '') }}</ss:Data>
+                </ss:Cell>
+            </ss:Row>
+        </ss:Table>
+    </ss:Worksheet>
+{% endblock %}

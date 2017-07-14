@@ -1,0 +1,87 @@
+{% extends 'report/export.xml.twig' %}
+
+{% block data %}
+    <ss:Worksheet>
+        <ss:Table ss:StyleID="Data">
+            <ss:Column ss:Span="4" ss:AutoFitWidth="1" />
+            <ss:Row ss:AutoFitHeight="1" ss:StyleID="Title">
+                <ss:Cell ss:MergeAcross="4">
+                    <ss:Data ss:Type="String">PT. Trio Prima</ss:Data>
+                </ss:Cell>
+            </ss:Row>
+            <ss:Row ss:AutoFitHeight="1" ss:StyleID="Title">
+                <ss:Cell ss:MergeAcross="4">
+                    <ss:Data ss:Type="String">Laporan Pembelian Tanda Terima</ss:Data>
+                </ss:Cell>
+            </ss:Row>
+            <ss:Row ss:AutoFitHeight="1" ss:StyleID="Title">
+                <ss:Cell ss:MergeAcross="4">
+                    {% set startDate = grid.searchVals['purchaseReceiptHeader']['transactionDate'][1]|default %}
+                    {% set endDate = grid.searchVals['purchaseReceiptHeader']['transactionDate'][2]|default %}
+                    <ss:Data ss:Type="String">{{ startDate ? startDate|date('j F Y') }}  -  {{ endDate ? endDate|date('j F Y') }}</ss:Data>
+                </ss:Cell>
+            </ss:Row>
+            <ss:Row ss:Span="1" />
+            <ss:Row ss:StyleID="Level1|Bold|Center">
+                <ss:Cell ss:MergeAcross="1">
+                    <ss:Data ss:Type="String">Tanda Terima #</ss:Data>
+                </ss:Cell>
+                <ss:Cell>
+                    <ss:Data ss:Type="String">Tanggal</ss:Data>
+                </ss:Cell>
+                <ss:Cell>
+                    <ss:Data ss:Type="String">Supplier</ss:Data>
+                </ss:Cell>
+                <ss:Cell>
+                    <ss:Data ss:Type="String">Note</ss:Data>
+                </ss:Cell>
+            </ss:Row>
+            <ss:Row ss:StyleID="Level2|Bold|Center|Bottom">
+                <ss:Cell ss:Index="2">
+                    <ss:Data ss:Type="String">Invoice #</ss:Data>
+                </ss:Cell>
+                <ss:Cell>
+                    <ss:Data ss:Type="String">Tanggal</ss:Data>
+                </ss:Cell>
+                <ss:Cell>
+                    <ss:Data ss:Type="String">Memo</ss:Data>
+                </ss:Cell>
+                <ss:Cell>
+                    <ss:Data ss:Type="String">Grand Total</ss:Data>
+                </ss:Cell>
+            </ss:Row>
+            {% for purchaseReceiptHeader in grid.data %}
+                <ss:Row ss:StyleID="Level1">
+                    <ss:Cell ss:MergeAcross="1">
+                        <ss:Data ss:Type="String">{{ purchaseReceiptHeader.codeNumber|default }}</ss:Data>
+                    </ss:Cell>
+                    <ss:Cell>
+                        <ss:Data ss:Type="String">{{ purchaseReceiptHeader.transactionDate|default ? purchaseReceiptHeader.transactionDate|date('j F Y') }}</ss:Data>
+                    </ss:Cell>
+                    <ss:Cell>
+                        <ss:Data ss:Type="String">{{ purchaseReceiptHeader.supplier.company|default }}</ss:Data>
+                    </ss:Cell>
+                    <ss:Cell>
+                        <ss:Data ss:Type="String">{{ purchaseReceiptHeader.note|default }}</ss:Data>
+                    </ss:Cell>
+                </ss:Row>
+                {% for purchaseReceiptDetail in purchaseReceiptHeader.purchaseReceiptDetails %}
+                    <ss:Row ss:StyleID="Level2">
+                        <ss:Cell ss:Index="2">
+                            <ss:Data ss:Type="String">{{ purchaseReceiptDetail.purchaseInvoiceHeader.codeNumber|default }}</ss:Data>
+                        </ss:Cell>
+                        <ss:Cell>
+                            <ss:Data ss:Type="String">{{ purchaseReceiptDetail.purchaseInvoiceHeader.transactionDate|default ? purchaseReceiptDetail.purchaseInvoiceHeader.transactionDate|date('j F Y') }}</ss:Data>
+                        </ss:Cell>
+                        <ss:Cell>
+                            <ss:Data ss:Type="String">{{ purchaseReceiptDetail.memo|default }}</ss:Data>
+                        </ss:Cell>
+                        <ss:Cell>
+                            <ss:Data ss:Type="Number">{{ purchaseReceiptDetail.purchaseInvoiceHeader.grandTotalBeforeDownpayment|default|number_format(2, '.', '') }}</ss:Data>
+                        </ss:Cell>
+                    </ss:Row>
+                {% endfor %}
+            {% endfor %}
+        </ss:Table>
+    </ss:Worksheet>
+{% endblock %}

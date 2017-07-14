@@ -1,0 +1,141 @@
+{% extends 'transaction/layout.html.twig' %}
+
+{% import _self as self %}
+
+{% macro details_row(object) %}
+    <tr data-index="{{ object.vars.name }}">
+        <td class="hide">
+            {{ form_row(object.account, {'label': false}) }}
+        </td>
+        <td>
+            <span id="account-code-{{ object.vars.name }}">{{ object.vars.value.account.code|default }}</span>
+        </td>
+        <td>
+            <span id="account-name-{{ object.vars.name }}">{{ object.vars.value.account.name|default }}</span>
+        </td>
+        <td>
+            {{ form_row(object.description, {'label': false}) }}
+        </td>
+        <td>
+            {{ form_row(object.amount, {'label': false, 'attr': {'class': 'bind-amount-class'} }) }}
+        </td>
+        <td>
+            {{ form_row(object.memo, {'label': false}) }}
+        </td>
+        <td>
+            <button type="button" class="btn btn-info remove">Delete</button>
+        </td>
+    </tr>
+{% endmacro %}
+
+{% block content %}
+    {{ form_start(form) }}
+        <div class="row">
+            <div class="col-sm-6">
+                <label>Code Number</label>
+                <div class="form-group">{{ expenseHeader.codeNumber }}</div>
+                
+                {{ form_row(form.transactionDate, {'label': 'Tanggal'}) }}
+            </div>
+            <div class="col-sm-6">
+                {{ form_row(form.account) }}
+                {{ form_row(form.note) }}
+            </div>
+        </div>
+            
+        <hr />
+        
+        <div>
+            <button type="button" class="btn btn-default" id="add" data-toggle="modal" data-target="#account-dialog">Add Detail</button>
+        </div>
+        
+        <br />
+        
+        <table class="table table-bordered" id="detail-list">
+            <thead>
+                <tr class="bg-info">
+                    <th class="hide">Account</th>
+                    <th>Account Code</th>
+                    <th>Account Name</th>
+                    <th>Description</th>
+                    <th>Amount</th>
+                    <th>Memo</th>
+                    <th style="width: 0"></th>
+                </tr>
+            </thead>
+            <tbody data-prototype="{{ self.details_row(form.expenseDetails.vars.prototype)|e }}">
+                {% for expenseDetail in form.expenseDetails %}
+                    {{ self.details_row(expenseDetail) }}
+                {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td class="text-right" colspan="3">Total</td>
+                    <td class="text-right"><span id="bind-totalamount">{{ expenseHeader.totalAmount|default|number_format(2) }}</span></td>
+                    <td colspan="2"></td>
+                </tr>
+            </tfoot>
+        </table>
+        
+        <input class="btn btn-primary" type="submit" value="Submit" data-confirm="Do you want to proceed?" />
+    {{ form_end(form) }}
+    
+    <div id="account-dialog" class="modal fade" role="dialog">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Account List</h4>
+                </div>
+                <div class="modal-body">
+                    <div id="account-grid" data-grid="{{ path('common_account_grid') }}"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        jQuery(function($) {
+            function bind() {
+                $.ajax({
+                    method: "POST",
+                    url: "{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')|merge({'_format': 'json'})) }}",
+                    data: $("form").serialize(),
+                    dataType: "JSON",
+                    success: function(data) {
+                        $("#bind-totalamount").text(data.totalAmount);
+                    }
+                });
+            }
+            
+            var table = $("table#detail-list");
+            var tableBody = $("tbody", table);
+            
+            tableBody.on("change", ".bind-amount-class", function() {
+                bind();
+            });
+            tableBody.on("click", "button.remove", function() {
+                $(this).closest("tr").remove();
+                bind();
+            });
+            $("#account-grid").on("click", "table[data-role=table] tbody tr", function() {
+                $("#account-dialog").modal("hide");
+                var context = $(this);
+                var name = "{{ form.expenseDetails.vars.prototype.vars.name }}";
+                var rows = tableBody.children("tr");
+                var index = Math.max({{ expenseDetailsCount }}, (rows.length > 0) ? parseInt(rows.last().attr("data-index")) + 1 : 0);
+                tableBody.appendByPrototype(tableBody.attr("data-prototype"), name, index, function(prototype) {
+                    var account = prototype.find("#{{ form.expenseDetails.vars.prototype.account.vars.id }}");
+                    account.val(context.attr("data-field-id"));
+                    var accountCode = prototype.find("#account-code-" + name);
+                    accountCode.text(context.attr("data-field-code"));
+                    var accountName = prototype.find("#account-name-" + name);
+                    accountName.text(context.attr("data-field-name"));
+                });
+            });
+        });
+    </script>
+{% endblock %}

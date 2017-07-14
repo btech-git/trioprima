@@ -1,0 +1,13 @@
+{
+    "taxNominal": "{{ saleReturnHeader.taxNominal|default|number_format(2) }}",
+    "subTotal": "{{ saleReturnHeader.subTotal|default|number_format(2) }}",
+    "grandTotal": "{{ saleReturnHeader.grandTotal|default|number_format(2) }}",
+    "saleReturnDetails": {
+        {%- for index, saleReturnDetail in saleReturnHeader.saleReturnDetails -%}
+            "{{ index }}": {
+                "total": "{{ saleReturnDetail.total|default|number_format(2) }}"
+            }
+            {%- if not loop.last -%},{%- endif -%}
+        {%- endfor -%}
+    }
+}

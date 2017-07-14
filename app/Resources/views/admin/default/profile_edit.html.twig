@@ -1,0 +1,21 @@
+{% extends 'default/layout.html.twig' %}
+
+{% block title %}Edit Profile{% endblock %}
+
+{% block actions %}
+    <a class="btn btn-info" href="{{ path('admin_default_profile_show', { 'id': user.id }) }}">
+        <span class="glyphicon glyphicon-info-sign"></span> Show Profile
+    </a>
+    <a class="btn btn-warning" href="{{ path('admin_default_password_change', { 'id': user.id }) }}">
+        <span class="glyphicon glyphicon-lock"></span> Change Password
+    </a>
+{% endblock %}
+
+{% block content %}
+    {{ form_start(form) }}
+        <label>Username</label>
+        <div class="form-group">{{ user.username }}</div>
+        {{ form_rest(form) }}
+        <input class="btn btn-warning" type="submit" value="Update" />
+    {{ form_end(form) }}
+{% endblock %}

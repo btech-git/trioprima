@@ -1,0 +1,14 @@
+{% extends 'actions.html.twig' %}
+
+{% block render %}
+    {% set default_template = '{index}{show}{new}{edit}' %}
+    {% set default_contents = {
+        '{index}': route != action_prefix ~ 'index' ? include('action.html.twig', {'url': path(action_prefix ~ 'index'), 'label': 'Manage', 'button': 'btn btn-primary', 'icon': 'glyphicon glyphicon-list'}),
+        '{show}': route != action_prefix ~ 'show' and action_id is not empty ? include('action.html.twig', {'url': path(action_prefix ~ 'show', {'id': action_id}), 'label': 'Show', 'button': 'btn btn-info', 'icon': 'glyphicon glyphicon-info-sign'}),
+        '{new}': route != action_prefix ~ 'new' ? include('action.html.twig', {'url': path(action_prefix ~ 'new'), 'label': 'Add', 'button': 'btn btn-success', 'icon': 'glyphicon glyphicon-plus'}),
+        '{edit}': route != action_prefix ~ 'edit' and action_id is not empty ? include('action.html.twig', {'url': path(action_prefix ~ 'edit', {'id': action_id}), 'label': 'Edit', 'button': 'btn btn-warning', 'icon': 'glyphicon glyphicon-edit'}),
+        '{delete}': route != action_prefix ~ 'delete' and action_id is not empty ? include('action.html.twig', {'url': path(action_prefix ~ 'delete', {'id': action_id}), 'label': 'Delete', 'button': 'btn btn-danger', 'icon': 'glyphicon glyphicon-remove'}),
+    } %}
+
+    {{ parent() }}
+{% endblock %}

@@ -1,0 +1,119 @@
+{% extends 'default/layout.html.twig' %}
+
+{% block title 'Report Menu' %}
+
+{% block stylesheets %}
+    <style>
+        table tr td:nth-child(2) { width: 50% }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <table class="table table-bordered table-striped">
+        <tr>
+            <th colspan="2" class="bg-info lead">
+                <strong>Penjualan</strong>
+            </th>
+        </tr>
+        <tr>
+            <td>Invoice Per Product</td>
+            <td>{{ include('action.html.twig', {'url': path('report_product_sale_invoice_index'), 'label': 'Show', 'button': 'btn btn-info', 'icon': 'glyphicon glyphicon-info-sign'}) }}</td>
+        </tr>
+        <tr>
+            <td>Invoice Per Customer</td>
+            <td>{{ include('action.html.twig', {'url': path('report_customer_sale_invoice_index'), 'label': 'Show', 'button': 'btn btn-info', 'icon': 'glyphicon glyphicon-info-sign'}) }}</td>
+        </tr>
+        <tr>
+            <td>Invoice Summary</td>
+            <td>{{ include('action.html.twig', {'url': path('report_sale_invoice_summary_index'), 'label': 'Show', 'button': 'btn btn-info', 'icon': 'glyphicon glyphicon-info-sign'}) }}</td>
+        </tr>
+        <tr>
+            <td>Invoice</td>
+            <td>{{ include('action.html.twig', {'url': path('report_sale_invoice_header_index'), 'label': 'Show', 'button': 'btn btn-info', 'icon': 'glyphicon glyphicon-info-sign'}) }}</td>
+        </tr>
+        <tr>
+            <td>Pelunasan</td>
+            <td>{{ include('action.html.twig', {'url': path('report_sale_payment_header_index'), 'label': 'Show', 'button': 'btn btn-info', 'icon': 'glyphicon glyphicon-info-sign'}) }}</td>
+        </tr>
+        <tr>
+            <td>Tanda Terima</td>
+            <td>{{ include('action.html.twig', {'url': path('report_sale_receipt_header_index'), 'label': 'Show', 'button': 'btn btn-info', 'icon': 'glyphicon glyphicon-info-sign'}) }}</td>
+        </tr>
+        <tr>
+            <td>Retur</td>
+            <td>{{ include('action.html.twig', {'url': path('report_sale_return_header_index'), 'label': 'Show', 'button': 'btn btn-info', 'icon': 'glyphicon glyphicon-info-sign'}) }}</td>
+        </tr>
+    </table>
+            
+    <table class="table table-bordered table-striped">
+        <tr>
+            <th colspan="2" class="bg-info lead">
+                <strong>Pembelian</strong>
+            </th>
+        </tr>
+        <tr>
+            <td>Invoice Per Product</td>
+            <td>{{ include('action.html.twig', {'url': path('report_product_purchase_invoice_index'), 'label': 'Show', 'button': 'btn btn-info', 'icon': 'glyphicon glyphicon-info-sign'}) }}</td>
+        </tr>
+        <tr>
+            <td>Invoice Per Supplier</td>
+            <td>{{ include('action.html.twig', {'url': path('report_supplier_purchase_invoice_index'), 'label': 'Show', 'button': 'btn btn-info', 'icon': 'glyphicon glyphicon-info-sign'}) }}</td>
+        </tr>
+        <tr>
+            <td>Invoice Summary</td>
+            <td>{{ include('action.html.twig', {'url': path('report_purchase_invoice_summary_index'), 'label': 'Show', 'button': 'btn btn-info', 'icon': 'glyphicon glyphicon-info-sign'}) }}</td>
+        </tr>
+        <tr>
+            <td>Invoice</td>
+            <td>{{ include('action.html.twig', {'url': path('report_purchase_invoice_header_index'), 'label': 'Show', 'button': 'btn btn-info', 'icon': 'glyphicon glyphicon-info-sign'}) }}</td>
+        </tr>
+        <tr>
+            <td>Pelunasan</td>
+            <td>{{ include('action.html.twig', {'url': path('report_purchase_payment_header_index'), 'label': 'Show', 'button': 'btn btn-info', 'icon': 'glyphicon glyphicon-info-sign'}) }}</td>
+        </tr>
+        <tr>
+            <td>Tanda Terima</td>
+            <td>{{ include('action.html.twig', {'url': path('report_purchase_receipt_header_index'), 'label': 'Show', 'button': 'btn btn-info', 'icon': 'glyphicon glyphicon-info-sign'}) }}</td>
+        </tr>
+        <tr>
+            <td>Retur</td>
+            <td>{{ include('action.html.twig', {'url': path('report_purchase_return_header_index'), 'label': 'Show', 'button': 'btn btn-info', 'icon': 'glyphicon glyphicon-info-sign'}) }}</td>
+        </tr>
+    </table>
+            
+    <table class="table table-bordered table-striped">
+        <tr>
+            <th colspan="2" class="bg-info lead">
+                <strong>Keuangan</strong>
+            </th>
+        </tr>
+        <tr>
+            <td>Penerimaan Kas / Bank</td>
+            <td>{{ include('action.html.twig', {'url': path('report_deposit_header_index'), 'label': 'Show', 'button': 'btn btn-info', 'icon': 'glyphicon glyphicon-info-sign'}) }}</td>
+        </tr>
+        <tr>
+            <td>Pengeluaran Kas / Bank</td>
+            <td>{{ include('action.html.twig', {'url': path('report_expense_header_index'), 'label': 'Show', 'button': 'btn btn-info', 'icon': 'glyphicon glyphicon-info-sign'}) }}</td>
+        </tr>
+        <tr>
+            <td>Jurnal Umum</td>
+            <td>{{ include('action.html.twig', {'url': path('report_journal_voucher_header_index'), 'label': 'Show', 'button': 'btn btn-info', 'icon': 'glyphicon glyphicon-info-sign'}) }}</td>
+        </tr>
+    </table>
+            
+    <table class="table table-bordered table-striped">
+        <tr>
+            <th colspan="2" class="bg-info lead">
+                <strong>Gudang</strong>
+            </th>
+        </tr>
+        <tr>
+            <td>Pengecekan Stok</td>
+            <td>{{ include('action.html.twig', {'url': path('report_product_stock_index'), 'label': 'Show', 'button': 'btn btn-info', 'icon': 'glyphicon glyphicon-info-sign'}) }}</td>
+        </tr>
+        <tr>
+            <td>Penyesuaian Stok</td>
+            <td>{{ include('action.html.twig', {'url': path('report_adjustment_stock_header_index'), 'label': 'Show', 'button': 'btn btn-info', 'icon': 'glyphicon glyphicon-info-sign'}) }}</td>
+        </tr>
+    </table>
+{% endblock %}

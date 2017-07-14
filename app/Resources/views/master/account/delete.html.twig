@@ -1,0 +1,17 @@
+{% extends 'master/layout.html.twig' %}
+
+{% block title 'Delete Account' %}
+
+{% block actions %}
+    {{ include('master/actions.html.twig') }}
+{% endblock %}
+
+{% block content %}
+    <div class="alert alert-danger">Are you sure you want to delete this item?</div>
+    {{ form_start(form) }}
+        <div class="well text-center">
+            <input class="btn btn-danger" type="submit" value="Delete" />
+            <a class="btn btn-default" href="{{ path('master_account_index') }}">Cancel</a>
+        </div>
+    {{ form_end(form) }}
+{% endblock %}

@@ -1,0 +1,8 @@
+{% set url = url|default %}
+{% set label = label|default %}
+{% set button = button|default %}
+{% set icon = icon|default %}
+
+<a {% if button is not empty %}class="{{ button }}"{% endif %} href="{{ url }}">
+    {% if icon is not empty %}<span class="{{ icon }}"></span>{% endif %} {{ label }}
+</a>

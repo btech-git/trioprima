@@ -1,0 +1,48 @@
+{% set grid_layout = 'datagrid.html.twig' %}
+
+{{ grid_top(grid) }}
+
+<table data-role="table" class="table table-bordered table-striped table-condensed table-hover">
+    <thead>
+        <tr data-action="sort" class="alert alert-info">
+            <th data-group="product" data-field="code">Code</th>
+            <th data-group="product" data-field="name">Name</th>
+            <th data-group="product" data-field="size">Size</th>
+            <th data-group="product" data-field="physicalCode">Physical Code</th>
+            <th data-group="product" data-field="minimumStock">Minimum Stock</th>
+            <th data-group="product" data-field="isActive">Is Active</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for product in grid.data %}
+            <tr data-field-id="{{ product.id }}">
+                <td class="text-left">{{ product.code|default }}</td>
+                <td class="text-left">{{ product.name|default }}</td>
+                <td class="text-left">{{ product.size|default }}</td>
+                <td class="text-left">{{ product.physicalCode|default }}</td>
+                <td class="text-left">{{ product.minimumStock|default }}</td>
+                <td class="text-left">{{ product.isActive|default ? 'Yes' : 'No' }}</td>
+                <td class="text-left">
+                    {{ include('master/actions.html.twig', {
+                        'contents': {
+                            '{index}': null,
+                            '{new}': null,
+                            '{show}': include('action.html.twig', {'url': path('master_product_show', {'id': product.id}), 'button': 'btn btn-info btn-sm', 'icon': 'glyphicon glyphicon-info-sign'}),
+                            '{edit}': include('action.html.twig', {'url': path('master_product_edit', {'id': product.id}), 'button': 'btn btn-warning btn-sm', 'icon': 'glyphicon glyphicon-edit'}),
+                            '{delete}': include('action.html.twig', {'url': path('master_product_delete', {'id': product.id}), 'button': 'btn btn-danger btn-sm', 'icon': 'glyphicon glyphicon-remove'}),
+                        }
+                    }) }}
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="7" class="alert alert-warning">
+                    <strong>There are no items to display.</strong>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{{ grid_bottom(grid) }}

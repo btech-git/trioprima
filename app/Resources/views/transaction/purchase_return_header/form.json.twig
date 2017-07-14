@@ -1,0 +1,13 @@
+{
+    "taxNominal": "{{ purchaseReturnHeader.taxNominal|default|number_format(2) }}",
+    "subTotal": "{{ purchaseReturnHeader.subTotal|default|number_format(2) }}",
+    "grandTotal": "{{ purchaseReturnHeader.grandTotal|default|number_format(2) }}",
+    "purchaseReturnDetails": {
+        {%- for index, purchaseReturnDetail in purchaseReturnHeader.purchaseReturnDetails -%}
+            "{{ index }}": {
+                "total": "{{ purchaseReturnDetail.total|default|number_format(2) }}"
+            }
+            {%- if not loop.last -%},{%- endif -%}
+        {%- endfor -%}
+    }
+}

@@ -1,0 +1,35 @@
+{% extends 'default/layout.html.twig' %}
+
+{% block title %}User Profile{% endblock %}
+
+{% block actions %}
+    <a class="btn btn-warning" href="{{ path('admin_default_profile_edit', { 'id': user.id }) }}">
+        <span class="glyphicon glyphicon-edit"></span> Edit Profile
+    </a>
+    <a class="btn btn-warning" href="{{ path('admin_default_password_change', { 'id': user.id }) }}">
+        <span class="glyphicon glyphicon-lock"></span> Change Password
+    </a>
+{% endblock %}
+
+{% block content %}
+    <table class="table table-striped table-bordered">
+        <tbody>
+            <tr>
+                <th>Username</th>
+                <td>{{ user.username }}</td>
+            </tr>
+            <tr>
+                <th>Email</th>
+                <td>{{ user.email }}</td>
+            </tr>
+            <tr>
+                <th>Roles</th>
+                <td>
+                    {% for role in user.userRoles %}
+                        <div>{{ role.name }}</div>
+                    {% endfor %}
+                </td>
+            </tr>
+        </tbody>
+    </table>
+{% endblock %}

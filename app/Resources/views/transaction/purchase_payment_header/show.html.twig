@@ -1,0 +1,68 @@
+{% extends 'transaction/layout.html.twig' %}
+
+{% block title 'Show Purchase Payment Header' %}
+
+{% block actions %}
+    {{ include('transaction/actions.html.twig') }}
+{% endblock %}
+
+{% block content %}
+    <table class="table table-bordered table-striped">
+        <tbody>
+            <tr>
+                <th>Code Number</th>
+                <td>{{ purchasePaymentHeader.codeNumber|default }}</td>
+            </tr>
+            <tr>
+                <th>Tanggal</th>
+                <td>{{ purchasePaymentHeader.transactionDate|default ? purchasePaymentHeader.transactionDate|date('j F Y') }}</td>
+            </tr>
+            <tr>
+                <th>Supplier</th>
+                <td>{{ purchasePaymentHeader.supplier.company|default }}</td>
+            </tr>
+            <tr>
+                <th>Payment Type</th>
+                <td>{{ purchasePaymentHeader.paymentType.name|default }}</td>
+            </tr>
+            <tr>
+                <th>Note</th>
+                <td>{{ purchasePaymentHeader.note|default }}</td>
+            </tr>
+        </tbody>
+    </table>
+                
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr class="bg-info">
+                <th>Invoice #</th>
+                <th>Tanggal</th>
+                <th>Faktur Pajak</th>
+                <th>Grand Total</th>
+                <th>Amount</th>
+                <th>Memo</th>
+                <th>Account</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for purchasePaymentDetail in purchasePaymentHeader.purchasePaymentDetails %}
+                <tr>
+                    <td>{{ purchasePaymentDetail.purchaseInvoiceHeader.codeNumber|default }}</td>
+                    <td>{{ purchasePaymentDetail.purchaseInvoiceHeader.transactionDate|default ? purchasePaymentDetail.purchaseInvoiceHeader.transactionDate|date('j F Y') }}</td>
+                    <td>{{ purchasePaymentDetail.purchaseInvoiceHeader.taxInvoiceCode|default }}</td>
+                    <td class="text-right">{{ purchasePaymentDetail.purchaseInvoiceHeader.grandTotalBeforeDownpayment|default|number_format(2) }}</td>
+                    <td class="text-right">{{ purchasePaymentDetail.amount|default|number_format(2) }}</td>
+                    <td>{{ purchasePaymentDetail.memo|default }}</td>
+                    <td>{{ purchasePaymentDetail.account.name|default }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+        <tfoot>
+            <tr>
+                <td class="text-right" colspan="4"><strong>Total</strong></td>
+                <td class="text-right"><strong>{{ purchasePaymentHeader.totalAmount|default|number_format(2) }}</strong></td>
+                <td colspan="2"></td>
+            </tr>
+        </tfoot>
+    </table>
+{% endblock %}

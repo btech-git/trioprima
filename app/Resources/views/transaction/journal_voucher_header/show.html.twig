@@ -1,0 +1,57 @@
+{% extends 'transaction/layout.html.twig' %}
+
+{% block title 'Show Journal Voucher Header' %}
+
+{% block actions %}
+    {{ include('transaction/actions.html.twig') }}
+{% endblock %}
+
+{% block content %}
+    <table class="table table-bordered table-striped">
+        <tbody>
+            <tr>
+                <th>Code Number</th>
+                <td>{{ journalVoucherHeader.codeNumber|default }}</td>
+            </tr>
+            <tr>
+                <th>Tanggal</th>
+                <td>{{ journalVoucherHeader.transactionDate|default ? journalVoucherHeader.transactionDate|date('j F Y') }}</td>
+            </tr>
+            <tr>
+                <th>Note</th>
+                <td>{{ journalVoucherHeader.note|default }}</td>
+            </tr>
+        </tbody>
+    </table>
+                
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr class="bg-info">
+                <th>Account Code</th>
+                <th>Account Name</th>
+                <th>Debit</th>
+                <th>Credit</th>
+                <th>Memo</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for journalVoucherDetail in journalVoucherHeader.journalVoucherDetails %}
+                <tr>
+                    <td>{{ journalVoucherDetail.account.code|default }}</td>
+                    <td>{{ journalVoucherDetail.account.name|default }}</td>
+                    <td class="text-right">{{ journalVoucherDetail.debit|default|number_format(2) }}</td>
+                    <td class="text-right">{{ journalVoucherDetail.credit|default|number_format(2) }}</td>
+                    <td>{{ journalVoucherDetail.memo|default }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+        <tfoot>
+            <tr>
+                <td class="text-right" colspan="2"><strong>Total</strong></td>
+                <td class="text-right"><strong>{{ journalVoucherHeader.totalDebit|default|number_format(2) }}</strong></td>
+                <td class="text-right"><strong>{{ journalVoucherHeader.totalCredit|default|number_format(2) }}</strong></td>
+                <td></td>
+            </tr>
+        </tfoot>
+    </table>
+{% endblock %}

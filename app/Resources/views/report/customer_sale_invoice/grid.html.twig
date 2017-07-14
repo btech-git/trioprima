@@ -1,0 +1,144 @@
+{% set grid_layout = 'datagrid.html.twig' %}
+
+<div class="hidden-print">
+    {{ grid_top(grid) }}
+    <div class="text-center">
+        <button type="button" class="btn btn-info btn-sm" id="export">Export</button>
+    </div>
+    <hr />
+</div>
+
+<div class="report">
+    <div class="report-header">
+        <div class="report-title">PT. Trio Prima</div>
+        <div class="report-title">Laporan Penjualan Invoice Per Customer</div>
+        <div>
+            {% set startDate = grid.searchVals['saleInvoiceHeaders']['transactionDate'][1]|default %}
+            {% set endDate = grid.searchVals['saleInvoiceHeaders']['transactionDate'][2]|default %}
+            {{ startDate ? startDate|date('j F Y') }} &nbsp;&ndash;&nbsp; {{ endDate ? endDate|date('j F Y') }}
+        </div>
+    </div>
+
+    <br />
+
+    <table class="report-data">
+        <thead class="border-top-solid-bold border-bottom-solid-bold">
+            <tr>
+                <th class="text-center">Perusahaan</th>
+                <th class="text-center">Nama</th>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th class="text-center">Invoice #</th>
+                                <th class="text-center">Tanggal</th>
+                                <th class="text-center">Grand Total</th>
+                                <th class="text-center">DP</th>
+                                <th class="text-center">Retur</th>
+                                <th class="text-center">Pelunasan</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <table>
+                        <thead>
+                            <tr>
+                                <td colspan="6">
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th class="text-center">Pelunasan #</th>
+                                                <th class="text-center">Tanggal</th>
+                                                <th class="text-center">Memo</th>
+                                                <th class="text-center">Jumlah</th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </td>
+                            </tr>
+                        </thead>
+                    </table>
+                </td>
+            </tr>
+        </thead>
+        <tbody class="border-top-solid-bold border-bottom-solid-bold">
+            {% for customer in grid.data %}
+                <tr data-field-id="{{ customer.id }}">
+                    <td class="text-left">{{ customer.company|default }}</td>
+                    <td class="text-left">{{ customer.name|default }}</td>
+                </tr>
+                <tr class="border-bottom-dotted-bold">
+                    <td colspan="2">
+                        {% set grandTotalBeforeDownpaymentSum = 0.00 %}
+                        {% set downpaymentNominalSum = 0.00 %}
+                        {% set totalReturnSum = 0.00 %}
+                        {% set totalPaymentSum = 0.00 %}
+                        <table>
+                            <tbody>
+                                {% for saleInvoiceHeader in customer.saleInvoiceHeaders %}
+                                    <tr>
+                                        <td class="text-left">{{ saleInvoiceHeader.codeNumber|default }}</td>
+                                        <td class="text-left">{{ saleInvoiceHeader.transactionDate|default ? saleInvoiceHeader.transactionDate|date('j F Y') }}</td>
+                                        <td class="text-right">{{ saleInvoiceHeader.grandTotalBeforeDownpayment|default|number_format(2) }}</td>
+                                        <td class="text-right">{{ saleInvoiceHeader.downpaymentNominal|default|number_format(2) }}</td>
+                                        <td class="text-right">{{ saleInvoiceHeader.totalReturn|default|number_format(2) }}</td>
+                                        <td class="text-right">{{ saleInvoiceHeader.totalPayment|default|number_format(2) }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="6">
+                                            <table>
+                                                <tbody>
+                                                    {% for salePaymentDetail in saleInvoiceHeader.salePaymentDetails %}
+                                                        <tr>
+                                                            <td class="text-left">{{ salePaymentDetail.salePaymentHeader.codeNumber|default }}</td>
+                                                            <td class="text-left">{{ salePaymentDetail.salePaymentHeader.transactionDate|default ? salePaymentDetail.salePaymentHeader.transactionDate|date('j F Y') }}</td>
+                                                            <td class="text-left">{{ salePaymentDetail.salePaymentHeader.memo|default }}</td>
+                                                            <td class="text-right">{{ salePaymentDetail.amount|default|number_format(2) }}</td>
+                                                        </tr>
+                                                    {% endfor %}
+                                                </tbody>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                    {% set grandTotalBeforeDownpaymentSum = grandTotalBeforeDownpaymentSum + saleInvoiceHeader.grandTotalBeforeDownpayment %}
+                                    {% set downpaymentNominalSum = downpaymentNominalSum + saleInvoiceHeader.downpaymentNominal %}
+                                    {% set totalReturnSum = totalReturnSum + saleInvoiceHeader.totalReturn %}
+                                    {% set totalPaymentSum = totalPaymentSum + saleInvoiceHeader.totalPayment %}
+                                {% endfor %}
+                            </tbody>
+                            <tfoot class="border-top-solid-normal">
+                                <tr>
+                                    <td class="text-right" colspan="2"></td>
+                                    <td class="text-right"><strong>{{ grandTotalBeforeDownpaymentSum|default|number_format(2) }}</strong></td>
+                                    <td class="text-right"><strong>{{ downpaymentNominalSum|default|number_format(2) }}</strong></td>
+                                    <td class="text-right"><strong>{{ totalReturnSum|default|number_format(2) }}</strong></td>
+                                    <td class="text-right"><strong>{{ totalPaymentSum|default|number_format(2) }}</strong></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<div class="hidden-print">
+    <br />
+    {{ grid_bottom(grid) }}
+</div>
+
+<script>
+    jQuery(function($) {
+        $("#export").click(function() {
+            var url = "{{ path('report_customer_sale_invoice_export') }}";
+            var data = {{ grid.params|json_encode|raw }};
+            $.redirect(url, data);
+        });
+    });
+</script>

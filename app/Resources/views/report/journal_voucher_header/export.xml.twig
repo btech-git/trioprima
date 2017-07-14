@@ -1,0 +1,87 @@
+{% extends 'report/export.xml.twig' %}
+
+{% block data %}
+    <ss:Worksheet>
+        <ss:Table ss:StyleID="Data">
+            <ss:Column ss:Span="5" ss:AutoFitWidth="1" />
+            <ss:Row ss:AutoFitHeight="1" ss:StyleID="Title">
+                <ss:Cell ss:MergeAcross="5">
+                    <ss:Data ss:Type="String">PT. Trio Prima</ss:Data>
+                </ss:Cell>
+            </ss:Row>
+            <ss:Row ss:AutoFitHeight="1" ss:StyleID="Title">
+                <ss:Cell ss:MergeAcross="5">
+                    <ss:Data ss:Type="String">Laporan Jurnal Umum</ss:Data>
+                </ss:Cell>
+            </ss:Row>
+            <ss:Row ss:AutoFitHeight="1" ss:StyleID="Title">
+                <ss:Cell ss:MergeAcross="5">
+                    {% set startDate = grid.searchVals['journalVoucherHeader']['transactionDate'][1]|default %}
+                    {% set endDate = grid.searchVals['journalVoucherHeader']['transactionDate'][2]|default %}
+                    <ss:Data ss:Type="String">{{ startDate ? startDate|date('j F Y') }}  -  {{ endDate ? endDate|date('j F Y') }}</ss:Data>
+                </ss:Cell>
+            </ss:Row>
+            <ss:Row ss:Span="1" />
+            <ss:Row ss:StyleID="Level1|Bold|Center">
+                <ss:Cell ss:MergeAcross="1">
+                    <ss:Data ss:Type="String">Jurnal Umum #</ss:Data>
+                </ss:Cell>
+                <ss:Cell>
+                    <ss:Data ss:Type="String">Tanggal</ss:Data>
+                </ss:Cell>
+                <ss:Cell>
+                    <ss:Data ss:Type="String">Note</ss:Data>
+                </ss:Cell>
+            </ss:Row>
+            <ss:Row ss:StyleID="Level2|Bold|Center|Bottom">
+                <ss:Cell ss:Index="2">
+                    <ss:Data ss:Type="String">Nama Akun</ss:Data>
+                </ss:Cell>
+                <ss:Cell>
+                    <ss:Data ss:Type="String">Deskripsi</ss:Data>
+                </ss:Cell>
+                <ss:Cell>
+                    <ss:Data ss:Type="String">Memo</ss:Data>
+                </ss:Cell>
+                <ss:Cell>
+                    <ss:Data ss:Type="String">Debit</ss:Data>
+                </ss:Cell>
+                <ss:Cell>
+                    <ss:Data ss:Type="String">Kredit</ss:Data>
+                </ss:Cell>
+            </ss:Row>
+            {% for journalVoucherHeader in grid.data %}
+                <ss:Row ss:StyleID="Level1">
+                    <ss:Cell ss:MergeAcross="1">
+                        <ss:Data ss:Type="String">{{ journalVoucherHeader.codeNumber|default }}</ss:Data>
+                    </ss:Cell>
+                    <ss:Cell>
+                        <ss:Data ss:Type="String">{{ journalVoucherHeader.transactionDate|default ? journalVoucherHeader.transactionDate|date('j F Y') }}</ss:Data>
+                    </ss:Cell>
+                    <ss:Cell>
+                        <ss:Data ss:Type="String">{{ journalVoucherHeader.note|default }}</ss:Data>
+                    </ss:Cell>
+                </ss:Row>
+                {% for journalVoucherDetail in journalVoucherHeader.journalVoucherDetails %}
+                    <ss:Row ss:StyleID="Level2">
+                        <ss:Cell ss:Index="2">
+                            <ss:Data ss:Type="String">{{ journalVoucherDetail.account.name|default }}</ss:Data>
+                        </ss:Cell>
+                        <ss:Cell>
+                            <ss:Data ss:Type="String">{{ journalVoucherDetail.description|default }}</ss:Data>
+                        </ss:Cell>
+                        <ss:Cell>
+                            <ss:Data ss:Type="String">{{ journalVoucherDetail.memo|default }}</ss:Data>
+                        </ss:Cell>
+                        <ss:Cell>
+                            <ss:Data ss:Type="Number">{{ journalVoucherDetail.debit|default|number_format(2, '.', '') }}</ss:Data>
+                        </ss:Cell>
+                        <ss:Cell>
+                            <ss:Data ss:Type="Number">{{ journalVoucherDetail.credit|default|number_format(2, '.', '') }}</ss:Data>
+                        </ss:Cell>
+                    </ss:Row>
+                {% endfor %}
+            {% endfor %}
+        </ss:Table>
+    </ss:Worksheet>
+{% endblock %}

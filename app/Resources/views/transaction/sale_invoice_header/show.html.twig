@@ -1,0 +1,105 @@
+{% extends 'transaction/layout.html.twig' %}
+
+{% block title 'Show Sale Invoice Header' %}
+
+{% block actions %}
+    {{ include('transaction/actions.html.twig') }}
+{% endblock %}
+
+{% block content %}
+    <table class="table table-bordered table-striped">
+        <tbody>
+            <tr>
+                <th>Code Number</th>
+                <td>{{ saleInvoiceHeader.codeNumber|default }}</td>
+            </tr>
+            <tr>
+                <th>Tanggal</th>
+                <td>{{ saleInvoiceHeader.transactionDate|default ? saleInvoiceHeader.transactionDate|date('j F Y') }}</td>
+            </tr>
+            <tr>
+                <th>Customer</th>
+                <td>{{ saleInvoiceHeader.customer.company|default }}</td>
+            </tr>
+            <tr>
+                <th>Customer PO</th>
+                <td>{{ saleInvoiceHeader.customerInvoice|default }}</td>
+            </tr>
+            <tr>
+                <th>Faktur Pajak</th>
+                <td>{{ saleInvoiceHeader.taxInvoiceCode|default }}</td>
+            </tr>
+            <tr>
+                <th>Note</th>
+                <td>{{ saleInvoiceHeader.note|default }}</td>
+            </tr>
+        </tbody>
+    </table>
+                
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr class="bg-info">
+                <th>Product Name</th>
+                <th>Size</th>
+                <th>Brand</th>
+                <th>Qty</th>
+                <th>Price</th>
+                <th>Discount</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for saleInvoiceDetail in saleInvoiceHeader.saleInvoiceDetails %}
+                <tr>
+                    <td>{{ saleInvoiceDetail.productName|default }}</td>
+                    <td>{{ saleInvoiceDetail.product.size|default }}</td>
+                    <td>{{ saleInvoiceDetail.product.brand.name|default }}</td>
+                    <td>{{ saleInvoiceDetail.quantity|default }}</td>
+                    <td class="text-right">{{ saleInvoiceDetail.unitPrice|default|number_format(2) }}</td>
+                    <td class="text-right">{{ saleInvoiceDetail.discount|default|number_format(2) }}</td>
+                    <td class="text-right">{{ saleInvoiceDetail.total|default|number_format(2) }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="6" class="text-right"><strong>Sub Total</strong></td>
+                <td class="text-right"><strong>{{ saleInvoiceHeader.subTotal|default|number_format(2) }}</strong></td>
+            </tr>
+            <tr>
+                <td colspan="6" class="text-right"><strong>Diskon {{ saleInvoiceHeader.discountPercentage|default|number_format(2) }}%</strong></td>
+                <td class="text-right"><strong>{{ saleInvoiceHeader.discountNominal|default|number_format(2) }}</strong></td>
+            </tr>
+            <tr>
+                <td colspan="6" class="text-right"><strong>PPn {{ saleInvoiceHeader.taxPercentage|default }}%</strong></td>
+                <td class="text-right"><strong>{{ saleInvoiceHeader.taxNominal|default|number_format(2) }}</strong></td>
+            </tr>
+            <tr>
+                <td colspan="6" class="text-right"><strong>Ongkos Kirim</strong></td>
+                <td class="text-right"><strong>{{ saleInvoiceHeader.shippingFee|default|number_format(2) }}</strong></td>
+            </tr>
+            <tr>
+                <td colspan="6" class="text-right"><strong>Grand Total</strong></td>
+                <td class="text-right"><strong>{{ saleInvoiceHeader.grandTotalBeforeDownpayment|default|number_format(2) }}</strong></td>
+            </tr>
+            <tr>
+                <td colspan="6" class="text-right"><strong>Uang Muka {{ saleInvoiceHeader.downpaymentPercentage|default|number_format(2) }}%</strong></td>
+                <td class="text-right"><strong>{{ saleInvoiceHeader.downpaymentNominal|default|number_format(2) }}</strong></td>
+            </tr>
+            <tr>
+                <td colspan="6" class="text-right"><strong>Grand Total</strong></td>
+                <td class="text-right"><strong>{{ saleInvoiceHeader.grandTotalAfterDownpayment|default|number_format(2) }}</strong></td>
+            </tr>
+        </tfoot>
+    </table>
+    
+    <a target="_blank" class="btn btn-info" href="{{ path('transaction_sale_invoice_header_memo', {'id': saleInvoiceHeader.id, 'type': 'invoice', 'show': true}) }}">
+        <span class="glyphicon glyphicon-print"></span> Print Invoice
+    </a>
+    <a target="_blank" class="btn btn-info" href="{{ path('transaction_sale_invoice_header_memo', {'id': saleInvoiceHeader.id, 'type': 'delivery'}) }}">
+        <span class="glyphicon glyphicon-print"></span> Print Surat Jalan
+    </a>
+    <a target="_blank" class="btn btn-info" href="{{ path('transaction_sale_invoice_header_memo', {'id': saleInvoiceHeader.id, 'type': 'invoice', 'show': false}) }}">
+        <span class="glyphicon glyphicon-print"></span> Print Invoice Sederhana
+    </a>
+{% endblock %}

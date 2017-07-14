@@ -1,0 +1,29 @@
+{% extends 'admin/staff/form.html.twig' %}
+
+{% block title 'Edit Staff' %}
+
+{% block content %}
+    {{ form_start(form) }}
+        <label>Username</label>
+        <div class="form-group">{{ staff.username }}</div>
+        {{ form_row(form.name) }}
+        {{ form_row(form.email) }}
+        {{ form_row(form.address) }}
+        {{ form_row(form.phone) }}
+        {{ form_row(form.note) }}
+        
+        <hr />
+        
+        <div class="form-group">
+            {{ form_errors(form.userRoles) }}
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h1 class="panel-title">{{ form_label(form.userRoles) }}</h1>
+                </div>
+                <div class="panel-body">{{ form_widget(form.userRoles) }}</div>
+            </div>
+        </div>
+        
+        <input class="btn btn-primary" type="submit" value="Update" />
+    {{ form_end(form) }}
+{% endblock %}

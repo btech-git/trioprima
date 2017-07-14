@@ -1,0 +1,45 @@
+{% extends 'admin/layout.html.twig' %}
+
+{% block actions %}
+    {{ include('admin/actions.html.twig') }}
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        jQuery(function($) {
+            function checkrole(root) {
+                var current = root;
+                var rootlevel = root.attr("data-level");
+                var lastlevel = rootlevel;
+                var currentlevel;
+                var container;
+                while ((container = current.closest("div").next("div")) && container.length > 0) {
+                    current = container.find("input[type=checkbox]").eq(0);
+                    currentlevel = current.attr("data-level");
+                    if (currentlevel <= rootlevel) {
+                        break;
+                    }
+                    if (root.is(":checked") || (lastlevel > rootlevel && lastlevel < currentlevel)) {
+                        current.prop("disabled", true);
+                        container.slideUp();
+                    } else {
+                        current.prop("disabled", false);
+                        container.slideDown();
+                        lastlevel = current.is(":checked") ? currentlevel : rootlevel;
+                    }
+                }
+            }
+
+            var selector = $("#{{ form.userRoles.vars.id }} input[type=checkbox]");
+
+            checkrole(selector.first());
+            selector.each(function() {
+                var el = $(this);
+                el.closest("div").css("padding-left", 20 * (el.attr("data-level") - 1));
+            });
+            selector.click(function() {
+                checkrole($(this));
+            });
+        });
+    </script>
+{% endblock %}

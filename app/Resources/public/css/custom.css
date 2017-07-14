@@ -1,0 +1,7 @@
+tbody:-moz-only-whitespace {
+    display: none;
+}
+
+input[type=checkbox] {
+    margin-top: 0;
+}

@@ -1,0 +1,24 @@
+
+    /**
+{% block phpdoc_method_header %}{% endblock phpdoc_method_header -%}
+
+{% block phpdoc_method_annotations %}
+{% if 'annotation' == format %}
+     * @Route("/{id}", name="{{ route_name_prefix }}_show")
+     * @Method("GET")
+     * @Security("has_role('ROLE_{{ entity_namespace|replace({'\\': '_'})|upper }}')")
+{% endif %}
+{% endblock phpdoc_method_annotations %}
+     */
+{% block method_definition %}
+    public function showAction({{ entity_class }} ${{ entity_singularized }})
+{% endblock method_definition %}
+    {
+{% block method_body %}{% endblock method_body -%}
+
+{% block method_return %}
+        return $this->render('{{ route_prefix }}/show.html.twig', array(
+            '{{ entity_singularized }}' => ${{ entity_singularized }},
+        ));
+{% endblock method_return %}
+    }

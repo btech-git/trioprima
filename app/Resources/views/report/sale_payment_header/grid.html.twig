@@ -1,0 +1,95 @@
+{% set grid_layout = 'datagrid.html.twig' %}
+
+<div class="hidden-print">
+    {{ grid_top(grid) }}
+    <div class="text-center">
+        <button type="button" class="btn btn-info btn-sm" id="export">Export</button>
+    </div>
+    <hr />
+</div>
+
+<div class="report">
+    <div class="report-header">
+        <div class="report-title">PT. Trio Prima</div>
+        <div class="report-title">Laporan Penjualan Pelunasan</div>
+        <div>
+            {% set startDate = grid.searchVals['salePaymentHeader']['transactionDate'][1]|default %}
+            {% set endDate = grid.searchVals['salePaymentHeader']['transactionDate'][2]|default %}
+            {{ startDate ? startDate|date('j F Y') }} &nbsp;&ndash;&nbsp; {{ endDate ? endDate|date('j F Y') }}
+        </div>
+    </div>
+
+    <br />
+
+    <table class="report-data">
+        <thead class="border-top-solid-bold border-bottom-solid-bold">
+            <tr>
+                <th class="text-center">Pelunasan #</th>
+                <th class="text-center">Tanggal</th>
+                <th class="text-center">Customer</th>
+                <th class="text-center">Note</th>
+            </tr>
+            <tr>
+                <td colspan="4">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th class="text-center">Invoice #</th>
+                                <th class="text-center">Nama Akun</th>
+                                <th class="text-center">Memo</th>
+                                <th class="text-center">Jumlah</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </td>
+            </tr>
+        </thead>
+        <tbody class="border-top-solid-bold border-bottom-solid-bold">
+            {% for salePaymentHeader in grid.data %}
+                <tr data-field-id="{{ salePaymentHeader.id }}">
+                    <td class="text-left">{{ salePaymentHeader.codeNumber|default }}</td>
+                    <td class="text-left">{{ salePaymentHeader.transactionDate|default ? salePaymentHeader.transactionDate|date('j F Y') }}</td>
+                    <td class="text-left">{{ salePaymentHeader.customer.company|default }}</td>
+                    <td class="text-left">{{ salePaymentHeader.note|default }}</td>
+                </tr>
+                <tr class="border-bottom-dotted-bold">
+                    <td colspan="4">
+                        <table>
+                            <tbody>
+                                {% for salePaymentDetail in salePaymentHeader.salePaymentDetails %}
+                                    <tr>
+                                        <td class="text-left">{{ salePaymentDetail.saleInvoiceHeader.codeNumber|default }}</td>
+                                        <td class="text-left">{{ salePaymentDetail.account.name|default }}</td>
+                                        <td class="text-left">{{ salePaymentDetail.memo|default }}</td>
+                                        <td class="text-right">{{ salePaymentDetail.amount|default|number_format(2) }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                            <tfoot class="border-top-solid-normal">
+                                <tr>
+                                    <td class="text-right" colspan="3"><strong>Total</strong></td>
+                                    <td class="text-right"><strong>{{ salePaymentHeader.totalAmount|default|number_format(2) }}</strong></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<div class="hidden-print">
+    <br />
+    {{ grid_bottom(grid) }}
+</div>
+
+<script>
+    jQuery(function($) {
+        $("#export").click(function() {
+            var url = "{{ path('report_sale_payment_header_export') }}";
+            var data = {{ grid.params|json_encode|raw }};
+            $.redirect(url, data);
+        });
+    });
+</script>

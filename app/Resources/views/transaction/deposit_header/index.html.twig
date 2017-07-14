@@ -1,0 +1,22 @@
+{% extends 'transaction/layout.html.twig' %}
+
+{% block title 'Manage Deposit Header' %}
+
+{% block actions %}
+    {{ include('transaction/actions.html.twig') }}
+{% endblock %}
+
+{% block content %}
+    {% for type, flashes in app.session.flashBag.all %}
+        {% for flash in flashes %}
+            <div class="alert alert-{{ type }} alert-dismissible" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <strong>{{ flash.title }}</strong> {{ flash.message }}
+            </div>
+        {% endfor %}
+    {% endfor %}
+
+    <div id="deposit-header-grid" data-grid="{{ path('transaction_deposit_header_grid') }}"></div>
+{% endblock %}

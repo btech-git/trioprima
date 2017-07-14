@@ -1,0 +1,119 @@
+{% set grid_layout = 'datagrid.html.twig' %}
+
+<div class="hidden-print">
+    {{ grid_top(grid) }}
+    <div class="text-center">
+        <button type="button" class="btn btn-info btn-sm" id="export">Export</button>
+    </div>
+    <hr />
+</div>
+
+<div class="report">
+    <div class="report-header">
+        <div class="report-title">PT. Trio Prima</div>
+        <div class="report-title">Laporan Pembelian Invoice</div>
+        <div>
+            {% set startDate = grid.searchVals['purchaseInvoiceHeader']['transactionDate'][1]|default %}
+            {% set endDate = grid.searchVals['purchaseInvoiceHeader']['transactionDate'][2]|default %}
+            {{ startDate ? startDate|date('j F Y') }} &nbsp;&ndash;&nbsp; {{ endDate ? endDate|date('j F Y') }}
+        </div>
+    </div>
+
+    <br />
+
+    <table class="report-data">
+        <thead class="border-top-solid-bold border-bottom-solid-bold">
+            <tr>
+                <th class="text-center">Pembelian #</th>
+                <th class="text-center">Tanggal</th>
+                <th class="text-center">Faktur Pajak</th>
+                <th class="text-center">Supplier Invoice</th>
+                <th class="text-center">Supplier</th>
+            </tr>
+            <tr>
+                <td colspan="5">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th class="text-center">Nama Produk</th>
+                                <th class="text-center">Ukuran</th>
+                                <th class="text-center">Merk</th>
+                                <th class="text-center">Qty</th>
+                                <th class="text-center">Harga</th>
+                                <th class="text-center">Diskon</th>
+                                <th class="text-center">Total</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </td>
+            </tr>
+        </thead>
+        <tbody class="border-top-solid-bold border-bottom-solid-bold">
+            {% for purchaseInvoiceHeader in grid.data %}
+                <tr data-field-id="{{ purchaseInvoiceHeader.id }}">
+                    <td class="text-left">{{ purchaseInvoiceHeader.codeNumber|default }}</td>
+                    <td class="text-left">{{ purchaseInvoiceHeader.transactionDate|default ? purchaseInvoiceHeader.transactionDate|date('j F Y') }}</td>
+                    <td class="text-left">{{ purchaseInvoiceHeader.taxInvoiceCode|default }}</td>
+                    <td class="text-left">{{ purchaseInvoiceHeader.supplierInvoice|default }}</td>
+                    <td class="text-left">{{ purchaseInvoiceHeader.supplier.company|default }}</td>
+                </tr>
+                <tr class="border-bottom-dotted-bold">
+                    <td colspan="5">
+                        <table>
+                            <tbody>
+                                {% for purchaseInvoiceDetail in purchaseInvoiceHeader.purchaseInvoiceDetails %}
+                                    <tr>
+                                        <td class="text-left">{{ purchaseInvoiceDetail.product.name|default }}</td>
+                                        <td class="text-left">{{ purchaseInvoiceDetail.product.size|default }}</td>
+                                        <td class="text-left">{{ purchaseInvoiceDetail.product.brand.name|default }}</td>
+                                        <td class="text-center">{{ purchaseInvoiceDetail.quantity|default }}</td>
+                                        <td class="text-right">{{ purchaseInvoiceDetail.unitPrice|default|number_format(2) }}</td>
+                                        <td class="text-right">{{ purchaseInvoiceDetail.discount|default|number_format(2) }}</td>
+                                        <td class="text-right">{{ purchaseInvoiceDetail.total|default|number_format(2) }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                            <tfoot class="border-top-solid-normal">
+                                <tr>
+                                    <td class="text-right" colspan="6"><strong>Sub Total</strong></td>
+                                    <td class="text-right"><strong>{{ purchaseInvoiceHeader.subTotal|default|number_format(2) }}</strong></td>
+                                </tr>
+                                <tr>
+                                    <td class="text-right" colspan="6"><strong>Diskon {{ purchaseInvoiceHeader.discountPercentage|default|number_format(2) }}%</strong></td>
+                                    <td class="text-right"><strong>{{ purchaseInvoiceHeader.discountNominal|default|number_format(2) }}</strong></td>
+                                </tr>
+                                <tr>
+                                    <td class="text-right" colspan="6"><strong>PPn {{ purchaseInvoiceHeader.taxPercentage|default }}%</strong></td>
+                                    <td class="text-right"><strong>{{ purchaseInvoiceHeader.taxNominal|default|number_format(2) }}</strong></td>
+                                </tr>
+                                <tr>
+                                    <td class="text-right" colspan="6"><strong>Ongkos Kirim</strong></td>
+                                    <td class="text-right"><strong>{{ purchaseInvoiceHeader.shippingFee|default|number_format(2) }}</strong></td>
+                                </tr>
+                                <tr>
+                                    <td class="text-right" colspan="6"><strong>Grand Total</strong></td>
+                                    <td class="text-right"><strong>{{ purchaseInvoiceHeader.grandTotalBeforeDownpayment|default|number_format(2) }}</strong></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<div class="hidden-print">
+    <br />
+    {{ grid_bottom(grid) }}
+</div>
+
+<script>
+    jQuery(function($) {
+        $("#export").click(function() {
+            var url = "{{ path('report_purchase_invoice_header_export') }}";
+            var data = {{ grid.params|json_encode|raw }};
+            $.redirect(url, data);
+        });
+    });
+</script>

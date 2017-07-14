@@ -1,0 +1,46 @@
+{% set grid_layout = 'datagrid.html.twig' %}
+
+{{ grid_top(grid) }}
+
+<table data-role="table" class="table table-bordered table-striped table-condensed table-hover">
+    <thead>
+        <tr data-action="sort" class="alert alert-info">
+            <th data-group="purchaseInvoiceHeader" data-field="codeNumber">Invoice #</th>
+            <th data-group="purchaseInvoiceHeader" data-field="transactionDate">Tanggal</th>
+            <th data-group="purchaseInvoiceHeader" data-field="supplierInvoice">Supplier Invoice</th>
+            <th>Supplier</th>
+            <th data-group="purchaseInvoiceHeader" data-field="grandTotalBeforeDownpayment">Grand Total</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for purchaseInvoiceHeader in grid.data %}
+            <tr data-field-id="{{ purchaseInvoiceHeader.id }}">
+                <td class="text-left">{{ purchaseInvoiceHeader.codeNumber|default }}</td>
+                <td class="text-left">{{ purchaseInvoiceHeader.transactionDate|default ? purchaseInvoiceHeader.transactionDate|date('j F Y') }}</td>
+                <td class="text-left">{{ purchaseInvoiceHeader.supplierInvoice|default }}</td>
+                <td class="text-left">{{ purchaseInvoiceHeader.supplier.company|default }}</td>
+                <td class="text-right">{{ purchaseInvoiceHeader.grandTotalBeforeDownpayment|default|number_format(2) }}</td>
+                <td class="text-left">
+                    {{ include('transaction/actions.html.twig', {
+                        'contents': {
+                            '{index}': null,
+                            '{new}': null,
+                            '{show}': include('action.html.twig', {'url': path('transaction_purchase_invoice_header_show', {'id': purchaseInvoiceHeader.id}), 'button': 'btn btn-info btn-sm', 'icon': 'glyphicon glyphicon-info-sign'}),
+                            '{edit}': include('action.html.twig', {'url': path('transaction_purchase_invoice_header_edit', {'id': purchaseInvoiceHeader.id}), 'button': 'btn btn-warning btn-sm', 'icon': 'glyphicon glyphicon-edit'}),
+                            '{delete}': include('action.html.twig', {'url': path('transaction_purchase_invoice_header_delete', {'id': purchaseInvoiceHeader.id}), 'button': 'btn btn-danger btn-sm', 'icon': 'glyphicon glyphicon-remove'}),
+                        }
+                    }) }}
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="6" class="alert alert-warning">
+                    <strong>There are no items to display.</strong>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{{ grid_bottom(grid) }}

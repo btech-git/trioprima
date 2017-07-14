@@ -1,0 +1,123 @@
+<?php
+
+namespace {{ namespace }}\Grid{{ entity_namespace ? '\\' ~ entity_namespace : '' }};
+
+{% block use_statements %}
+use Doctrine\Common\Collections\Criteria;
+use Doctrine\Common\Persistence\ObjectRepository;
+use LibBundle\Grid\DataGridType;
+use LibBundle\Grid\WidgetsBuilder;
+use LibBundle\Grid\DataBuilder;
+use LibBundle\Grid\SortOperator\BlankType as SortBlankType;
+use LibBundle\Grid\SortOperator\AscendingType;
+use LibBundle\Grid\SortOperator\DescendingType;
+use LibBundle\Grid\SearchOperator\BlankType as SearchBlankType;
+use LibBundle\Grid\SearchOperator\EqualType;
+{% if 'string' in fields_type or 'text' in fields_type %}
+use LibBundle\Grid\SearchOperator\ContainType;
+{% endif %}
+use {{ namespace }}\Entity{{ entity_namespace ? '\\' ~ entity_namespace : '' }}\{{ entity_class }};
+{% endblock use_statements %}
+
+{% block class_definition %}
+class {{ grid_class }} extends DataGridType
+{% endblock class_definition %}
+{
+{% block class_body %}
+    /**
+     * @param WidgetsBuilder $builder
+     * @param array $options
+     */
+    public function buildWidgets(WidgetsBuilder $builder, array $options)
+    {
+        $builder->searchWidget()
+            ->addGroup('{{ entity }}')
+                ->setEntityName({{ entity_class }}::class)
+
+            {%- for field in fields %}
+
+                ->addField('{{ field }}')
+                    ->addOperator(SearchBlankType::class)
+                    ->addOperator(EqualType::class)
+
+                    {%- if fields_mapping[field]['type'] == 'boolean' %}
+
+                        ->getInput(1)
+                            ->setListData(array('Yes' => true, 'No' => false))
+
+                    {%- elseif fields_mapping[field]['type'] == 'date' %}
+
+                        ->getInput(1)
+                            ->setAttributes(array('data-pick' => 'date'))
+
+                    {%- elseif fields_mapping[field]['type'] == 'time' %}
+
+                        ->getInput(1)
+                            -->setAttributes(array('data-pick' => 'time'))
+
+                    {%- elseif fields_mapping[field]['type'] == 'datetime' %}
+
+                        ->getInput(1)
+                            ->setAttributes(array('data-pick' => 'datetime'))
+
+                    {%- endif %}
+
+                {%- if fields_mapping[field]['type'] in ['string', 'text'] %}
+
+                    ->addOperator(ContainType::class)
+
+                {%- endif %}
+
+            {%- endfor %}
+
+        ;
+
+        $builder->sortWidget()
+            ->addGroup('{{ entity }}')
+
+            {%- for field in fields %}
+
+                ->addField('{{ field }}')
+                    ->addOperator(SortBlankType::class)
+                    ->addOperator(AscendingType::class)
+                    ->addOperator(DescendingType::class)
+
+            {%- endfor %}
+
+        ;
+
+        $builder->pageWidget()
+            ->addPageSizeField()
+                ->addItems(10, 25, 50, 100)
+            ->addPageNumField()
+        ;
+    }
+
+    /**
+     * @param DataBuilder $builder
+     * @param ObjectRepository $repository
+     * @param array $options
+     */
+    public function buildData(DataBuilder $builder, ObjectRepository $repository, array $options)
+    {
+        $criteria = Criteria::create();
+
+        $builder->processSearch(function($values, $operator, $field) use ($criteria) {
+            $operator::search($criteria, $field, $values);
+        });
+
+        $builder->processSort(function($operator, $field) use ($criteria) {
+            $operator::sort($criteria, $field);
+        });
+
+        $builder->processPage($repository->count($criteria), function($offset, $size) use ($criteria) {
+            $criteria->setMaxResults($size);
+            $criteria->setFirstResult($offset);
+        });
+        
+        $objects = $repository->match($criteria);
+
+        $builder->setData($objects);
+    }
+{% endblock class_body %}
+}

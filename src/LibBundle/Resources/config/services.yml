@@ -1,0 +1,80 @@
+# Learn more about services, parameters and containers at
+# http://symfony.com/doc/current/book/service_container.html
+parameters:
+#    parameter_name: value
+
+services:
+#    service_name:
+#        class: AppBundle\Directory\ClassName
+#        arguments: ["@another_service_name", "plain_value", "%parameter_name%"]
+    lib.twig.grid_extension:
+        class: LibBundle\Twig\GridExtension
+        public: false
+        tags:
+            - { name: twig.extension }
+
+    lib.twig.format_extension:
+        class: LibBundle\Twig\FormatExtension
+        public: false
+        tags:
+            - { name: twig.extension }
+
+    lib.form.form_type_extension:
+        class: LibBundle\Form\Extension\FormTypeExtension
+        tags:
+            - { name: form.type_extension, extended_type: Symfony\Component\Form\Extension\Core\Type\FormType }
+
+    lib.form.text_type_extension:
+        class: LibBundle\Form\Extension\TextTypeExtension
+        tags:
+            - { name: form.type_extension, extended_type: Symfony\Component\Form\Extension\Core\Type\TextType }
+
+    lib.form.integer_type_extension:
+        class: LibBundle\Form\Extension\IntegerTypeExtension
+        tags:
+            - { name: form.type_extension, extended_type: Symfony\Component\Form\Extension\Core\Type\IntegerType }
+
+    lib.form.number_type_extension:
+        class: LibBundle\Form\Extension\NumberTypeExtension
+        tags:
+            - { name: form.type_extension, extended_type: Symfony\Component\Form\Extension\Core\Type\NumberType }
+
+    lib.form.date_type_extension:
+        class: LibBundle\Form\Extension\DateTypeExtension
+        tags:
+            - { name: form.type_extension, extended_type: Symfony\Component\Form\Extension\Core\Type\DateType }
+
+    lib.form.time_type_extension:
+        class: LibBundle\Form\Extension\TimeTypeExtension
+        tags:
+            - { name: form.type_extension, extended_type: Symfony\Component\Form\Extension\Core\Type\TimeType }
+
+    lib.form.datetime_type_extension:
+        class: LibBundle\Form\Extension\DateTimeTypeExtension
+        tags:
+            - { name: form.type_extension, extended_type: Symfony\Component\Form\Extension\Core\Type\DateTimeType }
+
+    lib.form.entity_type_extension:
+        class: LibBundle\Form\Extension\EntityTypeExtension
+        tags:
+            - { name: form.type_extension, extended_type: Symfony\Bridge\Doctrine\Form\Type\EntityType }
+
+    lib.form.entity_hidden_type:
+        class: LibBundle\Form\Type\EntityHiddenType
+        arguments: ["@doctrine.orm.entity_manager"]
+        tags:
+            - { name: form.type, alias: entity_hidden }
+
+    lib.form.entity_text_type:
+        class: LibBundle\Form\Type\EntityTextType
+        arguments: ["@doctrine.orm.entity_manager"]
+        tags:
+            - { name: form.type, alias: entity_text }
+
+    lib.grid.datagrid:
+        class: LibBundle\Grid\DataGridService
+        autowire: true
+
+    lib.excel.xml_reader:
+        class: LibBundle\Excel\PhpExcelXmlReader
+        autowire: true

@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="hidden-print">{{ include('header.html.twig') }}</div>
+    
+    <div class="container">
+        <div class="row hidden-print" style="height: 75px"></div>
+        <div class="row hidden-print">
+            <div class="pull-left">
+                <span class="h1">{% block title %}{% endblock %}</span>
+            </div>
+            <div class="pull-right">{% block actions %}{% endblock %}</div>
+        </div>
+        <hr class="row hidden-print" />
+        <div class="row">{% block content %}{% endblock %}</div>
+        <div class="row hidden-print" style="height: 75px"></div>
+    </div>
+    
+    <div class="hidden-print">{{ include('footer.html.twig') }}</div>
+{% endblock %}

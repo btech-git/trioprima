@@ -1,0 +1,14 @@
+{
+    "taxNominal": "{{ saleInvoiceHeader.taxNominal|default|number_format(2) }}",
+    "subTotal": "{{ saleInvoiceHeader.subTotal|default|number_format(2) }}",
+    "grandTotalBeforeDownpayment": "{{ saleInvoiceHeader.grandTotalBeforeDownpayment|default|number_format(2) }}",
+    "grandTotalAfterDownpayment": "{{ saleInvoiceHeader.grandTotalAfterDownpayment|default|number_format(2) }}",
+    "saleInvoiceDetails": {
+        {%- for index, saleInvoiceDetail in saleInvoiceHeader.saleInvoiceDetails -%}
+            "{{ index }}": {
+                "total": "{{ saleInvoiceDetail.total|default|number_format(2) }}"
+            }
+            {%- if not loop.last -%},{%- endif -%}
+        {%- endfor -%}
+    }
+}

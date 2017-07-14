@@ -1,0 +1,75 @@
+{% set grid_layout = 'datagrid.html.twig' %}
+
+{{ grid_top(grid) }}
+
+<table data-role="table" class="table table-bordered table-striped table-condensed table-hover">
+    <thead>
+        <tr data-action="sort" class="alert alert-info">
+            <th data-group="saleInvoiceHeader" data-field="codeNumber">Code Number</th>
+            <th data-group="saleInvoiceHeader" data-field="transactionDate">Transaction Date</th>
+            <th data-group="saleInvoiceHeader" data-field="taxInvoiceCode">Faktur Pajak</th>
+            <th data-group="saleInvoiceHeader" data-field="customerInvoice">Customer PO</th>
+            <th data-group="saleInvoiceHeader" data-field="customer">Customer</th>
+            <th data-group="saleInvoiceHeader" data-field="downpaymentValue">Down Payment</th>
+            <th data-group="saleInvoiceHeader" data-field="grandTotalAfterDownpayment">Grand Total</th>
+            <th data-group="saleInvoiceHeader" data-field="totalReturn">Total Retur</th>
+            <th data-group="saleInvoiceHeader" data-field="totalPayment">Total Pembayaran</th>
+        </tr>
+        <tr data-action="search">
+            <th data-group="saleInvoiceHeader" data-field="codeNumber"></th>
+            <th data-group="saleInvoiceHeader" data-field="transactionDate"></th>
+            <th data-group="saleInvoiceHeader" data-field="taxInvoiceCode"></th>
+            <th data-group="saleInvoiceHeader" data-field="customerInvoice"></th>
+            <th data-group="saleInvoiceHeader" data-field="customer"></th>
+            <th data-group="saleInvoiceHeader" data-field="downpaymentValue"></th>
+            <th data-group="saleInvoiceHeader" data-field="grandTotalAfterDownpayment"></th>
+            <th data-group="saleInvoiceHeader" data-field="totalReturn"></th>
+            <th data-group="saleInvoiceHeader" data-field="totalPayment"></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for saleInvoiceHeader in grid.data %}
+            {% set details = [] %}
+            {% for saleInvoiceDetail in saleInvoiceHeader.saleInvoiceDetails %}
+                {% set details = details|merge([{
+                    'id': saleInvoiceDetail.id,
+                    'product.name': saleInvoiceDetail.product.name|default,
+                    'product.size': saleInvoiceDetail.product.size|default,
+                    'product.brand.name': saleInvoiceDetail.product.brand.name|default,
+                    'unitPrice': saleInvoiceDetail.unitPrice|default|number_format(2),
+                }]) %}
+            {% endfor %}
+            <tr data-field-id="{{ saleInvoiceHeader.id }}"
+                data-field-code-number="{{ saleInvoiceHeader.codeNumber|default }}"
+                data-field-transaction-date="{{ saleInvoiceHeader.transactionDate|default ? saleInvoiceHeader.transactionDate|date('j M Y') }}"
+                data-field-tax-invoice-code="{{ saleInvoiceHeader.taxInvoiceCode|default }}"
+                data-field-grand-total-after-downpayment="{{ saleInvoiceHeader.grandTotalAfterDownPayment|default|number_format(2) }}"
+                data-field-customer-company="{{ saleInvoiceHeader.customer.company|default }}"
+                data-field-sale-invoice-details="{{ details|json_encode }}">
+                <td class="text-left">{{ saleInvoiceHeader.codeNumber|default }}</td>
+                <td class="text-left">{{ saleInvoiceHeader.transactionDate|default ? saleInvoiceHeader.transactionDate|date('j M Y') }}</td>
+                <td class="text-left">{{ saleInvoiceHeader.taxInvoiceCode|default }}</td>
+                <td class="text-left">{{ saleInvoiceHeader.customerInvoice|default }}</td>
+                <td class="text-left">{{ saleInvoiceHeader.customer.company|default }}</td>
+                <td class="text-right">{{ saleInvoiceHeader.downpaymentNominal|default|number_format(2) }}</td>
+                <td class="text-right">{{ saleInvoiceHeader.grandTotalAfterDownpayment|default|number_format(2) }}</td>
+                <td class="text-right">{{ saleInvoiceHeader.totalReturn|default|number_format(2) }}</td>
+                <td class="text-right">{{ saleInvoiceHeader.totalPayment|default|number_format(2) }}</td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="9" class="alert alert-warning">
+                    <strong>There are no items to display.</strong>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{{ grid_bottom(grid) }}
+
+<script>
+    jQuery(function($) {
+        $("#{{ grid.id }}-top").css("display", "none");
+    });
+</script>

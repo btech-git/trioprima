@@ -1,0 +1,187 @@
+{% extends 'transaction/layout.html.twig' %}
+
+{% import _self as self %}
+
+{% macro details_row(object) %}
+    <tr data-index="{{ object.vars.name }}">
+        <td class="hide">
+            {{ form_row(object.saleInvoiceDetail, {'label': false}) }}
+        </td>
+        <td>
+            <span id="product-name-{{ object.vars.name }}">{{ object.vars.value.saleInvoiceDetail.product.name|default }}</span>
+        </td>
+        <td>
+            <span id="product-size-{{ object.vars.name }}">{{ object.vars.value.saleInvoiceDetail.product.size|default }}</span>
+        </td>
+        <td>
+            <span id="product-brandname-{{ object.vars.name }}">{{ object.vars.value.saleInvoiceDetail.product.brand.name|default }}</span>
+        </td>
+        <td>
+            {{ form_row(object.quantity, {'label': false, 'attr': {'class': 'bind-quantity-class'} }) }}
+        </td>
+        <td class="text-right">
+            <span id="invoicedetail-unitprice-{{ object.vars.name }}">{{ object.vars.value.saleInvoiceDetail.unitPrice|default|number_format(2) }}</span>
+        </td>
+        <td class="text-right">
+            <span id="bind-total-detail-{{ object.vars.name }}">{{ object.vars.value.total|default|number_format(2) }}</span>
+        </td>
+        <td>
+            <button type="button" class="btn btn-info remove">Delete</button>
+        </td>
+    </tr>
+{% endmacro %}
+
+{% block content %}
+    {{ form_start(form) }}
+        <div class="row">
+            <div class="col-sm-6">
+                <label>Code Number</label>
+                <div class="form-group">{{ saleReturnHeader.codeNumber }}</div>
+                
+                {{ form_row(form.transactionDate, {'label': 'Tanggal'}) }}
+            </div>
+            <div class="col-sm-6">
+                {{ form_row(form.saleInvoiceHeader, {'label': 'Invoice #', 'attr': {'readonly': true, 'data-toggle': 'modal', 'data-target': '#sale-invoice-header-dialog'} }) }}
+                <div class="form-group">
+                    <div id="invoiceheader-codenumber">{{ saleReturnHeader.saleInvoiceHeader.codeNumber|default }}</div>
+                    <div id="invoiceheader-transactiondate">{{ saleReturnHeader.saleInvoiceHeader.transactionDate|default ? saleReturnHeader.saleInvoiceHeader.transactionDate|date('j M Y') }}</div>
+                    <div id="customer-company">{{ saleReturnHeader.saleInvoiceHeader.customer.company|default }}</div>
+                </div>
+                {{ form_row(form.note) }}
+            </div>
+        </div>
+            
+        <hr />
+        
+        <table class="table table-bordered" id="detail-list">
+            <thead>
+                <tr class="bg-info">
+                    <th class="hide">Sale Invoice Detail</th>
+                    <th>Product Name</th>
+                    <th>Size</th>
+                    <th>Brand</th>
+                    <th>Qty</th>
+                    <th>Price</th>
+                    <th>Total</th>
+                    <th style="width: 0"></th>
+                </tr>
+            </thead>
+            <tbody data-prototype="{{ self.details_row(form.saleReturnDetails.vars.prototype)|e }}">
+                {% for saleReturnDetail in form.saleReturnDetails %}
+                    {{ self.details_row(saleReturnDetail) }}
+                {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td class="text-right" colspan="5">Sub Total</td>
+                    <td class="text-right"><span id="bind-subtotal">{{ saleReturnHeader.subTotal|default|number_format(2) }}</span></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td class="text-right" colspan="5">
+                        <span style="display: inline-block">PPn 10%</span>
+                        <span style="display: inline-block">{{ form_row(form.isTax, {'label': false}) }}</span>
+                    </td>
+                    <td class="text-right"><span id="bind-tax-nominal">{{ saleReturnHeader.taxNominal|default|number_format(2) }}</span></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td class="text-right" colspan="5">Ongkos Kirim</td>
+                    <td>{{ form_widget(form.shippingFee) }}{{ form_errors(form.shippingFee) }}</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td class="text-right" colspan="5">Grand Total</td>
+                    <td class="text-right"><span id="bind-grandtotal">{{ saleReturnHeader.grandTotal|default|number_format(2) }}</span></td>
+                    <td></td>
+                </tr>
+            </tfoot>
+        </table>
+        
+        <input class="btn btn-primary" type="submit" value="Submit" data-confirm="Do you want to proceed?" />
+    {{ form_end(form) }}
+    
+    <div id="sale-invoice-header-dialog" class="modal fade" role="dialog">
+        <div class="modal-dialog modal-lg" style="width: 90%">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Sale Invoice Header List</h4>
+                </div>
+                <div class="modal-body">
+                    <div id="sale-invoice-header-grid" data-grid="{{ path('common_sale_invoice_header_grid') }}"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        jQuery(function($) {
+            function bind() {
+                $.ajax({
+                    method: "POST",
+                    url: "{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')|merge({'_format': 'json'})) }}",
+                    data: $("form").serialize(),
+                    dataType: "JSON",
+                    success: function(data) {
+                        $.each(data.saleReturnDetails, function(index, saleReturnDetail) {
+                            $("#bind-total-detail-" + index).text(saleReturnDetail.total);
+                        });
+                        $("#bind-subtotal").text(data.subTotal);
+                        $("#bind-tax-nominal").text(data.taxNominal);
+                        $("#bind-grandtotal").text(data.grandTotal);
+                    }
+                });
+            }
+            
+            var table = $("table#detail-list");
+            var tableBody = $("tbody", table);
+            
+            $("#{{ form.isTax.vars.id }}").on("change", function() {
+                bind();
+            });
+            $("#{{ form.shippingFee.vars.id }}").on("change", function() {
+                bind();
+            });
+            tableBody.on("change", ".bind-quantity-class", function() {
+                bind();
+            });
+            tableBody.on("click", "button.remove", function() {
+                $(this).closest("tr").remove();
+                bind();
+            });
+            $("#sale-invoice-header-grid").on("click", "table[data-role=table] tbody tr", function() {
+                $("#sale-invoice-header-dialog").modal("hide");
+                $("#{{ form.saleInvoiceHeader.vars.id }}").val($(this).attr("data-field-id")).trigger("change", [$(this)]);
+                $("#invoiceheader-codenumber").text($(this).attr("data-field-code-number"));
+                $("#invoiceheader-transactiondate").text($(this).attr("data-field-transaction-date"));
+                $("#customer-company").text($(this).attr("data-field-customer-company"));
+            });
+            $("#{{ form.saleInvoiceHeader.vars.id }}").on("change", function(event, context) {
+                tableBody.empty();
+                var details = $.parseJSON(context.attr("data-field-sale-invoice-details"));
+                $.each(details, function(key, items) {
+                    var name = "{{ form.saleReturnDetails.vars.prototype.vars.name }}";
+                    var rows = tableBody.children("tr");
+                    var index = Math.max({{ saleReturnDetailsCount }}, (rows.length > 0) ? parseInt(rows.last().attr("data-index")) + 1 : 0);
+                    tableBody.appendByPrototype(tableBody.attr("data-prototype"), name, index, function(prototype) {
+                        var saleInvoiceDetail = prototype.find("#{{ form.saleReturnDetails.vars.prototype.saleInvoiceDetail.vars.id }}");
+                        saleInvoiceDetail.val(items["id"]);
+                        var productName = prototype.find("#product-name-" + name);
+                        productName.text(items["product.name"]);
+                        var productSize = prototype.find("#product-size-" + name);
+                        productSize.text(items["product.size"]);
+                        var productBrandName = prototype.find("#product-brandname-" + name);
+                        productBrandName.text(items["product.brand.name"]);
+                        var saleInvoiceDetailUnitPrice = prototype.find("#invoicedetail-unitprice-" + name);
+                        saleInvoiceDetailUnitPrice.text(items["unitPrice"]);
+                    });
+                });
+                bind();
+            });
+        });
+    </script>
+{% endblock %}

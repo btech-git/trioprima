@@ -1,0 +1,56 @@
+{% set grid_layout = 'datagrid.html.twig' %}
+
+{{ grid_top(grid) }}
+
+<table data-role="table" class="table table-bordered table-striped table-condensed table-hover">
+    <thead>
+        <tr data-action="sort" class="alert alert-info">
+            <th data-group="supplier" data-field="code">Code</th>
+            <th data-group="supplier" data-field="name">Name</th>
+            <th data-group="supplier" data-field="company">Company</th>
+            <th data-group="supplier" data-field="address">Address</th>
+            <th data-group="supplier" data-field="phone">Phone</th>
+            <th data-group="supplier" data-field="fax">Fax</th>
+            <th data-group="supplier" data-field="email">Email</th>
+            <th data-group="supplier" data-field="taxNumber">Tax Number</th>
+            <th data-group="supplier" data-field="note">Note</th>
+            <th data-group="supplier" data-field="isActive">Is Active</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for supplier in grid.data %}
+            <tr data-field-id="{{ supplier.id }}">
+                <td class="text-left">{{ supplier.code|default }}</td>
+                <td class="text-left">{{ supplier.name|default }}</td>
+                <td class="text-left">{{ supplier.company|default }}</td>
+                <td class="text-left">{{ supplier.address|default }}</td>
+                <td class="text-left">{{ supplier.phone|default }}</td>
+                <td class="text-left">{{ supplier.fax|default }}</td>
+                <td class="text-left">{{ supplier.email|default }}</td>
+                <td class="text-left">{{ supplier.taxNumber|default }}</td>
+                <td class="text-left">{{ supplier.note|default }}</td>
+                <td class="text-left">{{ supplier.isActive|default ? 'Yes' : 'No' }}</td>
+                <td class="text-left">
+                    {{ include('master/actions.html.twig', {
+                        'contents': {
+                            '{index}': null,
+                            '{new}': null,
+                            '{show}': include('action.html.twig', {'url': path('master_supplier_show', {'id': supplier.id}), 'button': 'btn btn-info btn-sm', 'icon': 'glyphicon glyphicon-info-sign'}),
+                            '{edit}': include('action.html.twig', {'url': path('master_supplier_edit', {'id': supplier.id}), 'button': 'btn btn-warning btn-sm', 'icon': 'glyphicon glyphicon-edit'}),
+                            '{delete}': include('action.html.twig', {'url': path('master_supplier_delete', {'id': supplier.id}), 'button': 'btn btn-danger btn-sm', 'icon': 'glyphicon glyphicon-remove'}),
+                        }
+                    }) }}
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="11" class="alert alert-warning">
+                    <strong>There are no items to display.</strong>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{{ grid_bottom(grid) }}

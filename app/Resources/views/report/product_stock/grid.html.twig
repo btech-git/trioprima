@@ -1,0 +1,56 @@
+{% set grid_layout = 'datagrid.html.twig' %}
+
+<div class="hidden-print">
+    {{ grid_top(grid) }}
+    <div class="text-center">
+        <button type="button" class="btn btn-info btn-sm" id="export">Export</button>
+    </div>
+    <hr />
+</div>
+
+<div class="report">
+    <div class="report-header">
+        <div class="report-title">PT. Trio Prima</div>
+        <div class="report-title">Laporan Pengecekan Stok</div>
+    </div>
+
+    <br />
+
+    <table class="report-data">
+        <thead class="border-top-solid-bold border-bottom-solid-bold">
+            <tr>
+                <th class="text-center">Nama</th>
+                <th class="text-center">Ukuran</th>
+                <th class="text-center">Merk</th>
+                <th class="text-center">Kategori</th>
+                <th class="text-center">Stok</th>
+            </tr>
+        </thead>
+        <tbody class="border-top-solid-bold border-bottom-solid-bold">
+            {% for product in grid.data %}
+                <tr data-field-id="{{ product.id }}">
+                    <td class="text-left">{{ product.name|default }}</td>
+                    <td class="text-left">{{ product.size|default }}</td>
+                    <td class="text-left">{{ product.brand.name|default }}</td>
+                    <td class="text-left">{{ product.productCategory.name|default }}</td>
+                    <td class="text-center">{{ inventoryRepository.getStockByProduct(product)|default }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<div class="hidden-print">
+    <br />
+    {{ grid_bottom(grid) }}
+</div>
+
+<script>
+    jQuery(function($) {
+        $("#export").click(function() {
+            var url = "{{ path('report_adjustment_stock_header_export') }}";
+            var data = {{ grid.params|json_encode|raw }};
+            $.redirect(url, data);
+        });
+    });
+</script>

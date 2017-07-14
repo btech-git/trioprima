@@ -1,0 +1,60 @@
+{% extends 'transaction/layout.html.twig' %}
+
+{% block title 'Show Expense Header' %}
+
+{% block actions %}
+    {{ include('transaction/actions.html.twig') }}
+{% endblock %}
+
+{% block content %}
+    <table class="table table-bordered table-striped">
+        <tbody>
+            <tr>
+                <th>Code Number</th>
+                <td>{{ expenseHeader.codeNumber|default }}</td>
+            </tr>
+            <tr>
+                <th>Tanggal</th>
+                <td>{{ expenseHeader.transactionDate|default ? expenseHeader.transactionDate|date('j F Y') }}</td>
+            </tr>
+            <tr>
+                <th>Account</th>
+                <td>{{ expenseHeader.account.name|default }}</td>
+            </tr>
+            <tr>
+                <th>Note</th>
+                <td>{{ expenseHeader.note|default }}</td>
+            </tr>
+        </tbody>
+    </table>
+                
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr class="bg-info">
+                <th>Account Code</th>
+                <th>Account Name</th>
+                <th>Description</th>
+                <th>Amount</th>
+                <th>Memo</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for expenseDetail in expenseHeader.expenseDetails %}
+                <tr>
+                    <td>{{ expenseDetail.account.code|default }}</td>
+                    <td>{{ expenseDetail.account.name|default }}</td>
+                    <td>{{ expenseDetail.description|default }}</td>
+                    <td class="text-right">{{ expenseDetail.amount|default|number_format(2) }}</td>
+                    <td>{{ expenseDetail.memo|default }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+        <tfoot>
+            <tr>
+                <td class="text-right" colspan="3"><strong>Total</strong></td>
+                <td class="text-right"><strong>{{ expenseHeader.totalAmount|default|number_format(2) }}</strong></td>
+                <td></td>
+            </tr>
+        </tfoot>
+    </table>
+{% endblock %}

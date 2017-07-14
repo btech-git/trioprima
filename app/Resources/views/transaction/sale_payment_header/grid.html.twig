@@ -1,0 +1,44 @@
+{% set grid_layout = 'datagrid.html.twig' %}
+
+{{ grid_top(grid) }}
+
+<table data-role="table" class="table table-bordered table-striped table-condensed table-hover">
+    <thead>
+        <tr data-action="sort" class="alert alert-info">
+            <th data-group="salePaymentHeader" data-field="codeNumber">Pelunasan #</th>
+            <th data-group="salePaymentHeader" data-field="transactionDate">Tanggal</th>
+            <th>Customer</th>
+            <th data-group="salePaymentHeader" data-field="note">Note</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for salePaymentHeader in grid.data %}
+            <tr data-field-id="{{ salePaymentHeader.id }}">
+                <td class="text-left">{{ salePaymentHeader.codeNumber|default }}</td>
+                <td class="text-left">{{ salePaymentHeader.transactionDate|default ? salePaymentHeader.transactionDate|date('j F Y') }}</td>
+                <td class="text-left">{{ salePaymentHeader.customer.company|default }}</td>
+                <td class="text-left">{{ salePaymentHeader.note|default }}</td>
+                <td class="text-left">
+                    {{ include('transaction/actions.html.twig', {
+                        'contents': {
+                            '{index}': null,
+                            '{new}': null,
+                            '{show}': include('action.html.twig', {'url': path('transaction_sale_payment_header_show', {'id': salePaymentHeader.id}), 'button': 'btn btn-info btn-sm', 'icon': 'glyphicon glyphicon-info-sign'}),
+                            '{edit}': include('action.html.twig', {'url': path('transaction_sale_payment_header_edit', {'id': salePaymentHeader.id}), 'button': 'btn btn-warning btn-sm', 'icon': 'glyphicon glyphicon-edit'}),
+                            '{delete}': include('action.html.twig', {'url': path('transaction_sale_payment_header_delete', {'id': salePaymentHeader.id}), 'button': 'btn btn-danger btn-sm', 'icon': 'glyphicon glyphicon-remove'}),
+                        }
+                    }) }}
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="5" class="alert alert-warning">
+                    <strong>There are no items to display.</strong>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{{ grid_bottom(grid) }}

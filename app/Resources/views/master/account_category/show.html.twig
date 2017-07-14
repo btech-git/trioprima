@@ -1,0 +1,26 @@
+{% extends 'master/layout.html.twig' %}
+
+{% block title 'Show Account Category' %}
+
+{% block actions %}
+    {{ include('master/actions.html.twig') }}
+{% endblock %}
+
+{% block content %}
+    <table class="table table-bordered table-striped">
+        <tbody>
+            <tr>
+                <th>Code</th>
+                <td>{{ accountCategory.code|default }}</td>
+            </tr>
+            <tr>
+                <th>Name</th>
+                <td>{{ accountCategory.name|default }}</td>
+            </tr>
+            <tr>
+                <th>Is Active</th>
+                <td>{{ accountCategory.isActive|default ? 'Yes' : 'No' }}</td>
+            </tr>
+        </tbody>
+    </table>
+{% endblock %}

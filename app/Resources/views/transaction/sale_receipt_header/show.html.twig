@@ -1,0 +1,53 @@
+{% extends 'transaction/layout.html.twig' %}
+
+{% block title 'Show Sale Receipt Header' %}
+
+{% block actions %}
+    {{ include('transaction/actions.html.twig') }}
+{% endblock %}
+
+{% block content %}
+    <table class="table table-bordered table-striped">
+        <tbody>
+            <tr>
+                <th>Code Number</th>
+                <td>{{ saleReceiptHeader.codeNumber|default }}</td>
+            </tr>
+            <tr>
+                <th>Tanggal</th>
+                <td>{{ saleReceiptHeader.transactionDate|default ? saleReceiptHeader.transactionDate|date('j F Y') }}</td>
+            </tr>
+            <tr>
+                <th>Customer</th>
+                <td>{{ saleReceiptHeader.customer.company|default }}</td>
+            </tr>
+            <tr>
+                <th>Note</th>
+                <td>{{ saleReceiptHeader.note|default }}</td>
+            </tr>
+        </tbody>
+    </table>
+                
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr class="bg-info">
+                <th>Invoice #</th>
+                <th>Tanggal</th>
+                <th>Faktur Pajak</th>
+                <th>Grand Total</th>
+                <th>Memo</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for saleReceiptDetail in saleReceiptHeader.saleReceiptDetails %}
+                <tr>
+                    <td>{{ saleReceiptDetail.saleInvoiceHeader.codeNumber|default }}</td>
+                    <td>{{ saleReceiptDetail.saleInvoiceHeader.transactionDate|default ? saleReceiptDetail.saleInvoiceHeader.transactionDate|date('j F Y') }}</td>
+                    <td>{{ saleReceiptDetail.saleInvoiceHeader.taxInvoiceCode|default }}</td>
+                    <td class="text-right">{{ saleReceiptDetail.saleInvoiceHeader.grandTotalBeforeDownpayment|default|number_format(2) }}</td>
+                    <td>{{ saleReceiptDetail.memo|default }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

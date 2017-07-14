@@ -1,0 +1,21 @@
+{% block extends %}
+{{ "{% extends '" ~ entity|lower|replace({'\\': '/', (entity_singularized|lower): 'layout'}) ~ ".html.twig' %}" }}
+{% endblock extends %}
+
+{% block body %}
+{{ "{% block title '" ~ 'Delete ' ~ entity_singularized|humanize|title ~ "' %}" }}
+
+{{ "{% block actions %}" }}
+    {{ "{{ include('" ~ entity|lower|replace({'\\': '/', (entity_singularized|lower): 'actions'}) ~ ".html.twig') }}" }}
+{{ "{% endblock %}" }}
+
+{{ "{% block content %}" }}
+    <div class="alert alert-danger">Are you sure you want to delete this item?</div>
+    {{ '{{ form_start(form) }}' }}
+        <div class="well text-center">
+            <input class="btn btn-danger" type="submit" value="Delete" />
+            <a class="btn btn-default" href="{{ "{{ path('" ~ route_name_prefix ~ "_index') }}" }}">Cancel</a>
+        </div>
+    {{ '{{ form_end(form) }}' }}
+{{ "{% endblock %}" }}
+{% endblock body %}

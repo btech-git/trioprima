@@ -1,0 +1,75 @@
+{% set grid_layout = 'datagrid.html.twig' %}
+
+{{ grid_top(grid) }}
+
+<table data-role="table" class="table table-bordered table-striped table-condensed table-hover">
+    <thead>
+        <tr data-action="sort" class="alert alert-info">
+            <th data-group="purchaseInvoiceHeader" data-field="codeNumber">Code Number</th>
+            <th data-group="purchaseInvoiceHeader" data-field="transactionDate">Tanggal</th>
+            <th data-group="purchaseInvoiceHeader" data-field="taxInvoiceCode">Faktur Pajak</th>
+            <th data-group="purchaseInvoiceHeader" data-field="supplierInvoice">Supplier Invoice</th>
+            <th data-group="purchaseInvoiceHeader" data-field="supplier">Supplier</th>
+            <th data-group="purchaseInvoiceHeader" data-field="downpaymentValue">Down Payment</th>
+            <th data-group="purchaseInvoiceHeader" data-field="grandTotalAfterDownpayment">Grand Total</th>
+            <th data-group="purchaseInvoiceHeader" data-field="totalReturn">Total Retur</th>
+            <th data-group="purchaseInvoiceHeader" data-field="totalPayment">Total Pembayaran</th>
+        </tr>
+        <tr data-action="search">
+            <th data-group="purchaseInvoiceHeader" data-field="codeNumber"></th>
+            <th data-group="purchaseInvoiceHeader" data-field="transactionDate"></th>
+            <th data-group="purchaseInvoiceHeader" data-field="taxInvoiceCode"></th>
+            <th data-group="purchaseInvoiceHeader" data-field="supplierInvoice"></th>
+            <th data-group="purchaseInvoiceHeader" data-field="supplier"></th>
+            <th data-group="purchaseInvoiceHeader" data-field="downpaymentValue"></th>
+            <th data-group="purchaseInvoiceHeader" data-field="grandTotalAfterDownpayment"></th>
+            <th data-group="purchaseInvoiceHeader" data-field="totalReturn"></th>
+            <th data-group="purchaseInvoiceHeader" data-field="totalPayment"></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for purchaseInvoiceHeader in grid.data %}
+            {% set details = [] %}
+            {% for purchaseInvoiceDetail in purchaseInvoiceHeader.purchaseInvoiceDetails %}
+                {% set details = details|merge([{
+                    'id': purchaseInvoiceDetail.id,
+                    'product.name': purchaseInvoiceDetail.product.name|default,
+                    'product.size': purchaseInvoiceDetail.product.size|default,
+                    'product.brand.name': purchaseInvoiceDetail.product.brand.name|default,
+                    'unitPrice': purchaseInvoiceDetail.unitPrice|default|number_format(2),
+                }]) %}
+            {% endfor %}
+            <tr data-field-id="{{ purchaseInvoiceHeader.id }}"
+                data-field-code-number="{{ purchaseInvoiceHeader.codeNumber|default }}"
+                data-field-transaction-date="{{ purchaseInvoiceHeader.transactionDate|default ? purchaseInvoiceHeader.transactionDate|date('j M Y') }}"
+                data-field-tax-invoice-code="{{ purchaseInvoiceHeader.taxInvoiceCode|default }}"
+                data-field-grand-total-after-downpayment="{{ purchaseInvoiceHeader.grandTotalAfterDownPayment|default|number_format(2) }}"
+                data-field-supplier-company="{{ purchaseInvoiceHeader.supplier.company|default }}"
+                data-field-purchase-invoice-details="{{ details|json_encode }}">
+                <td class="text-left">{{ purchaseInvoiceHeader.codeNumber|default }}</td>
+                <td class="text-left">{{ purchaseInvoiceHeader.transactionDate|default ? purchaseInvoiceHeader.transactionDate|date('j M Y') }}</td>
+                <td class="text-left">{{ purchaseInvoiceHeader.taxInvoiceCode|default }}</td>
+                <td class="text-left">{{ purchaseInvoiceHeader.supplierInvoice|default }}</td>
+                <td class="text-left">{{ purchaseInvoiceHeader.supplier.company|default }}</td>
+                <td class="text-right">{{ purchaseInvoiceHeader.downpaymentNominal|default|number_format(2) }}</td>
+                <td class="text-right">{{ purchaseInvoiceHeader.grandTotalAfterDownpayment|default|number_format(2) }}</td>
+                <td class="text-right">{{ purchaseInvoiceHeader.totalReturn|default|number_format(2) }}</td>
+                <td class="text-right">{{ purchaseInvoiceHeader.totalPayment|default|number_format(2) }}</td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="9" class="alert alert-warning">
+                    <strong>There are no items to display.</strong>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{{ grid_bottom(grid) }}
+
+<script>
+    jQuery(function($) {
+        $("#{{ grid.id }}-top").css("display", "none");
+    });
+</script>

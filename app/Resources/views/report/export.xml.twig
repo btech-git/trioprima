@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<ss:Workbook>
+{% block styles %}
+    <ss:Styles>
+        <ss:Style ss:ID="Data">
+            <ss:Font ss:FontName="Arial" />
+            <ss:NumberFormat ss:Format="#,##0.00" />
+        </ss:Style>
+        <ss:Style ss:ID="Center">
+            <ss:Alignment ss:Horizontal="Center" ss:Vertical="Center" />
+        </ss:Style>
+        <ss:Style ss:ID="Bold">
+            <ss:Font ss:Bold="1" />
+        </ss:Style>
+        <ss:Style ss:ID="Top">
+            <ss:Borders>
+                <ss:Border ss:Position="Top" ss:LineStyle="Continuous" />
+            </ss:Borders>
+        </ss:Style>
+        <ss:Style ss:ID="Bottom">
+            <ss:Borders>
+                <ss:Border ss:Position="Bottom" ss:LineStyle="Continuous" />
+            </ss:Borders>
+        </ss:Style>
+        <ss:Style ss:ID="Title" ss:Parent="Center">
+            <ss:Font ss:FontName="Verdana" ss:Size="16" ss:Bold="1" />
+        </ss:Style>
+        <ss:Style ss:ID="Level1">
+            <ss:Font ss:Size="12" />
+        </ss:Style>
+        <ss:Style ss:ID="Level2">
+            <ss:Font ss:Size="10" />
+        </ss:Style>
+        <ss:Style ss:ID="Level3">
+            <ss:Font ss:Size="8" />
+        </ss:Style>
+    </ss:Styles>
+{% endblock %}
+{% block data %}{% endblock %}
+</ss:Workbook>

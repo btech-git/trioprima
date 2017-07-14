@@ -1,0 +1,57 @@
+{% block extends %}
+{{ "{% extends '" ~ entity|lower|replace({'\\': '/', (entity_singularized|lower): 'layout'}) ~ ".html.twig' %}" }}
+{% endblock extends %}
+
+{% block body %}
+{{ "{% block title '" ~ 'Show ' ~ entity_singularized|humanize|title ~ "' %}" }}
+
+{{ "{% block actions %}" }}
+    {{ "{{ include('" ~ entity|lower|replace({'\\': '/', (entity_singularized|lower): 'actions'}) ~ ".html.twig') }}" }}
+{{ "{% endblock %}" }}
+
+{{ "{% block content %}" }}
+    <table class="table table-bordered table-striped">
+        <tbody>
+        {%- for field, metadata in fields if field != identifier %}
+
+            <tr>
+                <th>{{ field|replace({'_': ''})|humanize|title }}</th>
+
+            {%- if metadata.type in ['datetime'] %}
+
+                <td>{{ '{{ ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ '|default ? ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ '|date(\'Y-m-d H:i:s\') }}' }}</td>
+
+            {%- elseif metadata.type in ['date'] %}
+
+                <td>{{ '{{ ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ '|default ? ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ '|date(\'Y-m-d\') }}' }}</td>
+
+            {%- elseif metadata.type in ['time'] %}
+
+                <td>{{ '{{ ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ '|default ? ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ '|date(\'H:i:s\') }}' }}</td>
+
+            {%- elseif metadata.type in ['array'] %}
+
+                <td>{{ '{{ ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ '|default ? ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ '|join(\', \') }}' }}</td>
+
+            {%- elseif metadata.type in ['boolean'] %}
+
+                <td>{{ '{{ ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ '|default ? \'Yes\' : \'No\' }}' }}</td>
+
+            {%- elseif metadata.type in ['decimal'] %}
+
+                <td>{{ '{{ ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ '|default|number_format(2) }}' }}</td>
+
+            {%- else %}
+
+                <td>{{ '{{ ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ '|default }}' }}</td>
+
+            {%- endif %}
+
+            </tr>
+
+        {%- endfor %}
+
+        </tbody>
+    </table>
+{{ "{% endblock %}" }}
+{% endblock body %}

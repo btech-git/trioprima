@@ -1,0 +1,106 @@
+{{ "{% set grid_layout = 'datagrid.html.twig' %}" }}
+
+{{ "{{ grid_top(grid) }}" }}
+
+<table data-role="table" class="table table-bordered table-striped table-condensed table-hover">
+    <thead>
+        <tr data-action="sort" class="alert alert-info">
+
+    {%- for field, metadata in fields %}
+
+            <th data-group="{{ entity_singularized }}" data-field="{{ field|replace({'_': ''}) }}">{{ field|replace({'_': ' '})|humanize|title }}</th>
+
+        {%- if loop.last %}
+
+            <th></th>
+
+        {%- endif %}
+    {%- endfor %}
+
+        </tr>
+    </thead>
+    <tbody>
+        {{ "{% for " ~ entity_singularized ~ " in grid.data %}" }}
+            <tr data-field-id="{{ "{{ " ~ entity_singularized ~ ".id }}" }}">
+
+        {%- for field, metadata in fields %}
+
+            {%- if metadata.type in ['datetime'] %}
+
+                <td class="text-left">{{ '{{ ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ '|default ? ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ '|date(\'Y-m-d H:i:s\') }}' }}</td>
+
+            {%- elseif metadata.type in ['date'] %}
+
+                <td class="text-left">{{ '{{ ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ '|default ? ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ '|date(\'Y-m-d\') }}' }}</td>
+
+            {%- elseif metadata.type in ['time'] %}
+
+                <td class="text-left">{{ '{{ ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ '|default ? ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ '|date(\'H:i:s\') }}' }}</td>
+
+            {%- elseif metadata.type in ['array'] %}
+
+                <td class="text-left">{{ '{{ ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ '|default ? ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ '|join(\', \') }}' }}</td>
+
+            {%- elseif metadata.type in ['boolean'] %}
+
+                <td class="text-left">{{ '{{ ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ '|default ? \'Yes\' : \'No\' }}' }}</td>
+
+            {%- elseif metadata.type in ['decimal'] %}
+
+                <td class="text-right">{{ '{{ ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ '|default|number_format(2) }}' }}</td>
+
+            {%- else %}
+
+                <td class="text-left">{{ '{{ ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ '|default }}' }}</td>
+
+            {%- endif %}
+
+            {%- if loop.last %}
+
+                <td class="text-left">
+                    {{ "{{ include('" ~ entity|lower|replace({'\\': '/', (entity_singularized|lower): 'actions'}) ~ ".html.twig', {
+                        'contents': {
+                            '{index}': null,
+                            '{new}': null," }}
+
+                {%- for action in record_actions %}
+                    {%- if action == 'show' %}
+
+                            {{ "'{" ~ action ~ "}': include('action.html.twig', {'url': path('" ~ route_name_prefix ~ "_" ~ action ~ "', {'id': " ~ entity_singularized ~ "."~ identifier ~"}), 'button': 'btn btn-info btn-sm', 'icon': 'glyphicon glyphicon-info-sign'})," }}
+
+                    {%- elseif action == 'edit' %}
+
+                            {{ "'{" ~ action ~ "}': include('action.html.twig', {'url': path('" ~ route_name_prefix ~ "_" ~ action ~ "', {'id': " ~ entity_singularized ~ "."~ identifier ~"}), 'button': 'btn btn-warning btn-sm', 'icon': 'glyphicon glyphicon-edit'})," }}
+
+                    {%- elseif action == 'delete' %}
+
+                            {{ "'{" ~ action ~ "}': include('action.html.twig', {'url': path('" ~ route_name_prefix ~ "_" ~ action ~ "', {'id': " ~ entity_singularized ~ "."~ identifier ~"}), 'button': 'btn btn-danger btn-sm', 'icon': 'glyphicon glyphicon-remove'})," }}
+
+                    {%- endif %}
+                {%- endfor %}
+
+                        {{ "}
+                    }) }}" }}
+                </td>
+
+            {%- endif %}
+        {%- endfor %}
+
+            </tr>
+
+        {%- if fields %}
+
+        {{ "{% else %}" }}
+            <tr>
+                <td colspan="{{ fields|length + 1 }}" class="alert alert-warning">
+                    <strong>There are no items to display.</strong>
+                </td>
+            </tr>
+
+        {%- endif %}
+
+        {{ "{% endfor %}" }}
+    </tbody>
+</table>
+
+{{ "{{ grid_bottom(grid) }}" }}

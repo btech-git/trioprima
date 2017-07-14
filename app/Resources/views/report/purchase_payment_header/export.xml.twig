@@ -1,0 +1,95 @@
+{% extends 'report/export.xml.twig' %}
+
+{% block data %}
+    <ss:Worksheet>
+        <ss:Table ss:StyleID="Data">
+            <ss:Column ss:Span="4" ss:AutoFitWidth="1" />
+            <ss:Row ss:AutoFitHeight="1" ss:StyleID="Title">
+                <ss:Cell ss:MergeAcross="4">
+                    <ss:Data ss:Type="String">PT. Trio Prima</ss:Data>
+                </ss:Cell>
+            </ss:Row>
+            <ss:Row ss:AutoFitHeight="1" ss:StyleID="Title">
+                <ss:Cell ss:MergeAcross="4">
+                    <ss:Data ss:Type="String">Laporan Pembelian Pelunasan</ss:Data>
+                </ss:Cell>
+            </ss:Row>
+            <ss:Row ss:AutoFitHeight="1" ss:StyleID="Title">
+                <ss:Cell ss:MergeAcross="4">
+                    {% set startDate = grid.searchVals['purchasePaymentHeader']['transactionDate'][1]|default %}
+                    {% set endDate = grid.searchVals['purchasePaymentHeader']['transactionDate'][2]|default %}
+                    <ss:Data ss:Type="String">{{ startDate ? startDate|date('j F Y') }}  -  {{ endDate ? endDate|date('j F Y') }}</ss:Data>
+                </ss:Cell>
+            </ss:Row>
+            <ss:Row ss:Span="1" />
+            <ss:Row ss:StyleID="Level1|Bold|Center">
+                <ss:Cell ss:MergeAcross="1">
+                    <ss:Data ss:Type="String">Pelunasan #</ss:Data>
+                </ss:Cell>
+                <ss:Cell>
+                    <ss:Data ss:Type="String">Tanggal</ss:Data>
+                </ss:Cell>
+                <ss:Cell>
+                    <ss:Data ss:Type="String">Supplier</ss:Data>
+                </ss:Cell>
+                <ss:Cell>
+                    <ss:Data ss:Type="String">Note</ss:Data>
+                </ss:Cell>
+            </ss:Row>
+            <ss:Row ss:StyleID="Level2|Bold|Center|Bottom">
+                <ss:Cell ss:Index="2">
+                    <ss:Data ss:Type="String">Invoice #</ss:Data>
+                </ss:Cell>
+                <ss:Cell>
+                    <ss:Data ss:Type="String">Nama Akun</ss:Data>
+                </ss:Cell>
+                <ss:Cell>
+                    <ss:Data ss:Type="String">Memo</ss:Data>
+                </ss:Cell>
+                <ss:Cell>
+                    <ss:Data ss:Type="String">Jumlah</ss:Data>
+                </ss:Cell>
+            </ss:Row>
+            {% for purchasePaymentHeader in grid.data %}
+                <ss:Row ss:StyleID="Level1">
+                    <ss:Cell ss:MergeAcross="1">
+                        <ss:Data ss:Type="String">{{ purchasePaymentHeader.codeNumber|default }}</ss:Data>
+                    </ss:Cell>
+                    <ss:Cell>
+                        <ss:Data ss:Type="String">{{ purchasePaymentHeader.transactionDate|default ? purchasePaymentHeader.transactionDate|date('j F Y') }}</ss:Data>
+                    </ss:Cell>
+                    <ss:Cell>
+                        <ss:Data ss:Type="String">{{ purchasePaymentHeader.supplier.company|default }}</ss:Data>
+                    </ss:Cell>
+                    <ss:Cell>
+                        <ss:Data ss:Type="String">{{ purchasePaymentHeader.note|default }}</ss:Data>
+                    </ss:Cell>
+                </ss:Row>
+                {% for purchasePaymentDetail in purchasePaymentHeader.purchasePaymentDetails %}
+                    <ss:Row ss:StyleID="Level2">
+                        <ss:Cell ss:Index="2">
+                            <ss:Data ss:Type="String">{{ purchasePaymentDetail.purchaseInvoiceHeader.codeNumber|default }}</ss:Data>
+                        </ss:Cell>
+                        <ss:Cell>
+                            <ss:Data ss:Type="String">{{ purchasePaymentDetail.account.name|default }}</ss:Data>
+                        </ss:Cell>
+                        <ss:Cell>
+                            <ss:Data ss:Type="String">{{ purchasePaymentDetail.memo|default }}</ss:Data>
+                        </ss:Cell>
+                        <ss:Cell>
+                            <ss:Data ss:Type="Number">{{ purchasePaymentDetail.amount|default|number_format(2, '.', '') }}</ss:Data>
+                        </ss:Cell>
+                    </ss:Row>
+                {% endfor %}
+                <ss:Row ss:StyleID="Level2|Bold">
+                    <ss:Cell ss:Index="4">
+                        <ss:Data ss:Type="String">Total</ss:Data>
+                    </ss:Cell>
+                    <ss:Cell>
+                        <ss:Data ss:Type="Number">{{ purchasePaymentHeader.totalAmount|default|number_format(2, '.', '') }}</ss:Data>
+                    </ss:Cell>
+                </ss:Row>
+            {% endfor %}
+        </ss:Table>
+    </ss:Worksheet>
+{% endblock %}

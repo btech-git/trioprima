@@ -1,0 +1,17 @@
+{% extends 'admin/layout.html.twig' %}
+
+{% block title 'Delete Staff' %}
+
+{% block actions %}
+    {{ include('admin/actions.html.twig') }}
+{% endblock %}
+
+{% block content %}
+    <div class="alert alert-danger">Are you sure you want to delete this item?</div>
+    {{ form_start(form) }}
+        <div class="well text-center">
+            <input class="btn btn-danger" type="submit" value="Delete" />
+            <a class="btn btn-default" href="{{ path('admin_staff_index') }}">Cancel</a>
+        </div>
+    {{ form_end(form) }}
+{% endblock %}

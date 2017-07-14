@@ -1,0 +1,152 @@
+# Learn more about services, parameters and containers at
+# http://symfony.com/doc/current/book/service_container.html
+parameters:
+#    parameter_name: value
+
+services:
+#    service_name:
+#        class: AppBundle\Directory\ClassName
+#        arguments: ["@another_service_name", "plain_value", "%parameter_name%"]
+    app.master.tax_literal_repository:
+        class: LibBundle\Doctrine\EntityRepository
+        factory: ["@doctrine.orm.entity_manager", getRepository]
+        arguments:
+            - AppBundle\Entity\Master\TaxLiteral
+
+    app.transaction.purchase_invoice_header_repository:
+        class: AppBundle\Repository\Transaction\PurchaseInvoiceHeaderRepository
+        factory: ["@doctrine.orm.entity_manager", getRepository]
+        arguments:
+            - AppBundle\Entity\Transaction\PurchaseInvoiceHeader
+
+    app.transaction.purchase_payment_header_repository:
+        class: AppBundle\Repository\Transaction\PurchasePaymentHeaderRepository
+        factory: ["@doctrine.orm.entity_manager", getRepository]
+        arguments:
+            - AppBundle\Entity\Transaction\PurchasePaymentHeader
+
+    app.transaction.purchase_receipt_header_repository:
+        class: AppBundle\Repository\Transaction\PurchaseReceiptHeaderRepository
+        factory: ["@doctrine.orm.entity_manager", getRepository]
+        arguments:
+            - AppBundle\Entity\Transaction\PurchaseReceiptHeader
+
+    app.transaction.purchase_return_header_repository:
+        class: AppBundle\Repository\Transaction\PurchaseReturnHeaderRepository
+        factory: ["@doctrine.orm.entity_manager", getRepository]
+        arguments:
+            - AppBundle\Entity\Transaction\PurchaseReturnHeader
+
+    app.transaction.sale_invoice_header_repository:
+        class: AppBundle\Repository\Transaction\SaleInvoiceHeaderRepository
+        factory: ["@doctrine.orm.entity_manager", getRepository]
+        arguments:
+            - AppBundle\Entity\Transaction\SaleInvoiceHeader
+
+    app.transaction.sale_payment_header_repository:
+        class: AppBundle\Repository\Transaction\SalePaymentHeaderRepository
+        factory: ["@doctrine.orm.entity_manager", getRepository]
+        arguments:
+            - AppBundle\Entity\Transaction\SalePaymentHeader
+
+    app.transaction.sale_receipt_header_repository:
+        class: AppBundle\Repository\Transaction\SaleReceiptHeaderRepository
+        factory: ["@doctrine.orm.entity_manager", getRepository]
+        arguments:
+            - AppBundle\Entity\Transaction\SaleReceiptHeader
+
+    app.transaction.sale_return_header_repository:
+        class: AppBundle\Repository\Transaction\SaleReturnHeaderRepository
+        factory: ["@doctrine.orm.entity_manager", getRepository]
+        arguments:
+            - AppBundle\Entity\Transaction\SaleReturnHeader
+
+    app.transaction.adjustment_stock_header_repository:
+        class: AppBundle\Repository\Transaction\AdjustmentStockHeaderRepository
+        factory: ["@doctrine.orm.entity_manager", getRepository]
+        arguments:
+            - AppBundle\Entity\Transaction\AdjustmentStockHeader
+
+    app.transaction.deposit_header_repository:
+        class: AppBundle\Repository\Transaction\DepositHeaderRepository
+        factory: ["@doctrine.orm.entity_manager", getRepository]
+        arguments:
+            - AppBundle\Entity\Transaction\DepositHeader
+
+    app.transaction.expense_header_repository:
+        class: AppBundle\Repository\Transaction\ExpenseHeaderRepository
+        factory: ["@doctrine.orm.entity_manager", getRepository]
+        arguments:
+            - AppBundle\Entity\Transaction\ExpenseHeader
+
+    app.transaction.journal_voucher_header_repository:
+        class: AppBundle\Repository\Transaction\JournalVoucherHeaderRepository
+        factory: ["@doctrine.orm.entity_manager", getRepository]
+        arguments:
+            - AppBundle\Entity\Transaction\JournalVoucherHeader
+
+    app.transaction.purchase_invoice_detail_repository:
+        class: AppBundle\Repository\Transaction\PurchaseInvoiceDetailRepository
+        factory: ["@doctrine.orm.entity_manager", getRepository]
+        arguments:
+            - AppBundle\Entity\Transaction\PurchaseInvoiceDetail
+
+    app.report.inventory_repository:
+        class: AppBundle\Repository\Report\InventoryRepository
+        factory: ["@doctrine.orm.entity_manager", getRepository]
+        arguments:
+            - AppBundle\Entity\Report\Inventory
+
+    app.report.account_journal_repository:
+        class: AppBundle\Repository\Report\AccountJournalRepository
+        factory: ["@doctrine.orm.entity_manager", getRepository]
+        arguments:
+            - AppBundle\Entity\Report\AccountJournal
+
+    app.transaction.purchase_invoice_form:
+        class: AppBundle\Service\Transaction\PurchaseInvoiceForm
+        arguments: ["@app.transaction.purchase_invoice_header_repository", "@app.report.inventory_repository"]
+
+    app.transaction.purchase_payment_form:
+        class: AppBundle\Service\Transaction\PurchasePaymentForm
+        arguments: ["@app.transaction.purchase_payment_header_repository"]
+
+    app.transaction.purchase_receipt_form:
+        class: AppBundle\Service\Transaction\PurchaseReceiptForm
+        arguments: ["@app.transaction.purchase_receipt_header_repository"]
+
+    app.transaction.purchase_return_form:
+        class: AppBundle\Service\Transaction\PurchaseReturnForm
+        arguments: ["@app.transaction.purchase_return_header_repository", "@app.report.inventory_repository"]
+
+    app.transaction.sale_invoice_form:
+        class: AppBundle\Service\Transaction\SaleInvoiceForm
+        arguments: ["@app.transaction.sale_invoice_header_repository", "@app.transaction.purchase_invoice_detail_repository", "@app.report.inventory_repository"]
+
+    app.transaction.sale_payment_form:
+        class: AppBundle\Service\Transaction\SalePaymentForm
+        arguments: ["@app.transaction.sale_payment_header_repository"]
+
+    app.transaction.sale_receipt_form:
+        class: AppBundle\Service\Transaction\SaleReceiptForm
+        arguments: ["@app.transaction.sale_receipt_header_repository"]
+
+    app.transaction.sale_return_form:
+        class: AppBundle\Service\Transaction\SaleReturnForm
+        arguments: ["@app.transaction.sale_return_header_repository", "@app.report.inventory_repository"]
+
+    app.transaction.adjustment_stock_form:
+        class: AppBundle\Service\Transaction\AdjustmentStockForm
+        arguments: ["@app.transaction.adjustment_stock_header_repository", "@app.report.inventory_repository"]
+
+    app.transaction.deposit_form:
+        class: AppBundle\Service\Transaction\DepositForm
+        arguments: ["@app.transaction.deposit_header_repository", "@app.report.account_journal_repository"]
+
+    app.transaction.expense_form:
+        class: AppBundle\Service\Transaction\ExpenseForm
+        arguments: ["@app.transaction.expense_header_repository", "@app.report.account_journal_repository"]
+
+    app.transaction.journal_voucher_form:
+        class: AppBundle\Service\Transaction\JournalVoucherForm
+        arguments: ["@app.transaction.journal_voucher_header_repository", "@app.report.account_journal_repository"]

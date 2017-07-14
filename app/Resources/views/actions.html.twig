@@ -1,0 +1,35 @@
+{% set route = app.request.attributes.get('_route') %}
+{% set route_params = app.request.attributes.get('_route_params') %}
+
+{% set action_prefix = route|split('_', -1)|join('_') %}
+{% if action_prefix is not empty %}
+    {% set action_prefix = action_prefix ~ '_' %}
+{% endif %}
+{% set action_id = route_params.id is defined ? route_params.id : null %}
+
+{% set default_template = '' %}
+{% set default_contents = {} %}
+
+{% block start %}{% endblock %}
+
+{% block render %}
+    {% set contents = contents|default({}) %}
+    {% if merge is not defined or merge == true %}
+        {% set contents = default_contents|merge(contents) %}
+    {% endif %}
+    {% if template is not defined %}
+        {% set template = default_template %}
+    {% elseif template is null %}
+        {% set template = contents|keys|join %}
+    {% elseif template is iterable %}
+        {% set string = '' %}
+        {% for item in template %}
+            {% set string = string ~ (item is null ? default_template : item) %}
+        {% endfor %}
+        {% set template = string %}
+    {% endif %}
+
+    {{ template|replace(contents)|raw }}
+{% endblock %}
+
+{% block end %}{% endblock %}

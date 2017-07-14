@@ -1,0 +1,42 @@
+
+    /**
+{% block phpdoc_method_header %}{% endblock phpdoc_method_header -%}
+
+{% block phpdoc_method_annotations %}
+{% if 'annotation' == format %}
+     * @Route("/{id}/delete", name="{{ route_name_prefix }}_delete")
+     * @Method({"GET", "POST"})
+     * @Security("has_role('ROLE_{{ entity_namespace|replace({'\\': '_'})|upper }}')")
+{% endif %}
+{% endblock phpdoc_method_annotations %}
+     */
+{% block method_definition %}
+    public function deleteAction(Request $request, {{ entity_class }} ${{ entity_singularized }})
+{% endblock method_definition %}
+    {
+{% block method_body %}
+        $form = $this->createFormBuilder()->getForm();
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
+                $em = $this->getDoctrine()->getManager();
+                $repository = $em->getRepository({{ entity_class }}::class);
+                $repository->remove(${{ entity_singularized }});
+
+                $this->addFlash('success', array('title' => 'Success!', 'message' => 'The record was deleted successfully.'));
+            } else {
+                $this->addFlash('danger', array('title' => 'Error!', 'message' => 'Failed to delete the record.'));
+            }
+
+            return $this->redirectToRoute('{{ route_name_prefix }}_index');
+        }
+{% endblock method_body %}
+
+{% block method_return %}
+        return $this->render('{{ route_prefix }}/delete.html.twig', array(
+            '{{ entity_singularized }}' => ${{ entity_singularized }},
+            'form' => $form->createView(),
+        ));
+{% endblock method_return %}
+    }

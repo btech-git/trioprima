@@ -1,0 +1,77 @@
+{% extends 'transaction/layout.html.twig' %}
+
+{% block title 'Show Sale Return Header' %}
+
+{% block actions %}
+    {{ include('transaction/actions.html.twig') }}
+{% endblock %}
+
+{% block content %}
+    <table class="table table-bordered table-striped">
+        <tbody>
+            <tr>
+                <th>Code Number</th>
+                <td>{{ saleReturnHeader.codeNumber|default }}</td>
+            </tr>
+            <tr>
+                <th>Tanggal</th>
+                <td>{{ saleReturnHeader.transactionDate|default ? saleReturnHeader.transactionDate|date('j F Y') }}</td>
+            </tr>
+            <tr>
+                <th>Customer</th>
+                <td>{{ saleReturnHeader.saleInvoiceHeader.customer.company|default }}</td>
+            </tr>
+            <tr>
+                <th>Invoice #</th>
+                <td>{{ saleReturnHeader.saleInvoiceHeader.codeNumber|default }}</td>
+            </tr>
+            <tr>
+                <th>Note</th>
+                <td>{{ saleReturnHeader.note|default }}</td>
+            </tr>
+        </tbody>
+    </table>
+                
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr class="bg-info">
+                <th>Product Name</th>
+                <th>Size</th>
+                <th>Brand</th>
+                <th>Qty</th>
+                <th>Price</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for saleReturnDetail in saleReturnHeader.saleReturnDetails %}
+                <tr>
+                    <td>{{ saleReturnDetail.saleInvoiceDetail.product.name|default }}</td>
+                    <td>{{ saleReturnDetail.saleInvoiceDetail.product.size|default }}</td>
+                    <td>{{ saleReturnDetail.saleInvoiceDetail.product.brand.name|default }}</td>
+                    <td>{{ saleReturnDetail.quantity|default }}</td>
+                    <td class="text-right">{{ saleReturnDetail.saleInvoiceDetail.unitPrice|default|number_format(2) }}</td>
+                    <td class="text-right">{{ saleReturnDetail.total|default|number_format(2) }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="5" class="text-right"><strong>Sub Total</strong></td>
+                <td class="text-right"><strong>{{ saleReturnHeader.subTotal|default|number_format(2) }}</strong></td>
+            </tr>
+            <tr>
+                <td colspan="5" class="text-right"><strong>PPn {{ saleReturnHeader.taxPercentage|default }}%</strong></td>
+                <td class="text-right"><strong>{{ saleReturnHeader.taxNominal|default|number_format(2) }}</strong></td>
+            </tr>
+            <tr>
+                <td colspan="5" class="text-right"><strong>Ongkos Kirim</strong></td>
+                <td class="text-right"><strong>{{ saleReturnHeader.shippingFee|default|number_format(2) }}</strong></td>
+            </tr>
+            <tr>
+                <td colspan="5" class="text-right"><strong>Grand Total</strong></td>
+                <td class="text-right"><strong>{{ saleReturnHeader.grandTotal|default|number_format(2) }}</strong></td>
+            </tr>
+        </tfoot>
+    </table>
+{% endblock %}

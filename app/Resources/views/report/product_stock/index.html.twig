@@ -1,0 +1,28 @@
+{% extends 'report/layout.html.twig' %}
+
+{% block title 'Report Product Stock' %}
+
+{% block content %}
+    <div id="product-stock-grid" data-grid="{{ path('report_product_stock_grid') }}"></div>
+{% endblock %}
+
+{% block stylesheets_include %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('../app/Resources/public/css/report.css') }}" />
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        table.report-data > thead > tr > th:nth-child(1),
+        table.report-data > tbody > tr > td:nth-child(1) { width: 30% }
+        table.report-data > thead > tr > th:nth-child(2),
+        table.report-data > tbody > tr > td:nth-child(2) { width: 15% }
+        table.report-data > thead > tr > th:nth-child(3),
+        table.report-data > tbody > tr > td:nth-child(3) { width: 20% }
+        table.report-data > thead > tr > th:nth-child(4),
+        table.report-data > tbody > tr > td:nth-child(4) { width: 20% }
+        table.report-data > thead > tr > th:nth-child(5),
+        table.report-data > tbody > tr > td:nth-child(5) { width: 15% }
+    </style>
+{% endblock %}

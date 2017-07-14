@@ -1,0 +1,516 @@
+{%- block grid_top -%}
+    <div id="{{ grid.id }}-top">
+        {{ block('grid_panels') }}
+        {{ block('grid_action') }}
+    </div>
+{%- endblock grid_top -%}
+
+{%- block grid_bottom -%}
+    <div id="{{ grid.id }}-bottom">
+        {{ block('grid_info_navigation') }}
+        {{ block('grid_script') }}
+    </div>
+{%- endblock grid_bottom -%}
+
+{%- block grid_panels -%}
+    <div id="{{ grid.id }}-panels">
+        {{ block('grid_search_panel') }}
+        {{ block('grid_sort_panel') }}
+        {{ block('grid_page_panel') }}
+    </div>
+{%- endblock grid_panels -%}
+
+{%- block grid_search_panel -%}
+    {% if grid.searchWidget %}
+        {% set collapseSearch = grid.extra['__collapse_search'] is defined ? grid.extra['__collapse_search'] %}
+        <div class="panel panel-default" id="{{ grid.id }}-search-panel">
+            <div class="panel-heading" data-toggle="collapse" data-target="#{{ grid.id }}-search-panel .panel-collapse" style="cursor: pointer">
+                <h1 class="panel-title">
+                    <span class="glyphicon glyphicon-search"></span> {{ grid.searchWidget['label']|humanize|title }}
+                </h1>
+            </div>
+            <div class="panel-collapse collapse {{ collapseSearch }}">
+                <div class="panel-body">
+                    {% for groupname, groupitems in grid.searchWidget['groups']|default %}
+                        <table class="table table-bordered table-condensed" style="margin: 0">
+                            <thead>
+                                <tr>
+                                    <th colspan="3" class="bg-info">{{ groupitems['label']|humanize|title }}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for fieldname, fielditems in groupitems['fields']|default %}
+                                    <tr class="columns form-inline">
+                                        <td style="vertical-align: middle; width: 25%">{{ fielditems['label']|humanize|title }}</td>
+                                        <td style="vertical-align: middle; width: 0">
+                                            {% if fielditems['operators']|default is not empty %}
+                                                <select class="form-control input-sm" data-item="operator" data-group="{{ groupname }}" data-field="{{ fieldname }}" data-ordinal="0" data-values="{{ grid.searchVals[groupname][fieldname]|json_encode }}">
+                                                    {% for operatorname, operatoritems in fielditems['operators']|default %}
+                                                        <option data-list="{{ operatoritems['list']|json_encode }}" value="{{ operatorname }}" {% if (grid.searchVals[groupname][fieldname][0] == operatorname) %} selected="selected" {% endif %}>
+                                                            {{ operatoritems['label']|humanize|title }}
+                                                        </option>
+                                                    {% endfor %}
+                                                </select>
+                                            {% endif %}
+                                        </td>
+                                        <td style="vertical-align: middle"></td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    {% endif %}
+{%- endblock grid_search_panel -%}
+
+{%- block grid_sort_panel -%}
+    {% if grid.sortWidget %}
+        {% set collapseSort = grid.extra['__collapse_sort'] is defined ? grid.extra['__collapse_sort'] %}
+        <div class="panel panel-default" id="{{ grid.id }}-sort-panel">
+            <div class="panel-heading" data-toggle="collapse" data-target="#{{ grid.id }}-sort-panel .panel-collapse" style="cursor: pointer">
+                <h1 class="panel-title">
+                    <span class="glyphicon glyphicon-sort"></span> {{ grid.sortWidget['label']|humanize|title }}
+                </h1>
+            </div>
+            <div class="panel-collapse collapse {{ collapseSort }}">
+                <div class="panel-body">
+                    {% for groupname, groupitems in grid.sortWidget['groups']|default %}
+                        <table class="table table-bordered table-condensed" style="margin: 0">
+                            <thead>
+                                <tr>
+                                    <th colspan="3" class="bg-info">{{ groupitems['label']|humanize|title }}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for fieldname, fielditems in groupitems['fields']|default %}
+                                    <tr class="columns form-inline">
+                                        <td style="vertical-align: middle; width: 25%">{{ fielditems['label']|humanize|title }}</td>
+                                        <td style="vertical-align: middle; width: 0">
+                                            {% if fielditems['operators']|default is not empty %}
+                                                <select class="form-control input-sm" data-item="operator" data-group="{{ groupname }}" data-field="{{ fieldname }}">
+                                                    {% for operatorname, operatoritems in fielditems['operators']|default %}
+                                                        <option data-order="{{ operatoritems['order'] }}" value="{{ operatorname }}" {% if (grid.sortVals[groupname][fieldname] == operatorname) %} selected="selected" {% endif %}>
+                                                            {{ operatoritems['label']|humanize|title }}
+                                                        </option>
+                                                    {% endfor %}
+                                                </select>
+                                            {% endif %}
+                                        </td>
+                                        <td style="vertical-align: middle">
+                                            <button data-movement="up" class="btn btn-link" style="padding-left: 0; padding-right: 0">
+                                                <span class="glyphicon glyphicon-arrow-up"></span>
+                                            </button>
+                                            <button data-movement="down" class="btn btn-link" style="padding-left: 0; padding-right: 0">
+                                                <span class="glyphicon glyphicon-arrow-down"></span>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    {% endif %}
+{%- endblock grid_sort_panel -%}
+
+{%- block grid_page_panel -%}
+    {% if grid.pageWidget %}
+        {% set collapsePage = grid.extra['__collapse_page'] is defined ? grid.extra['__collapse_page'] %}
+        <div class="panel panel-default" id="{{ grid.id }}-page-panel">
+            <div class="panel-heading" data-toggle="collapse" data-target="#{{ grid.id }}-page-panel .panel-collapse" style="cursor: pointer">
+                <h1 class="panel-title">
+                    <span class="glyphicon glyphicon-book"></span> {{ grid.pageWidget['label']|humanize|title }}
+                </h1>
+            </div>
+            <div class="panel-collapse collapse {{ collapsePage }}">
+                <div class="panel-body">
+                    {% if grid.pageWidget['fields'] is defined %}
+                        <table class="table table-bordered table-condensed" style="margin: 0">
+                            {% for fieldname in ['pagesize', 'pagenum'] %}
+                                {% if grid.pageWidget['fields'][fieldname] is defined %}
+                                    {% set items = grid.pageWidget['fields'][fieldname] %}
+                                    <tr class="columns form-inline">
+                                        <td style="vertical-align: middle; width: 25%">{{ items['label']|humanize }}</td>
+                                        <td style="vertical-align: middle; width: 0">
+                                            {% if items['choices'] is not empty %}
+                                                <select data-field="{{ fieldname }}" class="form-control input-sm">
+                                                    {% for i in items['choices'] %}
+                                                        <option value="{{ i }}" {% if (i == grid.pageVals[fieldname]) %} selected="selected" {% endif %}>{{ i }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            {% else %}
+                                                <input data-field="{{ fieldname }}" class="form-control input-sm" type="text" value="{{ grid.pageVals[fieldname] }}" size="3" />
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                {% endif %}
+                            {% endfor %}
+                        </table>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    {% endif %}
+{%- endblock grid_page_panel -%}
+
+{%- block grid_action -%}
+    {% if grid.searchWidget or grid.sortWidget or grid.pageWidget %}
+        <p class="text-center" id="{{ grid.id }}-action">
+            <input data-action="submit" class="btn btn-primary btn-sm" type="button" value="Submit" />
+            <input data-action="reset" class="btn btn-default btn-sm" type="button" value="Reset" />
+        </p>
+    {% endif %}
+{%- endblock grid_action -%}
+
+{%- block grid_result_info -%}
+    {% if not grid.empty %}
+        {% set size = grid.sizePage %}
+        {% set current = grid.currentPage %}
+        {% set start = min(size * (current - 1) + 1, grid.count) %}
+        {% set end = min(size * current, grid.count) %}
+        
+        <span class="small" id="{{ grid.id }}-result-info">
+            Results: {{ start }} - {{ end }} of {{ grid.count }} item(s).
+        </span>
+    {% endif %}
+{%- endblock grid_result_info -%}
+
+{%- block grid_navigation -%}
+    {% if not grid.empty and grid.sizePage > 0 %}
+        {% set last = grid.lastPage %}
+        
+        {% if last > 1 %}
+            {% set current = grid.currentPage %}
+            {% set offset = 2 %}
+            
+            <ul class="pagination pagination-sm" id="{{ grid.id }}-navigation" style="margin: 0">
+                <li {% if (current == 1) %} class="disabled" {% endif %}>
+                    <a data-ordinal="1" {% if (current != 1) %} href="1" {% endif %}>&laquo; First</a>
+                </li>
+                <li {% if (current == 1) %} class="disabled" {% endif %}>
+                    <a data-ordinal="{{ current - 1 }}" {% if (current != 1) %} href="{{ current - 1 }}" {% endif %}>&lsaquo; Previous</a>
+                </li>
+                {% for i in current-offset..current+offset %}
+                    {% if (i >= 1 and i <= last) %}
+                        <li {% if (current == i) %} class="active" {% endif %}>
+                            <a data-ordinal="{{ i }}" {% if (current != i) %} href="{{ i }}" {% endif %}>{{ i }}</a>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+                <li {% if (current == last) %} class="disabled" {% endif %}>
+                    <a data-ordinal="{{ current + 1 }}" {% if (current != last) %} href="{{ current + 1 }}" {% endif %}>Next &rsaquo;</a>
+                </li>
+                <li {% if (current == last) %} class="disabled" {% endif %}>
+                    <a data-ordinal="{{ last }}" {% if (current != last) %} href="{{ last }}" {% endif %}>Last &raquo;</a>
+                </li>
+            </ul>
+        {% endif %}
+    {% endif %}
+{%- endblock grid_navigation -%}
+
+{%- block grid_info_navigation -%}
+    <div class="row" id="{{ grid.id }}-info-navigation">
+        <div class="col-md-4">
+            <div class="pull-left">
+                {{ block('grid_result_info') }}
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div class="pull-right">
+                {{ block('grid_navigation') }}
+            </div>
+        </div>
+    </div>
+{%- endblock grid_info_navigation -%}
+
+{%- block grid_script -%}
+    {% set id = grid.id %}
+    {% set params = grid.params %}
+    
+    <script id="{{ grid.id }}-script">
+        jQuery(function($) {
+            var container = $("#{{ id }}");
+
+            function makeSearchInput(element, isDefaultUpdate) {
+                var group = $(element).attr("data-group");
+                var field = $(element).attr("data-field");
+                var values = $(element).attr("data-values");
+                var valuesObj = $.parseJSON(values);
+                var list = $("option:selected", element).attr("data-list");
+                var listObj = $.parseJSON(list);
+
+                var lst = $(element).parent().next();
+                lst.addClass("form-inline").html("");
+
+                $.each(listObj, function(key, items) {
+                    var i = key + 1;
+                    var el;
+                    var con;
+                    if (items["choices"] === null) {
+                        el = $(document.createElement("input"));
+                        if (typeof items["attributes"] !== "undefined" && items["attributes"] !== null) {
+                            el.attr(items["attributes"]);
+                        }
+                        el.attr("type", "text");
+                        if (typeof items["placeholder"] !== "undefined" && items["placeholder"] !== null) {
+                            el.attr("placeholder", items["placeholder"]);
+                        }
+                    }
+                    else {
+                        el = $(document.createElement("select"));
+                        if (typeof items["attributes"] !== "undefined" && items["attributes"] !== null) {
+                            el.attr(items["attributes"]);
+                        }
+                        if (typeof items["placeholder"] !== "undefined" && items["placeholder"] !== null) {
+                            var opt = $(document.createElement("option"));
+                            opt.html(items["placeholder"]);
+                            opt.attr("value", "");
+                            opt.css("color", "gray");
+                            el.append(opt);
+                        }
+                        $.each(items["choices"], function(label, value) {
+                            var opt = $(document.createElement("option"));
+                            opt.html(label);
+                            opt.attr("value", value);
+                            el.append(opt);
+                        });
+                    }
+                    el.attr({"data-item": "input", "data-group": group, "data-field": field, "data-ordinal": i});
+                    el.addClass("form-control input-sm");
+                    if (typeof items["value"] !== "undefined") {
+                        el.val(items["value"]);
+                    }
+                    if (isDefaultUpdate && typeof valuesObj[i] !== "undefined") {
+                        el.val(valuesObj[i]);
+                    }
+                    if (typeof items["startdelimiter"] !== "undefined") {
+                        lst.append(items["startdelimiter"]);
+                    }
+                    con = $(document.createElement("span"));
+                    con.html(el);
+                    lst.append(con);
+                    if (typeof items["enddelimiter"] !== "undefined") {
+                        lst.append(items["enddelimiter"]);
+                    }
+                });
+            }
+            function getParams(reset) {
+                reset = typeof reset === "undefined" ? false : reset;
+
+                var params;
+
+                if (reset) {
+                    params = {"id": container.attr("id")};
+                } else {
+                    params = {{ params|json_encode|raw }};
+                }
+
+                return params;
+            }
+            function makeSearchParams() {
+                var searchvals = {};
+
+                $("#{{ id }}-search-panel [data-item]", container).each(function(k, v) {
+                    var group = $(v).attr("data-group");
+                    var field = $(v).attr("data-field");
+                    var ordinal = $(v).attr("data-ordinal");
+                    if (typeof searchvals[group] === "undefined" || searchvals[group] === null) {
+                        searchvals[group] = {};
+                    }
+                    if (typeof searchvals[group][field] === "undefined" || searchvals[group][field] === null) {
+                        searchvals[group][field] = {};
+                    }
+                    searchvals[group][field][ordinal] = $(v).val();
+                });
+
+                return searchvals;
+            }
+            function makeSortParams() {
+                var sortvals = {};
+
+                $("#{{ id }}-sort-panel [data-item]", container).each(function(k, v) {
+                    var group = $(v).attr("data-group");
+                    var field = $(v).attr("data-field");
+                    if (typeof sortvals[group] === "undefined" || sortvals[group] === null) {
+                        sortvals[group] = {};
+                    }
+                    sortvals[group][field] = $(v).val();
+                });
+
+                return sortvals;
+            }
+            function makePageParams() {
+                var pagevals = {};
+
+                pagevals["pagesize"] = $("#{{ id }}-page-panel [data-field=pagesize]", container).val();
+                pagevals["pagenum"] = $("#{{ id }}-page-panel [data-field=pagenum]", container).val();
+
+                return pagevals;
+            }
+            function makeExtraParams() {
+                var extra = {};
+
+                $("[data-extra-name][data-extra-value]", container).each(function(k, v) {
+                    extra[$(v).attr("data-extra-name")] = $(v).attr("data-extra-value");
+                });
+
+                return extra;
+            }
+            function refreshView(params) {
+                if (typeof params.extra === "undefined" || params.extra === null || params.length === 0) {
+                    params.extra = {};
+                }
+                params.extra["__collapse_search"] = $("#{{ id }}-search-panel .collapse", container).hasClass("in") ? "in" : "";
+                params.extra["__collapse_sort"] = $("#{{ id }}-sort-panel .collapse", container).hasClass("in") ? "in" : "";
+                params.extra["__collapse_page"] = $("#{{ id }}-page-panel .collapse", container).hasClass("in") ? "in" : "";
+
+                container.load("{{ path(grid.route, grid.routeParams|merge(grid.routeQueries))|raw }}", params);
+            }
+
+            $("#{{ id }}-search-panel [data-item=operator]", container).each(function() {
+                makeSearchInput(this, true);
+            });
+            $("#{{ id }}-search-panel [data-item=operator]", container).change(function() {
+                makeSearchInput(this, false);
+            });
+            $("#{{ id }}-sort-panel [data-movement=up]", container).click(function() {
+                var p = $(this).closest(".columns");
+                p.prev(".columns").before(p);
+            });
+            $("#{{ id }}-sort-panel [data-movement=down]", container).click(function() {
+                var p = $(this).closest(".columns");
+                p.next(".columns").after(p);
+            });
+            $("#{{ id }}-action [data-action=submit]", container).click(function() {
+                var params = getParams();
+                params.searchvals = makeSearchParams();
+                params.sortvals = makeSortParams();
+                params.pagevals = makePageParams();
+                params.extra = makeExtraParams();
+                refreshView(params);
+            });
+            $("#{{ id }}-action [data-action=reset]", container).click(function() {
+                var params = getParams(true);
+                refreshView(params);
+            });
+            $("#{{ id }}-navigation [data-ordinal]", container).click(function(event) {
+                event.preventDefault();
+                var p = $(this).parent();
+                if (!(p.hasClass("active") || p.hasClass("disabled"))) {
+                    var params = getParams();
+                    params.pagevals["pagenum"] = $(this).attr("data-ordinal");
+                    refreshView(params);
+                }
+            });
+            $("[data-role=table] [data-action=sort] [data-group][data-field]", container).each(function() {
+                var el = $(this);
+                var group = el.attr("data-group");
+                var field = el.attr("data-field");
+                var ref = $("#{{ id }}-sort-panel [data-item=operator][data-group=" + group + "][data-field=" + field + "]", container);
+                if (ref.length !== 0) {
+                    el.css("cursor", "pointer");
+                    var order = $("option:selected", ref).attr("data-order");
+                    var con = $(document.createElement("span"));
+                    if (order === "asc") {
+                        con.addClass("glyphicon glyphicon-triangle-top");
+                    } else if (order === "desc") {
+                        con.addClass("glyphicon glyphicon-triangle-bottom");
+                    }
+                    el.append(" ").append($(document.createElement("small")).append(con));
+                }
+            });
+            $("[data-role=table] [data-action=sort] [data-group][data-field]", container).click(function(event) {
+                var el = $(this);
+                var group = el.attr("data-group");
+                var field = el.attr("data-field");
+                var ref = $("#{{ id }}-sort-panel [data-item=operator][data-group=" + group + "][data-field=" + field + "]", container);
+                if (ref.length !== 0) {
+                    var opts = $("option", ref);
+                    var op = opts.eq((opts.index(opts.filter(":selected")) + 1) % opts.length);
+
+                    var params = getParams();
+                    if (!(event.shiftKey || event.ctrlKey || event.metaKey)) {
+                        var defaultparams = {{ grid.defaultparams|json_encode|raw }};
+                        $.each(defaultparams.sortvals, function(groupname, items) {
+                            $.each(items, function(fieldname, type) {
+                                params.sortvals[groupname][fieldname] = type;
+                            });
+                        });
+                    }
+                    params.sortvals[group][field] = op.val();
+                    refreshView(params);
+                }
+            });
+            $("[data-role=table] [data-action=search] [data-group][data-field]", container).each(function() {
+                var el = $(this);
+                var group = el.attr("data-group");
+                var field = el.attr("data-field");
+                var ref = $("#{{ id }}-search-panel [data-item=operator][data-group=" + group + "][data-field=" + field + "]", container);
+                if (ref.length !== 0) {
+                    var con = $(document.createElement("span")).addClass("filter").css("white-space", "nowrap");
+                    var con1 = $(document.createElement("span")).css({"display": "inline-block", "vertical-align": "middle"});
+                    var con2 = $(document.createElement("span")).css({"display": "inline-block", "vertical-align": "middle"});
+                    var con3 = $(document.createElement("span")).css({"display": "inline-block", "vertical-align": "middle"});
+                    con.append(con1).append(con2).append(con3);
+                    el.append(con);
+                    con1.html(ref.parent().html());
+
+                    var sel = con1.children("select").hide();
+                    makeSearchInput(sel, true);
+
+                    var dd = $(document.createElement("ul")).addClass("dropdown-menu");
+                    sel.children("option").each(function(k, v) {
+                        var l = $(document.createElement("li")).css("cursor", "pointer");
+                        if ($(v).text().trim() === "") {
+                            l.css("background-color", "#F0F6FC");
+                        }
+                        var link = $(document.createElement("a")).attr("data-type", $(v).val());
+                        var s = $(document.createElement("span")).css("width", "25px").addClass("glyphicon");
+                        if ($(v).val() === sel.val()) {
+                            s.addClass("glyphicon-ok");
+                        }
+                        l.append(link.append(s).append($(v).text()));
+                        dd.append(l);
+                    });
+                    var dl = $(document.createElement("button")).addClass("btn btn-default btn-sm dropdown-toggle").attr("data-toggle", "dropdown");
+                    dl.append($(document.createElement("span")).addClass("glyphicon glyphicon-filter"));
+                    con3.html($(document.createElement("div")).addClass("dropdown").append(dl).append(dd));
+                }
+            });
+            $("[data-role=table] [data-action=search] [data-group][data-field] [data-type]", container).click(function() {
+                var el = $(this);
+                el.closest(".dropdown-menu").find("span").removeClass("glyphicon-ok");
+                el.children("span").addClass("glyphicon-ok");
+                var sel = el.closest(".filter").find("[data-item=operator]");
+                var type = el.attr("data-type");
+                if (sel.val() !== type) {
+                    sel.val(type);
+                    makeSearchInput(sel, false);
+                    sel.trigger("change");
+                }
+            });
+            $("[data-role=table] [data-action=search] [data-group][data-field]", container).on("change", "[data-item]", function() {
+                var el = $(this).closest(".filter");
+                var sel = el.find("[data-item=operator]");
+                var params = getParams();
+                params.searchvals[sel.attr("data-group")][sel.attr("data-field")][sel.attr("data-ordinal")] = sel.val();
+                el.find("[data-item=input]").each(function(k, v) {
+                    params.searchvals[$(v).attr("data-group")][$(v).attr("data-field")][$(v).attr("data-ordinal")] = $(v).val();
+                });
+                refreshView(params);
+            });
+            $("[data-role=table] [data-check=all], [data-role=table] [data-check=item]", container).each(function() {
+                var el = $(document.createElement("input")).attr({"type": "checkbox", "data-input-check": $(this).attr("data-check")});
+                $(this).append(el);
+            });
+            $("[data-role=table] [data-input-check=all]", container).click(function() {
+                var el = $(this).closest("[data-role=table]").find("[data-input-check=item]");
+                el.prop("checked", $(this).is(":checked"));
+            });
+        });
+    </script>
+{%- endblock grid_script -%}

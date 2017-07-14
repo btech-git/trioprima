@@ -1,0 +1,151 @@
+{% extends 'report/export.xml.twig' %}
+
+{% block data %}
+    <ss:Worksheet>
+        <ss:Table ss:StyleID="Data">
+            <ss:Column ss:Span="7" ss:AutoFitWidth="1" />
+            <ss:Row ss:AutoFitHeight="1" ss:StyleID="Title">
+                <ss:Cell ss:MergeAcross="7">
+                    <ss:Data ss:Type="String">PT. Trio Prima</ss:Data>
+                </ss:Cell>
+            </ss:Row>
+            <ss:Row ss:AutoFitHeight="1" ss:StyleID="Title">
+                <ss:Cell ss:MergeAcross="7">
+                    <ss:Data ss:Type="String">Laporan Penjualan Invoice</ss:Data>
+                </ss:Cell>
+            </ss:Row>
+            <ss:Row ss:AutoFitHeight="1" ss:StyleID="Title">
+                <ss:Cell ss:MergeAcross="7">
+                    {% set startDate = grid.searchVals['saleInvoiceHeader']['transactionDate'][1]|default %}
+                    {% set endDate = grid.searchVals['saleInvoiceHeader']['transactionDate'][2]|default %}
+                    <ss:Data ss:Type="String">{{ startDate ? startDate|date('j F Y') }}  -  {{ endDate ? endDate|date('j F Y') }}</ss:Data>
+                </ss:Cell>
+            </ss:Row>
+            <ss:Row ss:Span="1" />
+            <ss:Row ss:StyleID="Level1|Bold|Center">
+                <ss:Cell ss:MergeAcross="1">
+                    <ss:Data ss:Type="String">Penjualan #</ss:Data>
+                </ss:Cell>
+                <ss:Cell>
+                    <ss:Data ss:Type="String">Tanggal</ss:Data>
+                </ss:Cell>
+                <ss:Cell>
+                    <ss:Data ss:Type="String">Faktur Pajak</ss:Data>
+                </ss:Cell>
+                <ss:Cell>
+                    <ss:Data ss:Type="String">Customer Invoice</ss:Data>
+                </ss:Cell>
+                <ss:Cell>
+                    <ss:Data ss:Type="String">Customer</ss:Data>
+                </ss:Cell>
+            </ss:Row>
+            <ss:Row ss:StyleID="Level2|Bold|Center|Bottom">
+                <ss:Cell ss:Index="2">
+                    <ss:Data ss:Type="String">Nama Produk</ss:Data>
+                </ss:Cell>
+                <ss:Cell>
+                    <ss:Data ss:Type="String">Ukuran</ss:Data>
+                </ss:Cell>
+                <ss:Cell>
+                    <ss:Data ss:Type="String">Merk</ss:Data>
+                </ss:Cell>
+                <ss:Cell>
+                    <ss:Data ss:Type="String">Qty</ss:Data>
+                </ss:Cell>
+                <ss:Cell>
+                    <ss:Data ss:Type="String">Harga</ss:Data>
+                </ss:Cell>
+                <ss:Cell>
+                    <ss:Data ss:Type="String">Diskon</ss:Data>
+                </ss:Cell>
+                <ss:Cell>
+                    <ss:Data ss:Type="String">Total</ss:Data>
+                </ss:Cell>
+            </ss:Row>
+            {% for saleInvoiceHeader in grid.data %}
+                <ss:Row ss:StyleID="Level1">
+                    <ss:Cell ss:MergeAcross="1">
+                        <ss:Data ss:Type="String">{{ saleInvoiceHeader.codeNumber|default }}</ss:Data>
+                    </ss:Cell>
+                    <ss:Cell>
+                        <ss:Data ss:Type="String">{{ saleInvoiceHeader.transactionDate|default ? saleInvoiceHeader.transactionDate|date('j F Y') }}</ss:Data>
+                    </ss:Cell>
+                    <ss:Cell>
+                        <ss:Data ss:Type="String">{{ saleInvoiceHeader.taxInvoiceCode|default }}</ss:Data>
+                    </ss:Cell>
+                    <ss:Cell>
+                        <ss:Data ss:Type="String">{{ saleInvoiceHeader.customerInvoice|default }}</ss:Data>
+                    </ss:Cell>
+                    <ss:Cell>
+                        <ss:Data ss:Type="String">{{ saleInvoiceHeader.customer.company|default }}</ss:Data>
+                    </ss:Cell>
+                </ss:Row>
+                {% for saleInvoiceDetail in saleInvoiceHeader.saleInvoiceDetails %}
+                    <ss:Row ss:StyleID="Level2">
+                        <ss:Cell ss:Index="2">
+                            <ss:Data ss:Type="String">{{ saleInvoiceDetail.product.name|default }}</ss:Data>
+                        </ss:Cell>
+                        <ss:Cell>
+                            <ss:Data ss:Type="String">{{ saleInvoiceDetail.product.size|default }}</ss:Data>
+                        </ss:Cell>
+                        <ss:Cell>
+                            <ss:Data ss:Type="String">{{ saleInvoiceDetail.product.brand.name|default }}</ss:Data>
+                        </ss:Cell>
+                        <ss:Cell>
+                            <ss:Data ss:Type="Number">{{ saleInvoiceDetail.quantity|default }}</ss:Data>
+                        </ss:Cell>
+                        <ss:Cell>
+                            <ss:Data ss:Type="Number">{{ saleInvoiceDetail.unitPrice|default|number_format(2, '.', '') }}</ss:Data>
+                        </ss:Cell>
+                        <ss:Cell>
+                            <ss:Data ss:Type="Number">{{ saleInvoiceDetail.discount|default|number_format(2, '.', '') }}</ss:Data>
+                        </ss:Cell>
+                        <ss:Cell>
+                            <ss:Data ss:Type="Number">{{ saleInvoiceDetail.total|default|number_format(2, '.', '') }}</ss:Data>
+                        </ss:Cell>
+                    </ss:Row>
+                {% endfor %}
+                <ss:Row ss:StyleID="Level2|Bold">
+                    <ss:Cell ss:Index="7">
+                        <ss:Data ss:Type="String">Sub Total</ss:Data>
+                    </ss:Cell>
+                    <ss:Cell>
+                        <ss:Data ss:Type="Number">{{ saleInvoiceHeader.subTotal|default|number_format(2, '.', '') }}</ss:Data>
+                    </ss:Cell>
+                </ss:Row>
+                <ss:Row ss:StyleID="Level2|Bold">
+                    <ss:Cell ss:Index="7">
+                        <ss:Data ss:Type="String">Diskon {{ saleInvoiceHeader.discountPercentage|default|number_format(2, '.', '') }}%</ss:Data>
+                    </ss:Cell>
+                    <ss:Cell>
+                        <ss:Data ss:Type="Number">{{ saleInvoiceHeader.discountNominal|default|number_format(2, '.', '') }}</ss:Data>
+                    </ss:Cell>
+                </ss:Row>
+                <ss:Row ss:StyleID="Level2|Bold">
+                    <ss:Cell ss:Index="7">
+                        <ss:Data ss:Type="String">PPn {{ saleInvoiceHeader.taxPercentage|default }}%</ss:Data>
+                    </ss:Cell>
+                    <ss:Cell>
+                        <ss:Data ss:Type="Number">{{ saleInvoiceHeader.taxNominal|default|number_format(2, '.', '') }}</ss:Data>
+                    </ss:Cell>
+                </ss:Row>
+                <ss:Row ss:StyleID="Level2|Bold">
+                    <ss:Cell ss:Index="7">
+                        <ss:Data ss:Type="String">Ongkos Kirim</ss:Data>
+                    </ss:Cell>
+                    <ss:Cell>
+                        <ss:Data ss:Type="Number">{{ saleInvoiceHeader.shippingFee|default|number_format(2, '.', '') }}</ss:Data>
+                    </ss:Cell>
+                </ss:Row>
+                <ss:Row ss:StyleID="Level2|Bold">
+                    <ss:Cell ss:Index="7">
+                        <ss:Data ss:Type="String">Grand Total</ss:Data>
+                    </ss:Cell>
+                    <ss:Cell>
+                        <ss:Data ss:Type="Number">{{ saleInvoiceHeader.grandTotalBeforeDownpayment|default|number_format(2, '.', '') }}</ss:Data>
+                    </ss:Cell>
+                </ss:Row>
+            {% endfor %}
+        </ss:Table>
+    </ss:Worksheet>
+{% endblock %}

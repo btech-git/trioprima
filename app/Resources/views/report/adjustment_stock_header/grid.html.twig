@@ -1,0 +1,93 @@
+{% set grid_layout = 'datagrid.html.twig' %}
+
+<div class="hidden-print">
+    {{ grid_top(grid) }}
+    <div class="text-center">
+        <button type="button" class="btn btn-info btn-sm" id="export">Export</button>
+    </div>
+    <hr />
+</div>
+
+<div class="report">
+    <div class="report-header">
+        <div class="report-title">PT. Trio Prima</div>
+        <div class="report-title">Laporan Penyesuaian Stok</div>
+        <div>
+            {% set startDate = grid.searchVals['adjustmentStockHeader']['transactionDate'][1]|default %}
+            {% set endDate = grid.searchVals['adjustmentStockHeader']['transactionDate'][2]|default %}
+            {{ startDate ? startDate|date('j F Y') }} &nbsp;&ndash;&nbsp; {{ endDate ? endDate|date('j F Y') }}
+        </div>
+    </div>
+
+    <br />
+
+    <table class="report-data">
+        <thead class="border-top-solid-bold border-bottom-solid-bold">
+            <tr>
+                <th class="text-center">Penyesuaian #</th>
+                <th class="text-center">Tanggal</th>
+                <th class="text-center">Note</th>
+            </tr>
+            <tr>
+                <td colspan="3">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th class="text-center">Nama Produk</th>
+                                <th class="text-center">Ukuran</th>
+                                <th class="text-center">Merk</th>
+                                <th class="text-center">Kategori</th>
+                                <th class="text-center">Qty Stok</th>
+                                <th class="text-center">Qty Penyesuaian</th>
+                                <th class="text-center">Selisih</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </td>
+            </tr>
+        </thead>
+        <tbody class="border-top-solid-bold border-bottom-solid-bold">
+            {% for adjustmentStockHeader in grid.data %}
+                <tr data-field-id="{{ adjustmentStockHeader.id }}">
+                    <td class="text-left">{{ adjustmentStockHeader.codeNumber|default }}</td>
+                    <td class="text-left">{{ adjustmentStockHeader.transactionDate|default ? adjustmentStockHeader.transactionDate|date('j F Y') }}</td>
+                    <td class="text-left">{{ adjustmentStockHeader.note|default }}</td>
+                </tr>
+                <tr class="border-bottom-dotted-bold">
+                    <td colspan="3">
+                        <table>
+                            <tbody>
+                                {% for adjustmentStockDetail in adjustmentStockHeader.adjustmentStockDetails %}
+                                    <tr>
+                                        <td class="text-left">{{ adjustmentStockDetail.product.name|default }}</td>
+                                        <td class="text-center">{{ adjustmentStockDetail.product.size|default }}</td>
+                                        <td class="text-left">{{ adjustmentStockDetail.product.brand.name|default }}</td>
+                                        <td class="text-left">{{ adjustmentStockDetail.product.productCategory.name|default }}</td>
+                                        <td class="text-center">{{ adjustmentStockDetail.quantityCurrent|default }}</td>
+                                        <td class="text-center">{{ adjustmentStockDetail.quantityAdjustment|default }}</td>
+                                        <td class="text-center">{{ adjustmentStockDetail.quantityDifference|default }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<div class="hidden-print">
+    <br />
+    {{ grid_bottom(grid) }}
+</div>
+
+<script>
+    jQuery(function($) {
+        $("#export").click(function() {
+            var url = "{{ path('report_adjustment_stock_header_export') }}";
+            var data = {{ grid.params|json_encode|raw }};
+            $.redirect(url, data);
+        });
+    });
+</script>

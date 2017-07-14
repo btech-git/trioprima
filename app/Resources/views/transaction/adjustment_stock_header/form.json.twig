@@ -1,0 +1,10 @@
+{
+    "adjustmentStockDetails": {
+        {%- for index, adjustmentStockDetail in adjustmentStockHeader.adjustmentStockDetails -%}
+            "{{ index }}": {
+                "quantityCurrent": "{{ adjustmentStockDetail.quantityCurrent|default }}"
+            }
+            {%- if not loop.last -%},{%- endif -%}
+        {%- endfor -%}
+    }
+}

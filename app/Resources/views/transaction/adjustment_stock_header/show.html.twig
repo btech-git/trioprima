@@ -1,0 +1,51 @@
+{% extends 'transaction/layout.html.twig' %}
+
+{% block title 'Show Adjustment Stock Header' %}
+
+{% block actions %}
+    {{ include('transaction/actions.html.twig') }}
+{% endblock %}
+
+{% block content %}
+    <table class="table table-bordered table-striped">
+        <tbody>
+            <tr>
+                <th>Code Number</th>
+                <td>{{ adjustmentStockHeader.codeNumber|default }}</td>
+            </tr>
+            <tr>
+                <th>Tanggal</th>
+                <td>{{ adjustmentStockHeader.transactionDate|default ? adjustmentStockHeader.transactionDate|date('j F Y') }}</td>
+            </tr>
+            <tr>
+                <th>Note</th>
+                <td>{{ adjustmentStockHeader.note|default }}</td>
+            </tr>
+        </tbody>
+    </table>
+                
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr class="bg-info">
+                <th>Product Name</th>
+                <th>Size</th>
+                <th>Brand</th>
+                <th>Qty Current</th>
+                <th>Qty Adjustment</th>
+                <th>Qty Difference</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for adjustmentStockDetail in adjustmentStockHeader.adjustmentStockDetails %}
+                <tr>
+                    <td>{{ adjustmentStockDetail.product.name|default }}</td>
+                    <td>{{ adjustmentStockDetail.product.size|default }}</td>
+                    <td>{{ adjustmentStockDetail.product.brand.name|default }}</td>
+                    <td>{{ adjustmentStockDetail.quantityCurrent|default }}</td>
+                    <td>{{ adjustmentStockDetail.quantityAdjustment|default }}</td>
+                    <td>{{ adjustmentStockDetail.quantityDifference|default }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

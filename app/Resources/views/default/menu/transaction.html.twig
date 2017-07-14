@@ -1,0 +1,104 @@
+{% extends 'default/layout.html.twig' %}
+
+{% block title 'Transaction Menu' %}
+
+{% block stylesheets %}
+    <style>
+        table tr td:nth-child(2) { width: 30% }
+        table tr td:nth-child(3) { width: 30% }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <table class="table table-bordered table-striped">
+        <tr>
+            <th colspan="3" class="bg-info lead">
+                <strong>Penjualan</strong>
+            </th>
+        </tr>
+        <tr>
+            <td>Invoice</td>
+            <td>{{ include('action.html.twig', {'url': path('transaction_sale_invoice_header_new'), 'label': 'Add', 'button': 'btn btn-success', 'icon': 'glyphicon glyphicon-plus'}) }}</td>
+            <td>{{ include('action.html.twig', {'url': path('transaction_sale_invoice_header_index'), 'label': 'Manage', 'button': 'btn btn-primary', 'icon': 'glyphicon glyphicon-list'}) }}</td>
+        </tr>
+        <tr>
+            <td>Pelunasan</td>
+            <td>{{ include('action.html.twig', {'url': path('transaction_sale_payment_header_new'), 'label': 'Add', 'button': 'btn btn-success', 'icon': 'glyphicon glyphicon-plus'}) }}</td>
+            <td>{{ include('action.html.twig', {'url': path('transaction_sale_payment_header_index'), 'label': 'Manage', 'button': 'btn btn-primary', 'icon': 'glyphicon glyphicon-list'}) }}</td>
+        </tr>
+        <tr>
+            <td>Tanda Terima</td>
+            <td>{{ include('action.html.twig', {'url': path('transaction_sale_receipt_header_new'), 'label': 'Add', 'button': 'btn btn-success', 'icon': 'glyphicon glyphicon-plus'}) }}</td>
+            <td>{{ include('action.html.twig', {'url': path('transaction_sale_receipt_header_index'), 'label': 'Manage', 'button': 'btn btn-primary', 'icon': 'glyphicon glyphicon-list'}) }}</td>
+        </tr>
+        <tr>
+            <td>Retur</td>
+            <td>{{ include('action.html.twig', {'url': path('transaction_sale_return_header_new'), 'label': 'Add', 'button': 'btn btn-success', 'icon': 'glyphicon glyphicon-plus'}) }}</td>
+            <td>{{ include('action.html.twig', {'url': path('transaction_sale_return_header_index'), 'label': 'Manage', 'button': 'btn btn-primary', 'icon': 'glyphicon glyphicon-list'}) }}</td>
+        </tr>
+    </table>
+            
+    <table class="table table-bordered table-striped">
+        <tr>
+            <th colspan="3" class="bg-info lead">
+                <strong>Pembelian</strong>
+            </th>
+        </tr>
+        <tr>
+            <td>Invoice</td>
+            <td>{{ include('action.html.twig', {'url': path('transaction_purchase_invoice_header_new'), 'label': 'Add', 'button': 'btn btn-success', 'icon': 'glyphicon glyphicon-plus'}) }}</td>
+            <td>{{ include('action.html.twig', {'url': path('transaction_purchase_invoice_header_index'), 'label': 'Manage', 'button': 'btn btn-primary', 'icon': 'glyphicon glyphicon-list'}) }}</td>
+        </tr>
+        <tr>
+            <td>Pelunasan</td>
+            <td>{{ include('action.html.twig', {'url': path('transaction_purchase_payment_header_new'), 'label': 'Add', 'button': 'btn btn-success', 'icon': 'glyphicon glyphicon-plus'}) }}</td>
+            <td>{{ include('action.html.twig', {'url': path('transaction_purchase_payment_header_index'), 'label': 'Manage', 'button': 'btn btn-primary', 'icon': 'glyphicon glyphicon-list'}) }}</td>
+        </tr>
+        <tr>
+            <td>Tanda Terima</td>
+            <td>{{ include('action.html.twig', {'url': path('transaction_purchase_receipt_header_new'), 'label': 'Add', 'button': 'btn btn-success', 'icon': 'glyphicon glyphicon-plus'}) }}</td>
+            <td>{{ include('action.html.twig', {'url': path('transaction_purchase_receipt_header_index'), 'label': 'Manage', 'button': 'btn btn-primary', 'icon': 'glyphicon glyphicon-list'}) }}</td>
+        </tr>
+        <tr>
+            <td>Retur</td>
+            <td>{{ include('action.html.twig', {'url': path('transaction_purchase_return_header_new'), 'label': 'Add', 'button': 'btn btn-success', 'icon': 'glyphicon glyphicon-plus'}) }}</td>
+            <td>{{ include('action.html.twig', {'url': path('transaction_purchase_return_header_index'), 'label': 'Manage', 'button': 'btn btn-primary', 'icon': 'glyphicon glyphicon-list'}) }}</td>
+        </tr>
+    </table>
+            
+    <table class="table table-bordered table-striped">
+        <tr>
+            <th colspan="3" class="bg-info lead">
+                <strong>Keuangan</strong>
+            </th>
+        </tr>
+        <tr>
+            <td>Penerimaan Kas / Bank</td>
+            <td>{{ include('action.html.twig', {'url': path('transaction_deposit_header_new'), 'label': 'Add', 'button': 'btn btn-success', 'icon': 'glyphicon glyphicon-plus'}) }}</td>
+            <td>{{ include('action.html.twig', {'url': path('transaction_deposit_header_index'), 'label': 'Manage', 'button': 'btn btn-primary', 'icon': 'glyphicon glyphicon-list'}) }}</td>
+        </tr>
+        <tr>
+            <td>Pengeluaran Kas / Bank</td>
+            <td>{{ include('action.html.twig', {'url': path('transaction_expense_header_new'), 'label': 'Add', 'button': 'btn btn-success', 'icon': 'glyphicon glyphicon-plus'}) }}</td>
+            <td>{{ include('action.html.twig', {'url': path('transaction_expense_header_index'), 'label': 'Manage', 'button': 'btn btn-primary', 'icon': 'glyphicon glyphicon-list'}) }}</td>
+        </tr>
+        <tr>
+            <td>Jurnal Umum</td>
+            <td>{{ include('action.html.twig', {'url': path('transaction_journal_voucher_header_new'), 'label': 'Add', 'button': 'btn btn-success', 'icon': 'glyphicon glyphicon-plus'}) }}</td>
+            <td>{{ include('action.html.twig', {'url': path('transaction_journal_voucher_header_index'), 'label': 'Manage', 'button': 'btn btn-primary', 'icon': 'glyphicon glyphicon-list'}) }}</td>
+        </tr>
+    </table>
+            
+    <table class="table table-bordered table-striped">
+        <tr>
+            <th colspan="3" class="bg-info lead">
+                <strong>Gudang</strong>
+            </th>
+        </tr>
+        <tr>
+            <td>Penyesuaian Stok</td>
+            <td>{{ include('action.html.twig', {'url': path('transaction_adjustment_stock_header_new'), 'label': 'Add', 'button': 'btn btn-success', 'icon': 'glyphicon glyphicon-plus'}) }}</td>
+            <td>{{ include('action.html.twig', {'url': path('transaction_adjustment_stock_header_index'), 'label': 'Manage', 'button': 'btn btn-primary', 'icon': 'glyphicon glyphicon-list'}) }}</td>
+        </tr>
+    </table>
+{% endblock %}

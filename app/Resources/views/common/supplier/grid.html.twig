@@ -1,0 +1,41 @@
+{% set grid_layout = 'datagrid.html.twig' %}
+
+{{ grid_top(grid) }}
+
+<table data-role="table" class="table table-bordered table-striped table-condensed table-hover">
+    <thead>
+        <tr data-action="sort" class="alert alert-info">
+            <th data-group="supplier" data-field="code">Code</th>
+            <th data-group="supplier" data-field="name">Name</th>
+            <th data-group="supplier" data-field="company">Company</th>
+        </tr>
+        <tr data-action="search">
+            <th data-group="supplier" data-field="code"></th>
+            <th data-group="supplier" data-field="name"></th>
+            <th data-group="supplier" data-field="company"></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for supplier in grid.data %}
+            <tr data-field-id="{{ supplier.id }}" data-field-company="{{ supplier.company|default }}">
+                <td class="text-left">{{ supplier.code|default }}</td>
+                <td class="text-left">{{ supplier.name|default }}</td>
+                <td class="text-left">{{ supplier.company|default }}</td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="3" class="alert alert-warning">
+                    <strong>There are no items to display.</strong>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{{ grid_bottom(grid) }}
+
+<script>
+    jQuery(function($) {
+        $("#{{ grid.id }}-top").css("display", "none");
+    });
+</script>

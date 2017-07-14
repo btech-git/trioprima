@@ -1,0 +1,42 @@
+{% set grid_layout = 'datagrid.html.twig' %}
+
+{{ grid_top(grid) }}
+
+<table data-role="table" class="table table-bordered table-striped table-condensed table-hover">
+    <thead>
+        <tr data-action="sort" class="alert alert-info">
+            <th data-group="staff" data-field="username">Username</th>
+            <th data-group="staff" data-field="name">Name</th>
+            <th data-group="staff" data-field="email">Email</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for staff in grid.data %}
+            <tr data-field-id="{{ staff.id }}">
+                <td>{{ staff.username|default }}</td>
+                <td>{{ staff.name|default }}</td>
+                <td>{{ staff.email|default }}</td>
+                <td>
+                    {{ include('admin/actions.html.twig', {
+                        'contents': {
+                            '{index}': null,
+                            '{new}': null,
+                            '{show}': include('action.html.twig', {'url': path('admin_staff_show', {'id': staff.id}), 'button': 'btn btn-info btn-sm', 'icon': 'glyphicon glyphicon-info-sign'}),
+                            '{edit}': include('action.html.twig', {'url': path('admin_staff_edit', {'id': staff.id}), 'button': 'btn btn-warning btn-sm', 'icon': 'glyphicon glyphicon-edit'}),
+                            '{delete}': include('action.html.twig', {'url': path('admin_staff_delete', {'id': staff.id}), 'button': 'btn btn-danger btn-sm', 'icon': 'glyphicon glyphicon-remove'}),
+                        }
+                    }) }}
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="3" class="alert alert-warning">
+                    <strong>There are no items to display.</strong>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{{ grid_bottom(grid) }}

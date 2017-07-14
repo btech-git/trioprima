@@ -1,0 +1,164 @@
+{% extends 'base.html.twig' %}
+
+{% block title 'Memo' %}
+
+{% block body %}
+    <div class="memo">
+        <div class="header">
+            {% if show %}
+                <h1 class="title">PT. Trio Prima Makmur Sejahtera</h1>
+            {% endif %}
+            <h2 class="title">INVOICE PENJUALAN</h2>
+        </div>
+        
+        <br />
+        
+        <div class="note">
+            <div class="table full">
+                <div class="cell col">
+                    <div class="table full">
+                        <div class="row">
+                            <div class="cell label">Invoice #</div>
+                            <div class="cell value">{{ saleInvoiceHeader.codeNumber|default }}</div>
+                        </div>
+                        <div class="row">
+                            <div class="cell label">Tanggal</div>
+                            <div class="cell value">{{ saleInvoiceHeader.transactionDate|default ? saleInvoiceHeader.transactionDate|date('d M Y') }}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="cell col">
+                    <div class="table full">
+                        <div class="row">
+                            <div class="cell label">Customer</div>
+                            <div class="cell value">{{ saleInvoiceHeader.customer.company|default }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <br />
+        
+        <table class="detail">
+            <thead>
+                <tr>
+                    <th class="center">Nama Barang</th>
+                    <th class="center">Ukuran</th>
+                    <th class="center">Qty</th>
+                    <th class="center">Harga</th>
+                    <th class="center">Diskon %</th>
+                    <th class="center">Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% set rowspan = show ? 20 : 10 %}
+                {% for row in saleInvoiceHeader.saleInvoiceDetails|batch(rowspan, '') %}
+                    {% for saleInvoiceDetail in row %}
+                        <tr>
+                            {% for i in 1..6 if saleInvoiceDetail is empty %}
+                                <td>&nbsp;</td>
+                            {% else %}
+                                <td class="left">{{ saleInvoiceDetail.productName|default }}</td>
+                                <td class="center">{{ saleInvoiceDetail.product.size|default }}</td>
+                                <td class="center">{{ saleInvoiceDetail.quantity|default }}</td>
+                                <td class="right">{{ saleInvoiceDetail.unitPrice|default|number_format(0) }}</td>
+                                <td class="right">{{ saleInvoiceDetail.discount|default|number_format(2) }}</td>
+                                <td class="right">{{ saleInvoiceDetail.total|default|number_format(0) }}</td>
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                {% endfor %}
+            </tbody>
+            <tfoot>
+                {% if show %}
+                    <tr>
+                        <td colspan="5" class="label right">Sub Total</td>
+                        <td class="right">{{ saleInvoiceHeader.subTotal|default|number_format(0) }}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="5" class="label right">Diskon {{ saleInvoiceHeader.discountPercentage|default|number_format(2) }}%</td>
+                        <td class="right">{{ saleInvoiceHeader.discountNominal|default|number_format(0) }}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="5" class="label right">PPn 10%</td>
+                        <td class="right">{{ saleInvoiceHeader.taxNominal|default|number_format(0) }}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="5" class="label right">Ongkos Kirim</td>
+                        <td class="right">{{ saleInvoiceHeader.shippingFee|default|number_format(0) }}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="5" class="label right">Grand Total</td>
+                        <td class="right">{{ saleInvoiceHeader.grandTotalBeforeDownpayment|default|number_format(0) }}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="5" class="label right">Uang Muka {{ saleInvoiceHeader.downpaymentPercentage|default|number_format(2) }}%</td>
+                        <td class="right">{{ saleInvoiceHeader.downpaymentNominal|default|number_format(0) }}</td>
+                    </tr>
+                {% endif %}
+                <tr>
+                    <td colspan="5" class="label right">Grand Total</td>
+                    <td class="right">{{ saleInvoiceHeader.grandTotalAfterDownpayment|default|number_format(0) }}</td>
+                </tr>
+            </tfoot>
+        </table>
+        
+        <br />
+        
+        <div class="note">
+            <div class="table">
+                <div class="cell label">Terbilang:</div>
+                <div class="cell">&nbsp;&nbsp;</div>
+                <div class="cell">{{ saleInvoiceHeader.grandTotalAfterDownpayment|default|number_format(0, '.', '')|say|capitalize }} rupiah.</div>
+            </div>
+        </div>
+        
+        <div class="note">
+            <div class="table">
+                <div class="cell label">Catatan:</div>
+                <div class="cell">&nbsp;&nbsp;</div>
+                <div class="cell">{{ saleInvoiceHeader.note|default }}</div>
+            </div>
+        </div>
+        
+        <br />
+        
+        <div class="signature">
+            <div class="table full">
+                <div class="cell sig">
+                    <div>Penerima,</div>
+                </div>
+                <div class="cell sig">
+                    <div>Hormat Kami,</div>
+                    {% if show %}
+                        <div class="blank"></div>
+                        <div class="blank"></div>
+                        <div>Sun On Tjoeng</div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block stylesheets_include %}
+    <link rel="stylesheet" href="{{ asset('../app/Resources/public/css/memo.css') }}" />
+{% endblock %}
+
+{% block javascripts_include %}{% endblock %}
+
+{% block stylesheets %}
+    <style>
+        .col:nth-child(1) { width: 50% }
+        .col:nth-child(2) { width: 50% }
+        
+        .col:nth-child(1) .label { width: 35% }
+        .col:nth-child(1) .value { width: 65% }
+        .col:nth-child(2) .label { width: 35% }
+        .col:nth-child(2) .value { width: 65% }
+        
+        .sig:nth-child(1) { width: 50% }
+        .sig:nth-child(2) { width: 50% }
+    </style>
+{% endblock %}

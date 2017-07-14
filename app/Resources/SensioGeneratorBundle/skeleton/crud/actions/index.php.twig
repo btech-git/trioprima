@@ -1,0 +1,22 @@
+
+    /**
+{% block phpdoc_method_header %}{% endblock phpdoc_method_header -%}
+
+{% block phpdoc_method_annotations %}
+{% if 'annotation' == format %}
+     * @Route("/", name="{{ route_name_prefix }}_index")
+     * @Method("GET")
+     * @Security("has_role('ROLE_{{ entity_namespace|replace({'\\': '_'})|upper }}')")
+{% endif %}
+{% endblock phpdoc_method_annotations %}
+     */
+{% block method_definition %}
+    public function indexAction()
+{% endblock method_definition %}
+    {
+{% block method_body %}{% endblock method_body -%}
+
+{% block method_return %}
+        return $this->render('{{ route_prefix }}/index.html.twig');
+{% endblock method_return %}
+    }

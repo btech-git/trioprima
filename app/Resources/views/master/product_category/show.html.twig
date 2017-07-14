@@ -1,0 +1,22 @@
+{% extends 'master/layout.html.twig' %}
+
+{% block title 'Show Product Category' %}
+
+{% block actions %}
+    {{ include('master/actions.html.twig') }}
+{% endblock %}
+
+{% block content %}
+    <table class="table table-bordered table-striped">
+        <tbody>
+            <tr>
+                <th>Name</th>
+                <td>{{ productCategory.name|default }}</td>
+            </tr>
+            <tr>
+                <th>Is Active</th>
+                <td>{{ productCategory.isActive|default ? 'Yes' : 'No' }}</td>
+            </tr>
+        </tbody>
+    </table>
+{% endblock %}

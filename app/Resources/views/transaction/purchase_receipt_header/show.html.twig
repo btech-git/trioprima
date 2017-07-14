@@ -1,0 +1,53 @@
+{% extends 'transaction/layout.html.twig' %}
+
+{% block title 'Show Purchase Receipt Header' %}
+
+{% block actions %}
+    {{ include('transaction/actions.html.twig') }}
+{% endblock %}
+
+{% block content %}
+    <table class="table table-bordered table-striped">
+        <tbody>
+            <tr>
+                <th>Code Number</th>
+                <td>{{ purchaseReceiptHeader.codeNumber|default }}</td>
+            </tr>
+            <tr>
+                <th>Tanggal</th>
+                <td>{{ purchaseReceiptHeader.transactionDate|default ? purchaseReceiptHeader.transactionDate|date('j F Y') }}</td>
+            </tr>
+            <tr>
+                <th>Supplier</th>
+                <td>{{ purchaseReceiptHeader.supplier.company|default }}</td>
+            </tr>
+            <tr>
+                <th>Note</th>
+                <td>{{ purchaseReceiptHeader.note|default }}</td>
+            </tr>
+        </tbody>
+    </table>
+                
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr class="bg-info">
+                <th>Invoice #</th>
+                <th>Tanggal</th>
+                <th>Faktur Pajak</th>
+                <th>Grand Total</th>
+                <th>Memo</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for purchaseReceiptDetail in purchaseReceiptHeader.purchaseReceiptDetails %}
+                <tr>
+                    <td>{{ purchaseReceiptDetail.purchaseInvoiceHeader.codeNumber|default }}</td>
+                    <td>{{ purchaseReceiptDetail.purchaseInvoiceHeader.transactionDate|default ? purchaseReceiptDetail.purchaseInvoiceHeader.transactionDate|date('j F Y') }}</td>
+                    <td>{{ purchaseReceiptDetail.purchaseInvoiceHeader.taxInvoiceCode|default }}</td>
+                    <td class="text-right">{{ purchaseReceiptDetail.purchaseInvoiceHeader.grandTotalBeforeDownpayment|default|number_format(2) }}</td>
+                    <td>{{ purchaseReceiptDetail.memo|default }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

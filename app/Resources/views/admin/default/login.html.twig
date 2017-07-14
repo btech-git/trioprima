@@ -1,0 +1,53 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        html, body { background: #E3E9EF; height: 100% }
+        div.login-container { padding: 5% 25%; height: inherit }
+        div.login-error { height: 10% }
+        div.login-logo { margin: 2.5% auto; text-align: center; height: 12.5% }
+        div.login-logo > img { height: 100% }
+        form.login-form { margin: auto 25% }
+        form.login-form input { width: 100% }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="login-container">
+        <div class="login-error">
+            {% if error %}
+                <div class="alert alert-danger fade in">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    {{ error.messageKey|replace({
+                        "credentials": "username or password"
+                    })|trans(error.messageData, 'security') }}
+                </div>
+            {% endif %}
+        </div>
+        
+        <div class="login-logo">
+            <img src="{{ asset('apple-touch-icon.png') }}" alt="Company Logo" />
+        </div>
+
+        <form action="{{ path('admin_default_login_check') }}" method="post" class="login-form">
+            <div class="form-group">
+                <label for="username" class="control-label">Username</label>
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                    <input type="text" class="form-control" id="username" name="_username" value="{{ lastUsername }}" placeholder="Enter your username" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="password" class="control-label">Password</label>
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+                    <input type="password" class="form-control" id="password" name="_password" placeholder="Enter your password" />
+                </div>
+            </div>
+            <div class="form-group">
+                <input type="submit" class="btn btn-primary" value="Log in" />
+            </div>
+        </form>
+    </div>
+{% endblock %}

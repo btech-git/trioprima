@@ -1,0 +1,22 @@
+{% extends 'master/layout.html.twig' %}
+
+{% block title 'Show Unit' %}
+
+{% block actions %}
+    {{ include('master/actions.html.twig') }}
+{% endblock %}
+
+{% block content %}
+    <table class="table table-bordered table-striped">
+        <tbody>
+            <tr>
+                <th>Name</th>
+                <td>{{ unit.name|default }}</td>
+            </tr>
+            <tr>
+                <th>Is Active</th>
+                <td>{{ unit.isActive|default ? 'Yes' : 'No' }}</td>
+            </tr>
+        </tbody>
+    </table>
+{% endblock %}

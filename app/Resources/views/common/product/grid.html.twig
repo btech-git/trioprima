@@ -1,0 +1,55 @@
+{% set grid_layout = 'datagrid.html.twig' %}
+
+{{ grid_top(grid) }}
+
+<table data-role="table" class="table table-bordered table-striped table-condensed table-hover" style="margin-bottom: 10px">
+    <thead>
+        <tr data-action="sort" class="alert alert-info">
+            <th></th>
+            <th data-group="product" data-field="code">Code</th>
+            <th data-group="product" data-field="name">Name</th>
+            <th data-group="product" data-field="size">Size</th>
+            <th data-group="product" data-field="brand">Brand</th>
+            <th data-group="product" data-field="productCategory">Category</th>
+        </tr>
+        <tr data-action="search">
+            <th data-check="all"></th>
+            <th data-group="product" data-field="code"></th>
+            <th data-group="product" data-field="name"></th>
+            <th data-group="product" data-field="size"></th>
+            <th data-group="product" data-field="brand"></th>
+            <th data-group="product" data-field="productCategory"></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for product in grid.data %}
+            <tr data-field-id="{{ product.id }}" data-field-name="{{ product.name|default }}" data-field-size="{{ product.size|default }}" data-field-brand-name="{{ product.brand.name|default }}">
+                <td class="text-center" data-check="item"></td>
+                <td class="text-left">{{ product.code|default }}</td>
+                <td class="text-left">{{ product.name|default }}</td>
+                <td class="text-left">{{ product.size|default }}</td>
+                <td class="text-left">{{ product.brand.name|default }}</td>
+                <td class="text-left">{{ product.productCategory.name|default }}</td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="6" class="alert alert-warning">
+                    <strong>There are no items to display.</strong>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+    
+<div data-role="action" class="form-group">
+    &nbsp;&nbsp;&boxur;&boxh;
+    <button data-action="select" type="button" class="btn btn-primary btn-sm">Select</button>
+</div>
+
+{{ grid_bottom(grid) }}
+
+<script>
+    jQuery(function($) {
+        $("#{{ grid.id }}-top").css("display", "none");
+    });
+</script>

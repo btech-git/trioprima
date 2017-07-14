@@ -1,0 +1,95 @@
+{% extends 'transaction/layout.html.twig' %}
+
+{% block title 'Show Purchase Invoice Header' %}
+
+{% block actions %}
+    {{ include('transaction/actions.html.twig') }}
+{% endblock %}
+
+{% block content %}
+    <table class="table table-bordered table-striped">
+        <tbody>
+            <tr>
+                <th>Code Number</th>
+                <td>{{ purchaseInvoiceHeader.codeNumber|default }}</td>
+            </tr>
+            <tr>
+                <th>Tanggal</th>
+                <td>{{ purchaseInvoiceHeader.transactionDate|default ? purchaseInvoiceHeader.transactionDate|date('j F Y') }}</td>
+            </tr>
+            <tr>
+                <th>Supplier</th>
+                <td>{{ purchaseInvoiceHeader.supplier.company|default }}</td>
+            </tr>
+            <tr>
+                <th>Supplier Invoice</th>
+                <td>{{ purchaseInvoiceHeader.supplierInvoice|default }}</td>
+            </tr>
+            <tr>
+                <th>Faktur Pajak</th>
+                <td>{{ purchaseInvoiceHeader.taxInvoiceCode|default }}</td>
+            </tr>
+            <tr>
+                <th>Note</th>
+                <td>{{ purchaseInvoiceHeader.note|default }}</td>
+            </tr>
+        </tbody>
+    </table>
+                
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr class="bg-info">
+                <th>Product Name</th>
+                <th>Size</th>
+                <th>Brand</th>
+                <th>Qty</th>
+                <th>Price</th>
+                <th>Discount</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for purchaseInvoiceDetail in purchaseInvoiceHeader.purchaseInvoiceDetails %}
+                <tr>
+                    <td>{{ purchaseInvoiceDetail.product.name|default }}</td>
+                    <td>{{ purchaseInvoiceDetail.product.size|default }}</td>
+                    <td>{{ purchaseInvoiceDetail.product.brand.name|default }}</td>
+                    <td>{{ purchaseInvoiceDetail.quantity|default }}</td>
+                    <td class="text-right">{{ purchaseInvoiceDetail.unitPrice|default|number_format(2) }}</td>
+                    <td class="text-right">{{ purchaseInvoiceDetail.discount|default|number_format(2) }}</td>
+                    <td class="text-right">{{ purchaseInvoiceDetail.total|default|number_format(2) }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="6" class="text-right"><strong>Sub Total</strong></td>
+                <td class="text-right"><strong>{{ purchaseInvoiceHeader.subTotal|default|number_format(2) }}</strong></td>
+            </tr>
+            <tr>
+                <td colspan="6" class="text-right"><strong>Diskon {{ purchaseInvoiceHeader.discountPercentage|default|number_format(2) }}%</strong></td>
+                <td class="text-right"><strong>{{ purchaseInvoiceHeader.discountNominal|default|number_format(2) }}</strong></td>
+            </tr>
+            <tr>
+                <td colspan="6" class="text-right"><strong>PPn {{ purchaseInvoiceHeader.taxPercentage|default }}%</strong></td>
+                <td class="text-right"><strong>{{ purchaseInvoiceHeader.taxNominal|default|number_format(2) }}</strong></td>
+            </tr>
+            <tr>
+                <td colspan="6" class="text-right"><strong>Ongkos Kirim</strong></td>
+                <td class="text-right"><strong>{{ purchaseInvoiceHeader.shippingFee|default|number_format(2) }}</strong></td>
+            </tr>
+            <tr>
+                <td colspan="6" class="text-right"><strong>Grand Total</strong></td>
+                <td class="text-right"><strong>{{ purchaseInvoiceHeader.grandTotalBeforeDownpayment|default|number_format(2) }}</strong></td>
+            </tr>
+            <tr>
+                <td colspan="6" class="text-right"><strong>Uang Muka {{ purchaseInvoiceHeader.downpaymentPercentage|default|number_format(2) }}%</strong></td>
+                <td class="text-right"><strong>{{ purchaseInvoiceHeader.downpaymentNominal|default|number_format(2) }}</strong></td>
+            </tr>
+            <tr>
+                <td colspan="6" class="text-right"><strong>Grand Total</strong></td>
+                <td class="text-right"><strong>{{ purchaseInvoiceHeader.grandTotalAfterDownpayment|default|number_format(2) }}</strong></td>
+            </tr>
+        </tfoot>
+    </table>
+{% endblock %}

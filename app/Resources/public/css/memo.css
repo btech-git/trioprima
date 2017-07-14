@@ -1,0 +1,118 @@
+.memo
+{
+    font-family: Arial,Helvetica,sans-serif;
+    font-size: 12px;
+}
+
+.memo .label
+{
+    font-weight: bold;
+}
+
+.memo .full
+{
+    width: 100%;
+}
+
+.memo .left
+{
+    text-align: left;
+}
+
+.memo .center
+{
+    text-align: center;
+}
+
+.memo .right
+{
+    text-align: right;
+}
+
+.memo .justify
+{
+    text-align: justify;
+}
+
+.memo div.table
+{
+    display: table;
+}
+
+.memo div.row
+{
+    display: table-row;
+}
+
+.memo div.cell
+{
+    display: table-cell;
+}
+
+.memo table.detail
+{
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    border-collapse: collapse;
+    border-spacing: 0;
+    border-top: 1px solid black;
+    border-bottom: 1px solid black;
+}
+
+.memo table.detail thead th, .memo table.detail tbody td, .memo table.detail tfoot td
+{
+    border-left: 1px solid black;
+    border-right: 1px solid black;
+}
+
+.memo table.detail thead th, .memo table.detail tfoot td
+{
+    border-top: 1px solid black;
+    border-bottom: 1px solid black;
+}
+
+.memo .header
+{
+    font-weight: bold;
+    text-align: center;
+}
+
+.memo .header h1.title, .memo .header h2.title, .memo .header h3.title
+{
+    margin: 0;
+}
+
+.memo .header h1.title
+{
+    font-size: 1.5em;
+}
+
+.memo .header h2.title
+{
+    font-size: 1.25em;
+}
+
+.memo .header h3.title
+{
+    font-size: 1.125em;
+}
+
+.memo .note
+{
+    width: 80%;
+    margin: 0 auto;
+}
+
+.memo .signature
+{
+    margin: 0 auto;
+    text-align: center;
+    font-weight: bold;
+    font-style: italic;
+}
+
+.memo .signature div.blank
+{
+    height: 50pt;
+}

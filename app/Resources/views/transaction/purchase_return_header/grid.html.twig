@@ -1,0 +1,46 @@
+{% set grid_layout = 'datagrid.html.twig' %}
+
+{{ grid_top(grid) }}
+
+<table data-role="table" class="table table-bordered table-striped table-condensed table-hover">
+    <thead>
+        <tr data-action="sort" class="alert alert-info">
+            <th data-group="purchaseReturnHeader" data-field="codeNumber">Retur #</th>
+            <th data-group="purchaseReturnHeader" data-field="transactionDate">Tanggal</th>
+            <th>Invoice #</th>
+            <th>Supplier</th>
+            <th data-group="purchaseReturnHeader" data-field="note">Note</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for purchaseReturnHeader in grid.data %}
+            <tr data-field-id="{{ purchaseReturnHeader.id }}">
+                <td class="text-left">{{ purchaseReturnHeader.codeNumber|default }}</td>
+                <td class="text-left">{{ purchaseReturnHeader.transactionDate|default ? purchaseReturnHeader.transactionDate|date('j F Y') }}</td>
+                <td class="text-left">{{ purchaseReturnHeader.purchaseInvoiceHeader.codeNumber|default }}</td>
+                <td class="text-left">{{ purchaseReturnHeader.purchaseInvoiceHeader.supplier.company|default }}</td>
+                <td class="text-left">{{ purchaseReturnHeader.note|default }}</td>
+                <td class="text-left">
+                    {{ include('transaction/actions.html.twig', {
+                        'contents': {
+                            '{index}': null,
+                            '{new}': null,
+                            '{show}': include('action.html.twig', {'url': path('transaction_purchase_return_header_show', {'id': purchaseReturnHeader.id}), 'button': 'btn btn-info btn-sm', 'icon': 'glyphicon glyphicon-info-sign'}),
+                            '{edit}': include('action.html.twig', {'url': path('transaction_purchase_return_header_edit', {'id': purchaseReturnHeader.id}), 'button': 'btn btn-warning btn-sm', 'icon': 'glyphicon glyphicon-edit'}),
+                            '{delete}': include('action.html.twig', {'url': path('transaction_purchase_return_header_delete', {'id': purchaseReturnHeader.id}), 'button': 'btn btn-danger btn-sm', 'icon': 'glyphicon glyphicon-remove'}),
+                        }
+                    }) }}
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="6" class="alert alert-warning">
+                    <strong>There are no items to display.</strong>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{{ grid_bottom(grid) }}
