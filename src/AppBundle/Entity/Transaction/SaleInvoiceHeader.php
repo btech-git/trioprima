@@ -229,11 +229,6 @@ class SaleInvoiceHeader extends CodeNumberEntity
     
     public function sync()
     {
-        if ($this->transactionDate !== null) {
-            $this->setCodeNumberMonth(intval($this->transactionDate->format('m')));
-            $this->setCodeNumberYear(intval($this->transactionDate->format('y')));
-        }
-        
         $subTotal = 0.00;
         foreach ($this->saleInvoiceDetails as $saleInvoiceDetail) {
             $subTotal += $saleInvoiceDetail->getTotal();

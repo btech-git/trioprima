@@ -30,6 +30,10 @@ class SaleInvoiceForm
 //            $lastSaleInvoiceHeader = $this->saleInvoiceHeaderRepository->findRecentBy($year, $month);
 //            $currentSaleInvoiceHeader = ($lastSaleInvoiceHeader === null) ? $saleInvoiceHeader : $lastSaleInvoiceHeader;
 //            $saleInvoiceHeader->setCodeNumberToNext($currentSaleInvoiceHeader->getCodeNumber(), $year, $month);
+            if ($saleInvoiceHeader->getTransactionDate() !== null) {
+                $saleInvoiceHeader->setCodeNumberMonth(intval($saleInvoiceHeader->getTransactionDate()->format('m')));
+                $saleInvoiceHeader->setCodeNumberYear(intval($saleInvoiceHeader->getTransactionDate()->format('y')));
+            }
             
             $saleInvoiceHeader->setTaxInvoiceCode($taxInvoiceCode);
             $saleInvoiceHeader->setStaffCreated($staff);
