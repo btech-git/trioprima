@@ -44,6 +44,46 @@
     border-bottom: 2px dotted;
 }
 
+.report .border-left-solid-normal
+{
+    border-left: 1px solid;
+}
+
+.report .border-left-solid-bold
+{
+    border-left: 2px solid;
+}
+
+.report .border-left-dotted-normal
+{
+    border-left: 1px dotted;
+}
+
+.report .border-left-dotted-bold
+{
+    border-left: 2px dotted;
+}
+
+.report .border-right-solid-normal
+{
+    border-right: 1px solid;
+}
+
+.report .border-right-solid-bold
+{
+    border-right: 2px solid;
+}
+
+.report .border-right-dotted-normal
+{
+    border-right: 1px dotted;
+}
+
+.report .border-right-dotted-bold
+{
+    border-right: 2px dotted;
+}
+
 .report table
 {
     margin: 1pt;
