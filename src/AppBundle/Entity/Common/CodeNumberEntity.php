@@ -14,7 +14,7 @@ abstract class CodeNumberEntity
 {
     /**
      * @ORM\Column(name="cn_ordinal", type="integer")
-     * @Assert\NotNull() @Assert\Range(min=1, max=9999)
+     * @Assert\NotNull() @Assert\Range(min=0, max=9999)
      */
     private $codeNumberOrdinal;
     /**
