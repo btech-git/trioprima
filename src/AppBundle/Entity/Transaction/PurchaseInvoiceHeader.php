@@ -43,7 +43,7 @@ class PurchaseInvoiceHeader extends CodeNumberEntity
     private $taxInvoiceCode;
     /**
      * @ORM\Column(name="supplier_invoice", type="string", length=60)
-     * @Assert\NotNull()
+     * @Assert\NotBlank()
      */
     private $supplierInvoice;
     /**

@@ -66,6 +66,10 @@ class ProductPurchaseInvoiceGridType extends DataGridType
                         ->getInput(2)
                             ->setAttributes(array('data-pick' => 'date'))
                     ->setDefault(BetweenType::class, new \DateTime(), new \DateTime())
+                ->addField('supplierInvoice')
+                    ->addOperator(SearchBlankType::class)
+                    ->addOperator(EqualType::class)
+                    ->addOperator(ContainType::class)
         ;
 
         $builder->sortWidget()
