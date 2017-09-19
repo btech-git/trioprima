@@ -11,8 +11,8 @@ class PurchaseInvoiceDetailRepository extends EntityRepository
         $query = $this->_em->createQuery('SELECT t.unitPrice * (CASE WHEN h.isTax = true THEN 1.1 ELSE 1 END) AS average_purchase_price FROM AppBundle\Entity\Transaction\PurchaseInvoiceDetail t JOIN t.purchaseInvoiceHeader h WHERE t.product = :product ORDER BY t.id DESC');
         $query->setParameter('product', $product);
         $query->setMaxResults(1);
-        $averagePurchasePrice = $query->getSingleScalarResult();
-        dump($averagePurchasePrice);
-        return $averagePurchasePrice;
+        $lastPurchaseInvoiceDetailRow = $query->getOneOrNullResult();
+        
+        return $lastPurchaseInvoiceDetailRow === null ? '0.00' : $lastPurchaseInvoiceDetailRow['average_purchase_price'];
     }
 }
