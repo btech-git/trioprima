@@ -6,7 +6,7 @@
         {% block stylesheets_include %}
             <link rel="stylesheet" href="{{ asset('../vendor/twbs/bootstrap/dist/css/bootstrap.min.css') }}" />
             <link rel="stylesheet" href="{{ asset('../vendor/eonasdan/bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css') }}" />
-            <link rel="stylesheet" href="{{ asset('../app/Resources/public/css/custom.css') }}" />
+            <link rel="stylesheet" href="{{ asset('css/main.css') }}" />
         {% endblock %}
         <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
         {% block javascripts_include %}
@@ -14,7 +14,7 @@
             <script src="{{ asset('../vendor/twbs/bootstrap/dist/js/bootstrap.min.js') }}"></script>
             <script src="{{ asset('../vendor/moment/moment/min/moment.min.js') }}"></script>
             <script src="{{ asset('../vendor/eonasdan/bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js') }}"></script>
-            <script src="{{ asset('../app/Resources/public/js/custom.js') }}"></script>
+            <script src="{{ asset('js/main.js') }}"></script>
         {% endblock %}
         {% block stylesheets %}{% endblock %}
     </head>
