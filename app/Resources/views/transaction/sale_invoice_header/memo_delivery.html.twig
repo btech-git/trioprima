@@ -50,7 +50,7 @@
             </thead>
             <tbody>
                 {% set quantitySum = 0.00 %}
-                {% for row in saleInvoiceHeader.saleInvoiceDetails|batch(10, '') %}
+                {% for row in saleInvoiceHeader.saleInvoiceDetails|batch(12, '') %}
                     {% for saleInvoiceDetail in row %}
                         <tr>
                             {% for i in 1..4 if saleInvoiceDetail is empty %}
