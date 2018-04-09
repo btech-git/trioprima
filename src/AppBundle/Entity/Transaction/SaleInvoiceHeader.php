@@ -102,6 +102,11 @@ class SaleInvoiceHeader extends CodeNumberEntity
      */
     private $totalReturn;
     /**
+     * @ORM\Column(name="remaining", type="decimal", precision=18, scale=2)
+     * @Assert\NotNull() @Assert\GreaterThanOrEqual(0)
+     */
+    private $remaining;
+    /**
      * @ORM\Column(name="note", type="text")
      * @Assert\NotNull()
      */
@@ -200,6 +205,9 @@ class SaleInvoiceHeader extends CodeNumberEntity
     public function getTotalReturn() { return $this->totalReturn; }
     public function setTotalReturn($totalReturn) { $this->totalReturn = $totalReturn; }
     
+    public function getRemaining() { return $this->remaining; }
+    public function setRemaining($remaining) { $this->remaining = $remaining; }
+    
     public function getNote() { return $this->note; }
     public function setNote($note) { $this->note = $note; }
     
@@ -240,6 +248,7 @@ class SaleInvoiceHeader extends CodeNumberEntity
         $this->grandTotalBeforeDownpayment = $this->subTotal - $discountNominal + $this->taxNominal + $this->shippingFee;
         $downpaymentNominal = $this->getDownpaymentNominal();
         $this->grandTotalAfterDownpayment = $this->grandTotalBeforeDownpayment - $downpaymentNominal;
+        $this->remaining = $this->getSyncRemaining();
     }
     
     public function getDiscountPercentage()
@@ -296,5 +305,12 @@ class SaleInvoiceHeader extends CodeNumberEntity
     public function getProfitLoss()
     {
         return $this->grandTotalBeforeDownpayment - $this->getAveragePurchaseGrandTotal();
+    }
+    
+    public function getSyncRemaining()
+    {
+        $totalReturn = $this->totalReturn === null ? 0 : $this->totalReturn;
+        $totalPayment = $this->totalPayment === null ? 0 : $this->totalPayment;
+        return $this->grandTotalAfterDownpayment - $totalReturn - $totalPayment;
     }
 }

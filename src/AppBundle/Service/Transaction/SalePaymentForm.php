@@ -71,6 +71,7 @@ class SalePaymentForm
                 $totalPayment += $salePaymentDetail->getAmount();
             }
             $saleInvoiceHeader->setTotalPayment($totalPayment);
+            $saleInvoiceHeader->setRemaining($saleInvoiceHeader->getSyncRemaining());
         }
     }
     

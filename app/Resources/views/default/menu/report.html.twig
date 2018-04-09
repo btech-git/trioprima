@@ -88,6 +88,14 @@
             </th>
         </tr>
         <tr>
+            <td>Hutang Supplier</td>
+            <td>{{ include('action.html.twig', {'url': path('report_payable_purchase_index'), 'label': 'Show', 'button': 'btn btn-info', 'icon': 'glyphicon glyphicon-info-sign'}) }}</td>
+        </tr>
+        <tr>
+            <td>Piutang Customer</td>
+            <td>{{ include('action.html.twig', {'url': path('report_receivable_sale_index'), 'label': 'Show', 'button': 'btn btn-info', 'icon': 'glyphicon glyphicon-info-sign'}) }}</td>
+        </tr>
+        <tr>
             <td>Penerimaan Kas / Bank</td>
             <td>{{ include('action.html.twig', {'url': path('report_deposit_header_index'), 'label': 'Show', 'button': 'btn btn-info', 'icon': 'glyphicon glyphicon-info-sign'}) }}</td>
         </tr>

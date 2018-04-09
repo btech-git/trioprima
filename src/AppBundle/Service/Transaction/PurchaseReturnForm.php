@@ -55,6 +55,7 @@ class PurchaseReturnForm
                 $totalReturn += $purchaseReturnHeader->getGrandTotal();
             }
             $purchaseInvoiceHeader->setTotalReturn($totalReturn);
+            $purchaseInvoiceHeader->setRemaining($purchaseInvoiceHeader->getSyncRemaining());
         }
     }
     

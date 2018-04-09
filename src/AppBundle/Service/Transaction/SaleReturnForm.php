@@ -55,6 +55,7 @@ class SaleReturnForm
                 $totalReturn += $saleReturnHeader->getGrandTotal();
             }
             $saleInvoiceHeader->setTotalReturn($totalReturn);
+            $saleInvoiceHeader->setRemaining($saleInvoiceHeader->getSyncRemaining());
         }
     }
     

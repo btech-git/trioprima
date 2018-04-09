@@ -71,6 +71,7 @@ class PurchasePaymentForm
                 $totalPayment += $purchasePaymentDetail->getAmount();
             }
             $purchaseInvoiceHeader->setTotalPayment($totalPayment);
+            $purchaseInvoiceHeader->setRemaining($purchaseInvoiceHeader->getSyncRemaining());
         }
     }
     
