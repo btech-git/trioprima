@@ -30,6 +30,9 @@
                     <ss:Data ss:Type="String">Tanggal</ss:Data>
                 </ss:Cell>
                 <ss:Cell>
+                    <ss:Data ss:Type="String">F. Pajak</ss:Data>
+                </ss:Cell>
+                <ss:Cell>
                     <ss:Data ss:Type="String">Customer</ss:Data>
                 </ss:Cell>
                 <ss:Cell>
@@ -58,6 +61,9 @@
                         <ss:Data ss:Type="String">{{ saleInvoiceHeader.transactionDate|default ? saleInvoiceHeader.transactionDate|date('j F Y') }}</ss:Data>
                     </ss:Cell>
                     <ss:Cell>
+                        <ss:Data ss:Type="String">{{ saleInvoiceHeader.taxInvoiceCode|default }}</ss:Data>
+                    </ss:Cell>
+                    <ss:Cell>
                         <ss:Data ss:Type="String">{{ saleInvoiceHeader.customer.company|default }}</ss:Data>
                     </ss:Cell>
                     <ss:Cell>
@@ -79,7 +85,7 @@
                 {% set totalPaymentSum = totalPaymentSum + saleInvoiceHeader.totalPayment %}
             {% endfor %}
             <ss:Row ss:StyleID="Level1|Bold|Top">
-                <ss:Cell ss:Index="4">
+                <ss:Cell ss:Index="5">
                     <ss:Data ss:Type="Number">{{ grandTotalBeforeDownpaymentSum|default|number_format(2, '.', '') }}</ss:Data>
                 </ss:Cell>
                 <ss:Cell>
