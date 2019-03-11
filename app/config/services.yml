@@ -97,12 +97,6 @@ services:
         arguments:
             - AppBundle\Entity\Report\Inventory
 
-    app.report.account_journal_repository:
-        class: AppBundle\Repository\Report\AccountJournalRepository
-        factory: ["@doctrine.orm.entity_manager", getRepository]
-        arguments:
-            - AppBundle\Entity\Report\AccountJournal
-
     app.transaction.purchase_invoice_form:
         class: AppBundle\Service\Transaction\PurchaseInvoiceForm
         arguments: ["@app.transaction.purchase_invoice_header_repository", "@app.report.inventory_repository"]
@@ -150,3 +144,13 @@ services:
     app.transaction.journal_voucher_form:
         class: AppBundle\Service\Transaction\JournalVoucherForm
         arguments: ["@app.transaction.journal_voucher_header_repository", "@app.report.account_journal_repository"]
+
+    app.report.account_journal_repository:
+        class: AppBundle\Repository\Report\AccountJournalRepository
+        factory: ["@doctrine.orm.entity_manager", getRepository]
+        arguments:
+            - AppBundle\Entity\Report\AccountJournal
+
+    app.report.account_journal_ledger_summary:
+        class: AppBundle\Service\Report\AccountJournalLedgerSummary
+        arguments: ["@app.report.account_journal_repository"]

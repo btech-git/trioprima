@@ -46,11 +46,16 @@ class Account
      * @ORM\OneToMany(targetEntity="Supplier", mappedBy="account")
      */
     private $suppliers;
+    /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Report\AccountJournal", mappedBy="account")
+     */
+    private $accountJournals;
     
     public function __construct()
     {
         $this->customers = new ArrayCollection();
         $this->suppliers = new ArrayCollection();
+        $this->accountJournals = new ArrayCollection();
     }
     
     public function __toString()
@@ -77,4 +82,7 @@ class Account
     
     public function getSuppliers() { return $this->suppliers; }
     public function setSuppliers(Collection $suppliers) { $this->suppliers = $suppliers; }
+    
+    public function getAccountJournals() { return $this->accountJournals; }
+    public function setAccountJournals(Collection $accountJournals) { $this->accountJournals = $accountJournals; }
 }

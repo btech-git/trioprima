@@ -88,11 +88,11 @@
             </th>
         </tr>
         <tr>
-            <td>Hutang Supplier</td>
+            <td>Aging Hutang Supplier</td>
             <td>{{ include('action.html.twig', {'url': path('report_payable_purchase_index'), 'label': 'Show', 'button': 'btn btn-info', 'icon': 'glyphicon glyphicon-info-sign'}) }}</td>
         </tr>
         <tr>
-            <td>Piutang Customer</td>
+            <td>Aging Piutang Customer</td>
             <td>{{ include('action.html.twig', {'url': path('report_receivable_sale_index'), 'label': 'Show', 'button': 'btn btn-info', 'icon': 'glyphicon glyphicon-info-sign'}) }}</td>
         </tr>
         <tr>
@@ -106,6 +106,10 @@
         <tr>
             <td>Jurnal Umum</td>
             <td>{{ include('action.html.twig', {'url': path('report_journal_voucher_header_index'), 'label': 'Show', 'button': 'btn btn-info', 'icon': 'glyphicon glyphicon-info-sign'}) }}</td>
+        </tr>
+        <tr>
+            <td>Buku Besar</td>
+            <td>{{ include('action.html.twig', {'url': path('report_account_journal_ledger_index'), 'label': 'Show', 'button': 'btn btn-info', 'icon': 'glyphicon glyphicon-info-sign'}) }}</td>
         </tr>
     </table>
             

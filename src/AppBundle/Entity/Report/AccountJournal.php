@@ -53,7 +53,7 @@ class AccountJournal extends CodeNumberEntity
      */
     private $credit;
     /**
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Master\Account")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Master\Account", inversedBy="accountJournals")
      * @Assert\NotNull()
      */
     private $account;
