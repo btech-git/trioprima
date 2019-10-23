@@ -1,0 +1,56 @@
+{% extends 'report/export.xml.twig' %}
+
+{% block data %}
+    <ss:Worksheet>
+        <ss:Table ss:StyleID="Data">
+            <ss:Column ss:Span="5" ss:AutoFitWidth="1" />
+            <ss:Row ss:AutoFitHeight="1" ss:StyleID="Title">
+                <ss:Cell ss:MergeAcross="5">
+                    <ss:Data ss:Type="String">PT. Trio Prima</ss:Data>
+                </ss:Cell>
+            </ss:Row>
+            <ss:Row ss:AutoFitHeight="1" ss:StyleID="Title">
+                <ss:Cell ss:MergeAcross="5">
+                    <ss:Data ss:Type="String">Laporan Pengecekan Stok</ss:Data>
+                </ss:Cell>
+            </ss:Row>
+            <ss:Row ss:Span="1" />
+            <ss:Row ss:StyleID="Level1|Bold|Center|Bottom">
+                <ss:Cell ss:Index="1">
+                    <ss:Data ss:Type="String">Nama Produk</ss:Data>
+                </ss:Cell>
+                <ss:Cell>
+                    <ss:Data ss:Type="String">Ukuran</ss:Data>
+                </ss:Cell>
+                <ss:Cell>
+                    <ss:Data ss:Type="String">Merk</ss:Data>
+                </ss:Cell>
+                <ss:Cell>
+                    <ss:Data ss:Type="String">Kategori</ss:Data>
+                </ss:Cell>
+                <ss:Cell>
+                    <ss:Data ss:Type="String">Stok</ss:Data>
+                </ss:Cell>
+            </ss:Row>
+            {% for product in grid.data %}
+                <ss:Row ss:StyleID="Level1">
+                    <ss:Cell ss:Index="1">
+                        <ss:Data ss:Type="String">{{ product.name|default }}</ss:Data>
+                    </ss:Cell>
+                    <ss:Cell>
+                        <ss:Data ss:Type="String">{{ product.size|default }}</ss:Data>
+                    </ss:Cell>
+                    <ss:Cell>
+                        <ss:Data ss:Type="String">{{ product.brand.name|default }}</ss:Data>
+                    </ss:Cell>
+                    <ss:Cell>
+                        <ss:Data ss:Type="String">{{ product.productCategory.name|default }}</ss:Data>
+                    </ss:Cell>
+                    <ss:Cell>
+                        <ss:Data ss:Type="Number">{{ inventoryRepository.getStockByProduct(product)|default }}</ss:Data>
+                    </ss:Cell>
+                </ss:Row>
+            {% endfor %}
+        </ss:Table>
+    </ss:Worksheet>
+{% endblock %}

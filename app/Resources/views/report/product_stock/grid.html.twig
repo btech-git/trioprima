@@ -48,7 +48,7 @@
 <script>
     jQuery(function($) {
         $("#export").click(function() {
-            var url = "{{ path('report_adjustment_stock_header_export') }}";
+            var url = "{{ path('report_product_stock_export') }}";
             var data = {{ grid.params|json_encode|raw }};
             $.redirect(url, data);
         });
