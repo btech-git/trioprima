@@ -1,0 +1,57 @@
+{% extends 'report/layout.html.twig' %}
+
+{% block title 'Report Profit Loss' %}
+
+{% block content %}
+    <div id="profit-loss-grid" data-grid="{{ path('report_profit_loss_grid') }}"></div>
+{% endblock %}
+
+{% block stylesheets_include %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/report.css') }}" />
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        div.report-data {
+            display: table;
+            width: 80%;
+            margin: 0 auto;
+        }
+        div.report-data > div.row {
+            display: table-row;
+        }
+        div.report-data > div.row > div:nth-child(1), div.report-data > div.row > div:nth-child(2) {
+            display: table-cell;
+        }
+        div.report-data > div.row > div:nth-child(1) {
+            width: 80%;
+        }
+        div.report-data > div.row > div:nth-child(2) {
+            width: 20%;
+            text-align: right;
+        }
+        .padding-left-0 {
+            padding-left: 0;
+        }
+        .padding-left-1 {
+            padding-left: 25px;
+        }
+        .padding-left-2 {
+            padding-left: 50px;
+        }
+        .padding-row-0 {
+            padding: 0;
+        }
+        .padding-row-1 {
+            padding: 16px 0;
+        }
+        .text-larger {
+            font-size: 1.25em;
+        }
+        .text-underline {
+            text-decoration: underline;
+        }
+    </style>
+{% endblock %}

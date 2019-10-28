@@ -1,0 +1,85 @@
+{% set grid_layout = 'datagrid.html.twig' %}
+
+<div class="hidden-print">
+    {{ grid_top(grid) }}
+    {#<div class="text-center">
+        <button type="button" class="btn btn-info btn-sm" id="export">Export</button>
+    </div>#}
+    <hr />
+</div>
+
+<div class="report">
+    <div class="report-header">
+        <div class="report-title">PT. Bypassindo Jaya Indah</div>
+        <div class="report-title">Laporan Laba Rugi</div>
+        <div>
+            {% set endDate = grid.searchVals['journalLedgers']['transactionDate'][1]|default %}
+            {{ endDate ? endDate|date('j F Y') }}
+        </div>
+    </div>
+
+    <br />
+    
+    <div class="report-data">
+        {% set lastCode = '' %}
+        {% set categoryName = '' %}
+        {% set totalSum = 0 %}
+        {% set profitLossAmount = 0 %}
+        {% set categoryCount = 0 %}
+        {% for index, item in grid.data %}
+            {% if lastCode != item['account_category_code'] %}
+                {% if lastCode != '' %}
+                    <div class="row">
+                        <div class="font-weight-bold padding-left-2">Total {{ categoryName }}</div>
+                        <div class="font-weight-bold border-top-solid-normal">{{ totalSum|number_format(2) }}</div>
+                    </div>
+                    {% set profitLossAmount = profitLossAmount + totalSum %}
+                    {% set categoryCount = categoryCount + 1 %}
+                {% endif %}
+                {% set categoryName = item['account_category_name'] %}
+                {% set totalSum = 0 %}
+                {% if categoryCount == 2 %}
+                    <div class="row text-larger">
+                        <div class="font-weight-bold padding-row-1 padding-left-0 text-right">LABA KOTOR</div>
+                        <div class="font-weight-bold padding-row-1 border-n text-underline">{{ profitLossAmount|number_format(2) }}</div>
+                    </div>
+                {% endif %}
+                <div class="row">
+                    <div class="font-weight-normal padding-left-0">{{ categoryName }}</div>
+                    <div class="font-weight-normal"></div>
+                </div>
+            {% endif %}
+            <div class="row">
+                <div class="font-weight-normal padding-left-1">{{ item['account_name'] }}</div>
+                <div class="font-weight-normal">{{ item['total']|number_format(2) }}</div>
+            </div>
+            {% set totalSum = totalSum + item['total'] %}
+            {% set lastCode = item['account_category_code'] %}
+        {% endfor %}
+        <div class="row">
+            <div class="font-weight-bold padding-left-2">Total {{ categoryName }}</div>
+            <div class="font-weight-bold border-top-solid-normal">{{ totalSum|number_format(2) }}</div>
+        </div>
+        {% set profitLossAmount = profitLossAmount + totalSum %}
+        {% set categoryCount = categoryCount + 1 %}
+        <div class="row text-larger">
+            <div class="font-weight-bold padding-row-1 padding-left-0 text-right">LABA BERSIH</div>
+            <div class="font-weight-bold padding-row-1 border-n text-underline">{{ profitLossAmount|number_format(2) }}</div>
+        </div>
+    </div>
+</div>
+
+<div class="hidden-print">
+    <br />
+    {{ grid_bottom(grid) }}
+</div>
+{#
+<script>
+    jQuery(function($) {
+        $("#export").click(function() {
+            var url = "{{ path('report_account_journal_ledger_export') }}";
+            var data = {{ grid.params|json_encode|raw }};
+            $.redirect(url, data);
+        });
+    });
+</script> #}
