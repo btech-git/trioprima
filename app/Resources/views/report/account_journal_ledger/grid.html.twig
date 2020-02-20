@@ -2,9 +2,9 @@
 
 <div class="hidden-print">
     {{ grid_top(grid) }}
-    {#<div class="text-center">
+    <div class="text-center">
         <button type="button" class="btn btn-info btn-sm" id="export">Export</button>
-    </div>#}
+    </div>
     <hr />
 </div>
 
@@ -91,7 +91,7 @@
     <br />
     {{ grid_bottom(grid) }}
 </div>
-{#
+
 <script>
     jQuery(function($) {
         $("#export").click(function() {
@@ -100,4 +100,4 @@
             $.redirect(url, data);
         });
     });
-</script> #}
+</script>

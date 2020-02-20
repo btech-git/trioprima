@@ -9,8 +9,10 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * @ORM\Table(name="master_account") @ORM\Entity
- * @UniqueEntity("code") @UniqueEntity("name")
+ * @ORM\Table(name="master_account") 
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\Master\AccountRepository")
+ * @UniqueEntity("code") 
+ * @UniqueEntity("name")
  */
 class Account
 {

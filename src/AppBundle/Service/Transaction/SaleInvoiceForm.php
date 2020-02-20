@@ -5,21 +5,28 @@ namespace AppBundle\Service\Transaction;
 use LibBundle\Doctrine\ObjectPersister;
 use AppBundle\Entity\Transaction\SaleInvoiceHeader;
 use AppBundle\Entity\Report\Inventory;
+use AppBundle\Entity\Report\AccountJournal;
 use AppBundle\Repository\Transaction\SaleInvoiceHeaderRepository;
 use AppBundle\Repository\Transaction\PurchaseInvoiceDetailRepository;
 use AppBundle\Repository\Report\InventoryRepository;
+use AppBundle\Repository\Report\AccountJournalRepository;
+use AppBundle\Repository\Master\AccountRepository;
 
 class SaleInvoiceForm
 {
     private $saleInvoiceHeaderRepository;
     private $purchaseInvoiceDetailRepository;
     private $inventoryRepository;
+    private $accountJournalRepository;
+    private $accountRepository;
     
-    public function __construct(SaleInvoiceHeaderRepository $saleInvoiceHeaderRepository, PurchaseInvoiceDetailRepository $purchaseInvoiceDetailRepository, InventoryRepository $inventoryRepository)
+    public function __construct(SaleInvoiceHeaderRepository $saleInvoiceHeaderRepository, PurchaseInvoiceDetailRepository $purchaseInvoiceDetailRepository, InventoryRepository $inventoryRepository, AccountJournalRepository $accountJournalRepository, AccountRepository $accountRepository)
     {
         $this->saleInvoiceHeaderRepository = $saleInvoiceHeaderRepository;
         $this->purchaseInvoiceDetailRepository = $purchaseInvoiceDetailRepository;
         $this->inventoryRepository = $inventoryRepository;
+        $this->accountJournalRepository = $accountJournalRepository;
+        $this->accountRepository = $accountRepository;
     }
     
     public function initialize(SaleInvoiceHeader $saleInvoiceHeader, array $params = array())
@@ -71,6 +78,7 @@ class SaleInvoiceForm
                     'saleInvoiceDetails' => array('add' => true),
                 ));
                 $this->markInventories($saleInvoiceHeader);
+                $this->markAccountJournals($saleInvoiceHeader, true);
             });
         } else {
             ObjectPersister::save(function() use ($saleInvoiceHeader) {
@@ -78,6 +86,7 @@ class SaleInvoiceForm
                     'saleInvoiceDetails' => array('add' => true, 'remove' => true),
                 ));
                 $this->markInventories($saleInvoiceHeader);
+                $this->markAccountJournals($saleInvoiceHeader, true);
             });
         }
     }
@@ -91,6 +100,7 @@ class SaleInvoiceForm
                     'saleInvoiceDetails' => array('remove' => true),
                 ));
                 $this->markInventories($saleInvoiceHeader);
+                $this->markAccountJournals($saleInvoiceHeader, true);
             });
         }
     }
@@ -137,6 +147,44 @@ class SaleInvoiceForm
                 $inventory->setStaff($saleInvoiceHeader->getStaffCreated());
                 $this->inventoryRepository->add($inventory);
             }
+        }
+    }
+    
+    private function markAccountJournals(SaleInvoiceHeader $saleInvoiceHeader, $addForHeader)
+    {
+        $oldAccountJournals = $this->accountJournalRepository->findBy(array(
+            'transactionType' => AccountJournal::TRANSACTION_TYPE_SALE_INVOICE,
+            'codeNumberYear' => $saleInvoiceHeader->getCodeNumberYear(),
+            'codeNumberMonth' => $saleInvoiceHeader->getCodeNumberMonth(),
+            'codeNumberOrdinal' => $saleInvoiceHeader->getCodeNumberOrdinal(),
+        ));
+        $this->accountJournalRepository->remove($oldAccountJournals);
+        if ($addForHeader && $saleInvoiceHeader->getGrandTotalAfterDownpayment() > 0) {
+            $accountReceivable = $this->accountRepository->findReceivableRecord();
+            
+            $accountJournalCredit = new AccountJournal();
+            $accountJournalCredit->setCodeNumber($saleInvoiceHeader->getCodeNumber());
+            $accountJournalCredit->setTransactionDate($saleInvoiceHeader->getTransactionDate());
+            $accountJournalCredit->setTransactionType(AccountJournal::TRANSACTION_TYPE_SALE_INVOICE);
+            $accountJournalCredit->setTransactionSubject($saleInvoiceHeader->getCustomer());
+            $accountJournalCredit->setNote($saleInvoiceHeader->getNote());
+            $accountJournalCredit->setDebit(0);
+            $accountJournalCredit->setCredit($saleInvoiceHeader->getGrandTotalAfterDownpayment());
+            $accountJournalCredit->setAccount($accountReceivable);
+            $accountJournalCredit->setStaff($saleInvoiceHeader->getStaffCreated());
+            $this->accountJournalRepository->add($accountJournalCredit);
+                
+            $accountJournalDebit = new AccountJournal();
+            $accountJournalDebit->setCodeNumber($saleInvoiceHeader->getCodeNumber());
+            $accountJournalDebit->setTransactionDate($saleInvoiceHeader->getTransactionDate());
+            $accountJournalDebit->setTransactionType(AccountJournal::TRANSACTION_TYPE_SALE_INVOICE);
+            $accountJournalDebit->setTransactionSubject($saleInvoiceHeader->getCustomer());
+            $accountJournalDebit->setNote($saleInvoiceHeader->getNote());
+            $accountJournalDebit->setDebit($saleInvoiceHeader->getGrandTotalAfterDownpayment());
+            $accountJournalDebit->setCredit(0);
+            $accountJournalDebit->setAccount($saleInvoiceHeader->getCustomer()->getAccount());
+            $accountJournalDebit->setStaff($saleInvoiceHeader->getStaffCreated());
+            $this->accountJournalRepository->add($accountJournalDebit);
         }
     }
 }

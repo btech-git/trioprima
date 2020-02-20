@@ -17,6 +17,10 @@ class AccountJournal extends CodeNumberEntity
     const TRANSACTION_TYPE_DEPOSIT = 'deposit';
     const TRANSACTION_TYPE_EXPENSE = 'expense';
     const TRANSACTION_TYPE_VOUCHER = 'voucher';
+    const TRANSACTION_TYPE_SALE_INVOICE = 'sale invoice';
+    const TRANSACTION_TYPE_SALE_PAYMENT = 'sale payment';
+    const TRANSACTION_TYPE_PURCHASE_INVOICE = 'purchase invoice';
+    const TRANSACTION_TYPE_PURCHASE_PAYMENT = 'purchase payment';
     
     /**
      * @ORM\Column(name="id", type="integer") @ORM\Id @ORM\GeneratedValue

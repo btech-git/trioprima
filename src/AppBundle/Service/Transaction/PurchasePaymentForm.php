@@ -4,15 +4,19 @@ namespace AppBundle\Service\Transaction;
 
 use LibBundle\Doctrine\ObjectPersister;
 use AppBundle\Entity\Transaction\PurchasePaymentHeader;
+use AppBundle\Entity\Report\AccountJournal;
 use AppBundle\Repository\Transaction\PurchasePaymentHeaderRepository;
+use AppBundle\Repository\Report\AccountJournalRepository;
 
 class PurchasePaymentForm
 {
     private $purchasePaymentHeaderRepository;
+    private $accountJournalRepository;
     
-    public function __construct(PurchasePaymentHeaderRepository $purchasePaymentHeaderRepository)
+    public function __construct(PurchasePaymentHeaderRepository $purchasePaymentHeaderRepository, AccountJournalRepository $accountJournalRepository)
     {
         $this->purchasePaymentHeaderRepository = $purchasePaymentHeaderRepository;
+        $this->accountJournalRepository = $accountJournalRepository;
     }
     
     public function initialize(PurchasePaymentHeader $purchasePaymentHeader, array $params = array())
@@ -82,12 +86,14 @@ class PurchasePaymentForm
                 $this->purchasePaymentHeaderRepository->add($purchasePaymentHeader, array(
                     'purchasePaymentDetails' => array('add' => true),
                 ));
+                $this->markAccountJournals($purchasePaymentHeader, true);
             });
         } else {
             ObjectPersister::save(function() use ($purchasePaymentHeader) {
                 $this->purchasePaymentHeaderRepository->update($purchasePaymentHeader, array(
                     'purchasePaymentDetails' => array('add' => true, 'remove' => true),
                 ));
+                $this->markAccountJournals($purchasePaymentHeader, true);
             });
         }
     }
@@ -100,6 +106,7 @@ class PurchasePaymentForm
                 $this->purchasePaymentHeaderRepository->remove($purchasePaymentHeader, array(
                     'purchasePaymentDetails' => array('remove' => true),
                 ));
+                $this->markAccountJournals($purchasePaymentHeader, true);
             });
         }
     }
@@ -108,5 +115,44 @@ class PurchasePaymentForm
     {
         $purchasePaymentHeader->getPurchasePaymentDetails()->clear();
         $this->sync($purchasePaymentHeader);
+    }
+    
+    private function markAccountJournals(PurchasePaymentHeader $purchasePaymentHeader, $addForHeader)
+    {
+        $oldAccountJournals = $this->accountJournalRepository->findBy(array(
+            'transactionType' => AccountJournal::TRANSACTION_TYPE_SALE_PAYMENT,
+            'codeNumberYear' => $purchasePaymentHeader->getCodeNumberYear(),
+            'codeNumberMonth' => $purchasePaymentHeader->getCodeNumberMonth(),
+            'codeNumberOrdinal' => $purchasePaymentHeader->getCodeNumberOrdinal(),
+        ));
+        $this->accountJournalRepository->remove($oldAccountJournals);
+        foreach ($purchasePaymentHeader->getPurchasePaymentDetails() as $purchasePaymentDetail) {
+            if ($purchasePaymentDetail->getAmount() > 0) {
+                $accountJournal = new AccountJournal();
+                $accountJournal->setCodeNumber($purchasePaymentHeader->getCodeNumber());
+                $accountJournal->setTransactionDate($purchasePaymentHeader->getTransactionDate());
+                $accountJournal->setTransactionType(AccountJournal::TRANSACTION_TYPE_SALE_PAYMENT);
+                $accountJournal->setTransactionSubject($purchasePaymentDetail->getMemo());
+                $accountJournal->setNote($purchasePaymentHeader->getNote());
+                $accountJournal->setDebit($purchasePaymentDetail->getAmount());
+                $accountJournal->setCredit(0);
+                $accountJournal->setAccount($purchasePaymentDetail->getAccount());
+                $accountJournal->setStaff($purchasePaymentHeader->getStaff());
+                $this->accountJournalRepository->add($accountJournal);
+            }
+        }
+        if ($addForHeader) {
+            $accountJournal = new AccountJournal();
+            $accountJournal->setCodeNumber($purchasePaymentHeader->getCodeNumber());
+            $accountJournal->setTransactionDate($purchasePaymentHeader->getTransactionDate());
+            $accountJournal->setTransactionType(AccountJournal::TRANSACTION_TYPE_SALE_PAYMENT);
+            $accountJournal->setTransactionSubject($purchasePaymentHeader->getSupplier()->getCompany());
+            $accountJournal->setNote($purchasePaymentHeader->getNote());
+            $accountJournal->setDebit(0);
+            $accountJournal->setCredit($purchasePaymentHeader->getTotalAmount());
+            $accountJournal->setAccount($purchasePaymentHeader->getSupplier()->getAccount());
+            $accountJournal->setStaff($purchasePaymentHeader->getStaff());
+            $this->accountJournalRepository->add($accountJournal);
+        }
     }
 }

@@ -54,19 +54,22 @@ class AccountJournalLedgerController extends Controller
      * @Method({"GET", "POST"})
      * @Security("has_role('ROLE_REPORT')")
      */
-    /*
     public function exportAction(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
-        $repository = $em->getRepository(VehicleModel::class);
+        $repository = $em->getRepository(Account::class);
 
+        $accountJournalLedgerService = $this->get('app.report.account_journal_ledger_summary');
         $grid = $this->get('lib.grid.datagrid');
-        $grid->build(VehicleModelSaleInvoiceGridType::class, $repository, $request);
+        $grid->build(AccountJournalLedgerGridType::class, $repository, $request);
+        $dataGridView = $grid->createView();
+        $beginningBalance = $accountJournalLedgerService->getBeginningBalanceData($dataGridView);
 
         $excel = $this->get('phpexcel');
         $excelXmlReader = $this->get('lib.excel.xml_reader');
-        $xml = $this->renderView('report/customer_sale_invoice/export.xml.twig', array(
+        $xml = $this->renderView('report/account_journal_ledger/export.xml.twig', array(
             'grid' => $grid->createView(),
+            'beginningBalanceData' => $beginningBalance,
         ));
         $excelObject = $excelXmlReader->load($xml);
         $writer = $excel->createWriter($excelObject, 'Excel5');
@@ -79,5 +82,5 @@ class AccountJournalLedgerController extends Controller
         $response->headers->set('Content-Disposition', $dispositionHeader);
 
         return $response;
-    }*/
+    }
 }

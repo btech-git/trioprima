@@ -7,6 +7,13 @@ services:
 #    service_name:
 #        class: AppBundle\Directory\ClassName
 #        arguments: ["@another_service_name", "plain_value", "%parameter_name%"]
+
+    app.master.account_repository:
+        class: AppBundle\Repository\Master\AccountRepository
+        factory: ["@doctrine.orm.entity_manager", getRepository]
+        arguments:
+            - AppBundle\Entity\Master\Account
+
     app.master.tax_literal_repository:
         class: LibBundle\Doctrine\EntityRepository
         factory: ["@doctrine.orm.entity_manager", getRepository]
@@ -99,11 +106,11 @@ services:
 
     app.transaction.purchase_invoice_form:
         class: AppBundle\Service\Transaction\PurchaseInvoiceForm
-        arguments: ["@app.transaction.purchase_invoice_header_repository", "@app.report.inventory_repository"]
+        arguments: ["@app.transaction.purchase_invoice_header_repository", "@app.report.inventory_repository", "@app.report.account_journal_repository", "@app.master.account_repository"]
 
     app.transaction.purchase_payment_form:
         class: AppBundle\Service\Transaction\PurchasePaymentForm
-        arguments: ["@app.transaction.purchase_payment_header_repository"]
+        arguments: ["@app.transaction.purchase_payment_header_repository", "@app.report.account_journal_repository"]
 
     app.transaction.purchase_receipt_form:
         class: AppBundle\Service\Transaction\PurchaseReceiptForm
@@ -115,11 +122,11 @@ services:
 
     app.transaction.sale_invoice_form:
         class: AppBundle\Service\Transaction\SaleInvoiceForm
-        arguments: ["@app.transaction.sale_invoice_header_repository", "@app.transaction.purchase_invoice_detail_repository", "@app.report.inventory_repository"]
+        arguments: ["@app.transaction.sale_invoice_header_repository", "@app.transaction.purchase_invoice_detail_repository", "@app.report.inventory_repository", "@app.report.account_journal_repository", "@app.master.account_repository"]
 
     app.transaction.sale_payment_form:
         class: AppBundle\Service\Transaction\SalePaymentForm
-        arguments: ["@app.transaction.sale_payment_header_repository"]
+        arguments: ["@app.transaction.sale_payment_header_repository", "@app.report.account_journal_repository"]
 
     app.transaction.sale_receipt_form:
         class: AppBundle\Service\Transaction\SaleReceiptForm
