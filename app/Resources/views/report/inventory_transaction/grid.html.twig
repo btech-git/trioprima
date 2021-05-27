@@ -1,0 +1,67 @@
+{% set grid_layout = 'datagrid.html.twig' %}
+
+<div class="hidden-print">
+    {{ grid_top(grid) }}
+    <div class="text-center">
+        <button type="button" class="btn btn-info btn-sm" id="export">Export</button>
+    </div>
+    <hr />
+</div>
+
+<div class="report">
+    <div class="report-header">
+        <div class="report-title">PT. Trio Prima</div>
+        <div class="report-title">Laporan Inventory</div>
+        <div>
+            {% set startDate = grid.searchVals['inventories']['transactionDate'][1]|default %}
+            {% set endDate = grid.searchVals['inventories']['transactionDate'][2]|default %}
+            {{ startDate ? startDate|date('j F Y') }} &nbsp;&ndash;&nbsp; {{ endDate ? endDate|date('j F Y') }}
+        </div>
+    </div>
+
+    <br />
+
+    <table class="report-data">
+        <thead class="border-top-solid-bold border-bottom-solid-bold">
+            <tr>
+                <th class="border-left-solid-bold border-right-solid-bold text-center">Nama</th>
+                <th class="border-left-solid-bold border-right-solid-bold text-center">Ukuran</th>
+                <th class="border-left-solid-bold border-right-solid-bold text-center">Merk</th>
+                <th class="border-left-solid-bold border-right-solid-bold text-center">Kategori</th>
+                <th class="border-left-solid-bold border-right-solid-bold text-center">Qty In</th>
+                <th class="border-left-solid-bold border-right-solid-bold text-center">Qty Out</th>
+                <th class="border-left-solid-bold border-right-solid-bold text-center">Stok</th>
+                <th class="border-left-solid-bold border-right-solid-bold text-center">Harga</th>
+            </tr>
+        </thead>
+        <tbody class="border-top-solid-bold border-bottom-solid-bold">
+            {% for product in grid.data %}
+                <tr class="border-top-solid-normal border-bottom-solid-normal" data-field-id="{{ product.id }}">
+                    <td class="border-left-solid-bold border-right-solid-bold text-left">{{ product.name|default }}</td>
+                    <td class="border-left-solid-bold border-right-solid-bold text-left">{{ product.size|default }}</td>
+                    <td class="border-left-solid-bold border-right-solid-bold text-left">{{ product.brand.name|default }}</td>
+                    <td class="border-left-solid-bold border-right-solid-bold text-left">{{ product.productCategory.name|default }}</td>
+                    <td class="border-left-solid-bold border-right-solid-bold text-center">{{ inventoryRepository.getQuantityInByProduct(product, startDate, endDate)|default }}</td>
+                    <td class="border-left-solid-bold border-right-solid-bold text-center">{{ inventoryRepository.getQuantityOutByProduct(product, startDate, endDate)|default }}</td>
+                    <td class="border-left-solid-bold border-right-solid-bold text-center">{{ inventoryRepository.getInventoryStockByProduct(product, startDate, endDate)|default }}</td>
+                    <td class="border-left-solid-bold border-right-solid-bold text-right">{{ inventoryRepository.getTotalPriceByProduct(product, startDate, endDate)|default }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<div class="hidden-print">
+    <br />
+    {{ grid_bottom(grid) }}
+</div>
+
+<script>
+    jQuery(function($) {
+        $("#export").click(function() {
+            var url = "{{ path('report_inventory_transaction_export') }}";
+            var data = {{ grid.params|json_encode|raw }};
+            $.redirect(url, data);
+        });
+    });
+</script>
