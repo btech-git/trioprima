@@ -45,12 +45,12 @@ class Inventory extends CodeNumberEntity
      */
     private $note;
     /**
-     * @ORM\Column(name="quantity_in", type="smallint")
+     * @ORM\Column(name="quantity_in", type="integer")
      * @Assert\NotNull()
      */
     private $quantityIn;
     /**
-     * @ORM\Column(name="quantity_out", type="smallint")
+     * @ORM\Column(name="quantity_out", type="integer")
      * @Assert\NotNull()
      */
     private $quantityOut;
