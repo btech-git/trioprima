@@ -289,7 +289,7 @@ class SaleInvoiceHeader extends CodeNumberEntity
     
     public function getTaxPercentage()
     {
-        return $this->isTax ? 11 : 0;
+        return $this->isTax ? ($this->transactionDate < '2022-04-01') ? 10 : 11 : 0;
     }
     
     public function getAveragePurchaseGrandTotal()
