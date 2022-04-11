@@ -67,6 +67,11 @@ class PurchaseInvoiceHeader extends CodeNumberEntity
      */
     private $discountValue;
     /**
+     * @ORM\Column(name="tax_percentage", type="smallint")
+     * @Assert\NotNull() @Assert\GreaterThanOrEqual(0)
+     */
+    private $taxPercentage;
+    /**
      * @ORM\Column(name="tax_nominal", type="decimal", precision=18, scale=2)
      * @Assert\NotNull() @Assert\GreaterThanOrEqual(0)
      */
@@ -184,6 +189,9 @@ class PurchaseInvoiceHeader extends CodeNumberEntity
     public function getDiscountValue() { return $this->discountValue; }
     public function setDiscountValue($discountValue) { $this->discountValue = $discountValue; }
     
+    public function getTaxPercentage() { return $this->taxPercentage; }
+    public function setTaxPercentage($taxPercentage) { $this->taxPercentage = $taxPercentage; }
+    
     public function getTaxNominal() { return $this->taxNominal; }
     public function setTaxNominal($taxNominal) { $this->taxNominal = $taxNominal; }
     
@@ -287,10 +295,10 @@ class PurchaseInvoiceHeader extends CodeNumberEntity
         }
     }
     
-    public function getTaxPercentage()
-    {
-        return $this->isTax ? 11 : 0;
-    }
+//    public function getTaxPercentage()
+//    {
+//        return $this->isTax ? 11 : 0;
+//    }
     
     public function getSyncRemaining()
     {

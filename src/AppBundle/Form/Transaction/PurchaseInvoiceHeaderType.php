@@ -39,6 +39,7 @@ class PurchaseInvoiceHeaderType extends AbstractType
             ->add('discountValue')
             ->add('shippingFee')
             ->add('note')
+            ->add('taxPercentage')
             ->add('isTax')
             ->add('supplier', EntityTextType::class, array('class' => 'AppBundle\Entity\Master\Supplier'))
             ->add('purchaseInvoiceDetails', CollectionType::class, array(
