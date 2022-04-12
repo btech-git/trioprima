@@ -70,7 +70,7 @@ class PurchaseInvoiceHeader extends CodeNumberEntity
      * @ORM\Column(name="tax_percentage", type="smallint")
      * @Assert\NotNull() @Assert\GreaterThanOrEqual(0)
      */
-    private $taxPercentage;
+    private $taxPercentage = 11;
     /**
      * @ORM\Column(name="tax_nominal", type="decimal", precision=18, scale=2)
      * @Assert\NotNull() @Assert\GreaterThanOrEqual(0)

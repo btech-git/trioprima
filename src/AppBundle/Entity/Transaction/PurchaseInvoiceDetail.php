@@ -19,7 +19,7 @@ class PurchaseInvoiceDetail
      */
     private $id;
     /**
-     * @ORM\Column(name="quantity", type="smallint")
+     * @ORM\Column(name="quantity", type="integer")
      * @Assert\NotNull() @Assert\GreaterThan(0)
      */
     private $quantity;

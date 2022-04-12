@@ -92,7 +92,7 @@
                 </tr>
                 <tr>
                     <td class="text-right" colspan="6">
-                        <span style="display: inline-block">PPn 10%</span>
+                        <span style="display: inline-block">PPn {{ form_row(form.taxPercentage, {'label': false}) }}%</span>
                         <span style="display: inline-block">{{ form_row(form.isTax, {'label': false}) }}</span>
                     </td>
                     <td class="text-right"><span id="bind-tax-nominal">{{ saleInvoiceHeader.taxNominal|default|number_format(2) }}</span></td>
@@ -182,6 +182,9 @@
             var tableBody = $("tbody", table);
             
             $("#{{ form.isTax.vars.id }}").on("change", function() {
+                bind();
+            });
+            $("#{{ form.taxPercentage.vars.id }}").on("change", function() {
                 bind();
             });
             $("#{{ form.discountType.vars.id }}").on("change", function() {

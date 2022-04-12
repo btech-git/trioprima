@@ -38,6 +38,7 @@ class SaleInvoiceHeaderType extends AbstractType
             ->add('discountValue')
             ->add('shippingFee')
             ->add('note')
+            ->add('taxPercentage')
             ->add('isTax')
             ->add('customer', EntityTextType::class, array('class' => 'AppBundle\Entity\Master\Customer'))
             ->add('saleInvoiceDetails', CollectionType::class, array(
