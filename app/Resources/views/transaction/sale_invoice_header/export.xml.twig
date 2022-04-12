@@ -180,7 +180,7 @@
                         <ss:Data ss:Type="Number">{{ saleInvoiceHeader.subTotal|default|number_format(0, '.', '') }}</ss:Data>
                     </ss:Cell>
                     <ss:Cell>
-                        <ss:Data ss:Type="Number">{{ saleInvoiceHeader.taxNominal|default|number_format(0, '.', '') }}</ss:Data>
+                        <ss:Data ss:Type="Number">{{ saleInvoiceHeader.excelTaxAmount|default|number_format(0, '.', '') }}</ss:Data>
                     </ss:Cell>
                     <ss:Cell>
                         <ss:Data ss:Type="Number">0</ss:Data>

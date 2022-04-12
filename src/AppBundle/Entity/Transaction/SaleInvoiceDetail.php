@@ -100,7 +100,7 @@ class SaleInvoiceDetail
     
     public function getTaxNominal()
     {
-        return $this->getTotal() * $this->saleInvoiceHeader->taxPercentage / 100;
+        return round($this->getTotal() * $this->saleInvoiceHeader->getTaxPercentage() / 100, 0);
     }
     
     public function getAveragePurchaseTotal()

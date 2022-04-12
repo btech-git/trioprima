@@ -295,10 +295,15 @@ class SaleInvoiceHeader extends CodeNumberEntity
         }
     }
     
-//    public function getTaxPercentage()
-//    {
-//        return $this->isTax ? ($this->transactionDate < '2022-04-01') ? 10 : 11 : 0;
-//    }
+    public function getExcelTaxAmount()
+    {
+        $total = 0.00;
+        foreach ($this->saleInvoiceDetails as $saleInvoiceDetail) {
+            $total += $saleInvoiceDetail->getTaxNominal();
+        }
+        
+        return $total;
+    }
     
     public function getAveragePurchaseGrandTotal()
     {
