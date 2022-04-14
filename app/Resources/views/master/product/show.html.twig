@@ -30,6 +30,10 @@
                 <td>{{ product.minimumStock|default }}</td>
             </tr>
             <tr>
+                <th>Price List</th>
+                <td>{{ product.sellingPrice|default|number_format(2) }}</td>
+            </tr>
+            <tr>
                 <th>Is Active</th>
                 <td>{{ product.isActive|default ? 'Yes' : 'No' }}</td>
             </tr>

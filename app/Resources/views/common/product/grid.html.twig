@@ -9,6 +9,8 @@
             <th data-group="product" data-field="code">Code</th>
             <th data-group="product" data-field="name">Name</th>
             <th data-group="product" data-field="size">Size</th>
+            <th data-group="product" data-field="sellingPrice">Price List</th>
+            <th data-group="product" data-field="netSellingPrice">Price Net</th>
             <th data-group="product" data-field="brand">Brand</th>
             <th data-group="product" data-field="productCategory">Category</th>
         </tr>
@@ -17,17 +19,21 @@
             <th data-group="product" data-field="code"></th>
             <th data-group="product" data-field="name"></th>
             <th data-group="product" data-field="size"></th>
+            <th data-group="product" data-field="sellingPrice"></th>
+            <th data-group="product" data-field="netSellingPrice"></th>
             <th data-group="product" data-field="brand"></th>
             <th data-group="product" data-field="productCategory"></th>
         </tr>
     </thead>
     <tbody>
         {% for product in grid.data %}
-            <tr data-field-id="{{ product.id }}" data-field-name="{{ product.name|default }}" data-field-size="{{ product.size|default }}" data-field-brand-name="{{ product.brand.name|default }}">
+            <tr data-field-id="{{ product.id }}" data-field-name="{{ product.name|default }}" data-field-size="{{ product.size|default }}" data-field-brand-name="{{ product.brand.name|default }}" data-field-selling-price="{{ product.netSellingPrice|default }}" data-field-price-list="{{ product.sellingPrice|default|number_format(2) }}">
                 <td class="text-center" data-check="item"></td>
                 <td class="text-left">{{ product.code|default }}</td>
                 <td class="text-left">{{ product.name|default }}</td>
                 <td class="text-left">{{ product.size|default }}</td>
+                <td class="text-right">{{ product.sellingPrice|default|number_format(2) }}</td>
+                <td class="text-right">{{ product.netSellingPrice|default|number_format(2) }}</td>
                 <td class="text-left">{{ product.brand.name|default }}</td>
                 <td class="text-left">{{ product.productCategory.name|default }}</td>
             </tr>

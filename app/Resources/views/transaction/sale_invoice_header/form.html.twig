@@ -20,6 +20,9 @@
             {{ form_row(object.quantity, {'label': false, 'attr': {'class': 'bind-quantity-class'} }) }}
         </td>
         <td>
+            <span id="price-list-{{ object.vars.name }}">{{ object.vars.value.product.sellingPrice|default|number_format(2) }}</span>
+        </td>
+        <td>
             {{ form_row(object.unitPrice, {'label': false, 'attr': {'class': 'bind-price-class'} }) }}
         </td>
         <td>
@@ -65,7 +68,8 @@
                     <th>Size</th>
                     <th>Brand</th>
                     <th>Qty</th>
-                    <th>Price</th>
+                    <th>Price List</th>
+                    <th>Unit Price</th>
                     <th>Discount</th>
                     <th>Total</th>
                     <th style="width: 0"></th>
@@ -78,12 +82,12 @@
             </tbody>
             <tfoot>
                 <tr>
-                    <td class="text-right" colspan="6">Sub Total</td>
+                    <td class="text-right" colspan="7">Sub Total</td>
                     <td class="text-right"><span id="bind-subtotal">{{ saleInvoiceHeader.subTotal|default|number_format(2) }}</span></td>
                     <td></td>
                 </tr>
                 <tr>
-                    <td class="text-right" colspan="6">
+                    <td class="text-right" colspan="7">
                         <span style="display: inline-block">Discount</span>
                         <span style="display: inline-block">{{ form_widget(form.discountType) }}{{ form_errors(form.discountType) }}</span>
                     </td>
@@ -91,25 +95,27 @@
                     <td></td>
                 </tr>
                 <tr>
-                    <td class="text-right" colspan="6">
-                        <span style="display: inline-block">PPn {{ form_row(form.taxPercentage, {'label': false}) }}%</span>
+                    <td class="text-right" colspan="7">
+                        <span style="display: inline-block">PPn</span>
+                        <span style="display: inline-block">{{ form_row(form.taxPercentage, {'label': false}) }}</span>
+                        <span style="display: inline-block">%</span>
                         <span style="display: inline-block">{{ form_row(form.isTax, {'label': false}) }}</span>
                     </td>
                     <td class="text-right"><span id="bind-tax-nominal">{{ saleInvoiceHeader.taxNominal|default|number_format(2) }}</span></td>
                     <td></td>
                 </tr>
                 <tr>
-                    <td class="text-right" colspan="6">Ongkos Kirim</td>
+                    <td class="text-right" colspan="7">Ongkos Kirim</td>
                     <td>{{ form_widget(form.shippingFee) }}{{ form_errors(form.shippingFee) }}</td>
                     <td></td>
                 </tr>
                 <tr>
-                    <td class="text-right" colspan="6">Grand Total</td>
+                    <td class="text-right" colspan="7">Grand Total</td>
                     <td class="text-right"><span id="bind-grandtotal-before">{{ saleInvoiceHeader.grandTotalBeforeDownpayment|default|number_format(2) }}</span></td>
                     <td></td>
                 </tr>
                 <tr>
-                    <td class="text-right" colspan="6">
+                    <td class="text-right" colspan="7">
                         <span style="display: inline-block">Down Payment</span>
                         <span style="display: inline-block">{{ form_widget(form.downpaymentType) }}{{ form_errors(form.downpaymentType) }}</span>
                     </td>
@@ -117,7 +123,7 @@
                     <td></td>
                 </tr>
                 <tr>
-                    <td class="text-right" colspan="6">Grand Total</td>
+                    <td class="text-right" colspan="7">Grand Total</td>
                     <td class="text-right"><span id="bind-grandtotal-after">{{ saleInvoiceHeader.grandTotalAfterDownpayment|default|number_format(2) }}</span></td>
                     <td></td>
                 </tr>
@@ -231,6 +237,10 @@
                     product.val(context.attr("data-field-id"));
                     var productName = prototype.find("#{{ form.saleInvoiceDetails.vars.prototype.productName.vars.id }}");
                     productName.attr("value", context.attr("data-field-name"));
+                    var priceList = prototype.find("#price-list-" + name);
+                    priceList.text(context.attr("data-field-price-list"));
+                    var unitPrice = prototype.find("#{{ form.saleInvoiceDetails.vars.prototype.unitPrice.vars.id }}");
+                    unitPrice.attr("value", context.attr("data-field-selling-price"));
                     var productSize = prototype.find("#product-size-" + name);
                     productSize.text(context.attr("data-field-size"));
                     var productBrandName = prototype.find("#product-brandname-" + name);

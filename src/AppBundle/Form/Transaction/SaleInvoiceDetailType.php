@@ -16,10 +16,18 @@ class SaleInvoiceDetailType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('productName')
-            ->add('quantity')
-            ->add('unitPrice')
-            ->add('discount')
+            ->add('productName', null, array(
+                'attr' => array('style' => 'width: 300px')
+            ))
+            ->add('quantity', null, array(
+                'attr' => array('style' => 'width: 100px')
+            ))
+            ->add('unitPrice', null, array(
+                'attr' => array('style' => 'width: 150px')
+            ))
+            ->add('discount', null, array(
+                'attr' => array('style' => 'width: 150px')
+            ))
             ->add('product', EntityHiddenType::class, array('class' => 'AppBundle\Entity\Master\Product'))
         ;
     }

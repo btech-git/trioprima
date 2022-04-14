@@ -9,6 +9,7 @@
             <th data-group="product" data-field="name">Name</th>
             <th data-group="product" data-field="size">Size</th>
             <th data-group="product" data-field="physicalCode">Physical Code</th>
+            <th data-group="product" data-field="sellingPrice">Price List</th>
             <th data-group="product" data-field="minimumStock">Minimum Stock</th>
             <th data-group="product" data-field="isActive">Is Active</th>
             <th></th>
@@ -21,6 +22,7 @@
                 <td class="text-left">{{ product.name|default }}</td>
                 <td class="text-left">{{ product.size|default }}</td>
                 <td class="text-left">{{ product.physicalCode|default }}</td>
+                <td class="text-left">{{ product.sellingPrice|default|number_format(2) }}</td>
                 <td class="text-left">{{ product.minimumStock|default }}</td>
                 <td class="text-left">{{ product.isActive|default ? 'Yes' : 'No' }}</td>
                 <td class="text-left">

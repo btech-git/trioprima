@@ -39,6 +39,11 @@ class Product
      */
     private $physicalCode;
     /**
+     * @ORM\Column(name="selling_price", type="decimal", precision=18, scale=2)
+     * @Assert\NotNull() @Assert\GreaterThan(0)
+     */
+    private $sellingPrice;
+    /**
      * @ORM\Column(name="minimum_stock", type="smallint")
      * @Assert\NotNull()
      */
@@ -97,6 +102,9 @@ class Product
     public function getPhysicalCode() { return $this->physicalCode; }
     public function setPhysicalCode($physicalCode) { $this->physicalCode = $physicalCode; }
     
+    public function getSellingPrice() { return $this->sellingPrice; }
+    public function setSellingPrice($sellingPrice) { $this->sellingPrice = $sellingPrice; }
+    
     public function getMinimumStock() { return $this->minimumStock; }
     public function setMinimumStock($minimumStock) { $this->minimumStock = $minimumStock; }
     
@@ -117,4 +125,9 @@ class Product
     
     public function getSaleInvoiceDetails() { return $this->saleInvoiceDetails; }
     public function setSaleInvoiceDetails(Collection $saleInvoiceDetails) { $this->saleInvoiceDetails = $saleInvoiceDetails; }
+    
+    public function getNetSellingPrice()
+    {
+        return round ($this->sellingPrice / 1.11, 2);
+    }
 }

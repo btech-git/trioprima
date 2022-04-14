@@ -19,6 +19,7 @@ class ProductType extends AbstractType
             ->add('name')
             ->add('size')
             ->add('physicalCode')
+            ->add('sellingPrice')
             ->add('minimumStock')
             ->add('isActive')
             ->add('productCategory')
