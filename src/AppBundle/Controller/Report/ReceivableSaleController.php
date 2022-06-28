@@ -10,6 +10,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use AppBundle\Entity\Master\Customer;
 use AppBundle\Grid\Report\ReceivableSaleGridType;
+use AppBundle\Grid\Report\CustomerSaleInvoiceGridType;
 
 /**
  * @Route("/report/receivable_sale")
