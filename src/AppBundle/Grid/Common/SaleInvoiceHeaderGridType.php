@@ -79,6 +79,9 @@ class SaleInvoiceHeaderGridType extends DataGridType
     public function buildData(DataBuilder $builder, ObjectRepository $repository, array $options)
     {
         $criteria = Criteria::create();
+        $expr = Criteria::expr();
+
+        $criteria->andWhere($expr->eq('isActive', true));
 
         if (array_key_exists('customer', $options)) {
             $criteria->andWhere($criteria->expr()->eq('customer', $options['customer']));

@@ -47,6 +47,9 @@
         "bin-dir": "bin",
         "platform": {
             "php": "5.3.9"
+        },
+        "allow-plugins": {
+            "robloach/component-installer": true
         }
     },
     "extra": {

@@ -69,6 +69,9 @@ class AccountGridType extends DataGridType
     public function buildData(DataBuilder $builder, ObjectRepository $repository, array $options)
     {
         $criteria = Criteria::create();
+        $expr = Criteria::expr();
+
+        $criteria->andWhere($expr->eq('isActive', true));
 
         $builder->processSearch(function($values, $operator, $field) use ($criteria) {
             $operator::search($criteria, $field, $values);
