@@ -33,6 +33,9 @@
                     <ss:Data ss:Type="String">Memo</ss:Data>
                 </ss:Cell>
                 <ss:Cell>
+                    <ss:Data ss:Type="String">Type</ss:Data>
+                </ss:Cell>
+                <ss:Cell>
                     <ss:Data ss:Type="String">Debit</ss:Data>
                 </ss:Cell>
                 <ss:Cell>
@@ -74,6 +77,9 @@
                             <ss:Data ss:Type="String">{{ accountJournal.transactionSubject|default }}</ss:Data>
                         </ss:Cell>
                         <ss:Cell>
+                            <ss:Data ss:Type="String">{{ accountJournal.transactionType|default }}</ss:Data>
+                        </ss:Cell>
+                        <ss:Cell>
                             <ss:Data ss:Type="String">{{ accountJournal.debit|default }}</ss:Data>
                         </ss:Cell>
                         <ss:Cell>
@@ -87,11 +93,11 @@
                     {% set creditSum = creditSum + accountJournal.credit %}
                 {% endfor %}
                 <ss:Row ss:StyleID="Level1|Bold|Top">
-                    <ss:Cell ss:Index="4">
-                        <ss:Data ss:Type="Number">{{ debitSum|default }}</ss:Data>
-                    </ss:Cell>
                     <ss:Cell ss:Index="5">
-                        <ss:Data ss:Type="Number">{{ creditSum|default }}</ss:Data>
+                        <ss:Data ss:Type="String">{{ debitSum|default }}</ss:Data>
+                    </ss:Cell>
+                    <ss:Cell ss:Index="6">
+                        <ss:Data ss:Type="String">{{ creditSum|default }}</ss:Data>
                     </ss:Cell>
                 </ss:Row>
             {% endfor %}

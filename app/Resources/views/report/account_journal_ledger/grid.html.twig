@@ -35,6 +35,7 @@
                                 <th class="text-center">Transaksi #</th>
                                 <th class="text-center">Tanggal</th>
                                 <th class="text-center">Memo</th>
+                                <th class="text-center" style="width: 10%">Type</th>
                                 <th class="text-center">Debit</th>
                                 <th class="text-center">Kredit</th>
                                 <th class="text-center">Saldo</th>
@@ -51,7 +52,7 @@
                     <td class="text-right">{{ beginningBalanceData[index]|default|number_format(2) }}</td>
                 </tr>
                 <tr class="border-bottom-dotted-bold">
-                    <td colspan="5">
+                    <td colspan="2">
                         {% set debitSum = 0.00 %}
                         {% set creditSum = 0.00 %}
                         {% set balanceAggregate = beginningBalanceData[index] %}
@@ -61,8 +62,9 @@
                                     {% set balanceAggregate = balanceAggregate + accountJournal.debit - accountJournal.credit %}
                                     <tr>
                                         <td class="text-left">{{ accountJournal.codeNumber|default }}</td>
-                                        <td class="text-left">{{ accountJournal.transactionDate|default ? accountJournal.transactionDate|date('j F Y') }}</td>
+                                        <td class="text-left">{{ accountJournal.transactionDate|default ? accountJournal.transactionDate|date('j M Y') }}</td>
                                         <td class="text-left">{{ accountJournal.transactionSubject|default }}</td>
+                                        <td class="text-left">{{ accountJournal.transactionType|default }}</td>
                                         <td class="text-right">{{ accountJournal.debit|default|number_format(2) }}</td>
                                         <td class="text-right">{{ accountJournal.credit|default|number_format(2) }}</td>
                                         <td class="text-right">{{ balanceAggregate|default|number_format(2) }}</td>
@@ -73,10 +75,10 @@
                             </tbody>
                             <tfoot class="border-top-solid-normal">
                                 <tr>
-                                    <td class="text-right" colspan="3">Total</td>
-                                    <td class="text-right">{{ debitSum|default|number_format(2) }}</td>
-                                    <td class="text-right">{{ creditSum|default|number_format(2) }}</td>
-                                    <td></td>
+                                    <th class="text-right" colspan="4">Total</th>
+                                    <th class="text-right">{{ debitSum|default|number_format(2) }}</th>
+                                    <th class="text-right">{{ creditSum|default|number_format(2) }}</th>
+                                    <th></th>
                                 </tr>
                             </tfoot>
                         </table>
