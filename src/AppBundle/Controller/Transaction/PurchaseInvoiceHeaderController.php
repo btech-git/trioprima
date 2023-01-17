@@ -144,7 +144,7 @@ class PurchaseInvoiceHeaderController extends Controller
     }
 
     /**
-     * @Route("/{id}/{type}/memo", name="transaction_purchase_invoice_header_memo")
+     * @Route("/{id}/memo", name="transaction_purchase_invoice_header_memo")
      * @Method("GET")
      * @Security("has_role('ROLE_TRANSACTION')")
      */

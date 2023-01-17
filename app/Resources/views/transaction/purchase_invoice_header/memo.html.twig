@@ -52,14 +52,14 @@
                 </tr>
             </thead>
             <tbody>
-                {% set rowspan = show ? 20 : 10 %}
+                {% set rowspan = show ? 10 : 5 %}
                 {% for row in purchaseInvoiceHeader.purchaseInvoiceDetails|batch(rowspan, '') %}
                     {% for purchaseInvoiceDetail in row %}
                         <tr>
                             {% for i in 1..6 if purchaseInvoiceDetail is empty %}
                                 <td>&nbsp;</td>
                             {% else %}
-                                <td class="left">{{ purchaseInvoiceDetail.productName|default }}</td>
+                                <td class="left">{{ purchaseInvoiceDetail.product.name|default }}</td>
                                 <td class="center">{{ purchaseInvoiceDetail.product.size|default }}</td>
                                 <td class="center">{{ purchaseInvoiceDetail.quantity|default }}</td>
                                 <td class="right">{{ purchaseInvoiceDetail.unitPrice|default|number_format(0) }}</td>
@@ -81,26 +81,14 @@
                         <td class="right">{{ purchaseInvoiceHeader.discountNominal|default|number_format(0) }}</td>
                     </tr>
                     <tr>
-                        <td colspan="5" class="label right">PPn 10%</td>
+                        <td colspan="5" class="label right">PPn {{ purchaseInvoiceHeader.taxPercentage|default }}%</td>
                         <td class="right">{{ purchaseInvoiceHeader.taxNominal|default|number_format(0) }}</td>
-                    </tr>
-                    <tr>
-                        <td colspan="5" class="label right">Ongkos Kirim</td>
-                        <td class="right">{{ purchaseInvoiceHeader.shippingFee|default|number_format(0) }}</td>
                     </tr>
                     <tr>
                         <td colspan="5" class="label right">Grand Total</td>
                         <td class="right">{{ purchaseInvoiceHeader.grandTotalBeforeDownpayment|default|number_format(0) }}</td>
                     </tr>
-                    <tr>
-                        <td colspan="5" class="label right">Uang Muka {{ purchaseInvoiceHeader.downpaymentPercentage|default|number_format(2) }}%</td>
-                        <td class="right">{{ purchaseInvoiceHeader.downpaymentNominal|default|number_format(0) }}</td>
-                    </tr>
                 {% endif %}
-                <tr>
-                    <td colspan="5" class="label right">Grand Total</td>
-                    <td class="right">{{ purchaseInvoiceHeader.grandTotalAfterDownpayment|default|number_format(0) }}</td>
-                </tr>
             </tfoot>
         </table>
         
@@ -110,7 +98,7 @@
             <div class="table">
                 <div class="cell label">Terbilang:</div>
                 <div class="cell">&nbsp;&nbsp;</div>
-                <div class="cell">{{ purchaseInvoiceHeader.grandTotalAfterDownpayment|default|number_format(0, '.', '')|say|capitalize }} rupiah.</div>
+                <div class="cell">{{ purchaseInvoiceHeader.grandTotalBeforeDownpayment|default|number_format(0, '.', '')|say|capitalize }} rupiah.</div>
             </div>
         </div>
         
@@ -134,7 +122,7 @@
                     {% if show %}
                         <div class="blank"></div>
                         <div class="blank"></div>
-                        <div>Sun On Tjoeng</div>
+                        <div></div>
                     {% endif %}
                 </div>
             </div>

@@ -20,12 +20,12 @@ class PurchaseInvoiceDetail
     private $id;
     /**
      * @ORM\Column(name="quantity", type="integer")
-     * @Assert\NotNull() @Assert\GreaterThan(0)
+     * @Assert\NotNull() @Assert\GreaterThanOrEqual(0)
      */
     private $quantity;
     /**
      * @ORM\Column(name="unit_price", type="decimal", precision=18, scale=2)
-     * @Assert\NotNull() @Assert\GreaterThan(0)
+     * @Assert\NotNull() @Assert\GreaterThanOrEqual(0)
      */
     private $unitPrice;
     /**

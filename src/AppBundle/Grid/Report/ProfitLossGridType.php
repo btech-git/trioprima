@@ -6,36 +6,21 @@ use Doctrine\Common\Persistence\ObjectRepository;
 use LibBundle\Grid\DataGridType;
 use LibBundle\Grid\WidgetsBuilder;
 use LibBundle\Grid\DataBuilder;
-use LibBundle\Grid\SortOperator\BlankType as SortBlankType;
-use LibBundle\Grid\SortOperator\AscendingType;
-use LibBundle\Grid\SortOperator\DescendingType;
-use LibBundle\Grid\SearchOperator\BlankType as SearchBlankType;
-use LibBundle\Grid\SearchOperator\EqualType;
-use LibBundle\Grid\SearchOperator\BetweenType;
-use LibBundle\Grid\SearchOperator\ContainType;
-use AppBundle\Entity\Master\Account;
-use AppBundle\Entity\Report\AccountJournal;
+use LibBundle\Grid\SearchOperator\LessEqualType;
+use AppBundle\Entity\Report\JournalLedger;
 
 class ProfitLossGridType extends DataGridType
 {
     public function buildWidgets(WidgetsBuilder $builder, array $options)
     {
         $builder->searchWidget()
-            ->addGroup('account')
-                ->setEntityName(Account::class)
-                ->addField('name')
-                    ->addOperator(SearchBlankType::class)
-                    ->addOperator(EqualType::class)
-                    ->addOperator(ContainType::class)
-            ->addGroup('accountJournals')
-                ->setEntityName(AccountJournal::class)
+            ->addGroup('journalLedgers')
+                ->setEntityName(JournalLedger::class)
                 ->addField('transactionDate')
-                    ->addOperator(BetweenType::class)
+                    ->addOperator(LessEqualType::class)
                         ->getInput(1)
                             ->setAttributes(array('data-pick' => 'date'))
-                        ->getInput(2)
-                            ->setAttributes(array('data-pick' => 'date'))
-                    ->setDefault(BetweenType::class, new \DateTime(), new \DateTime())
+                    ->setDefault(LessEqualType::class, new \DateTime())
         ;
     }
 

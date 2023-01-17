@@ -81,7 +81,7 @@
                         <td class="right">{{ saleInvoiceHeader.discountNominal|default|number_format(0) }}</td>
                     </tr>
                     <tr>
-                        <td colspan="5" class="label right">PPn 10%</td>
+                        <td colspan="5" class="label right">PPn {{ saleInvoiceHeader.taxPercentage|default }}%</td>
                         <td class="right">{{ saleInvoiceHeader.taxNominal|default|number_format(0) }}</td>
                     </tr>
                     <tr>
@@ -134,7 +134,7 @@
                     {% if show %}
                         <div class="blank"></div>
                         <div class="blank"></div>
-                        <div>Sun On Tjoeng</div>
+                        <div>TJOE JEN SEN</div>
                     {% endif %}
                 </div>
             </div>
