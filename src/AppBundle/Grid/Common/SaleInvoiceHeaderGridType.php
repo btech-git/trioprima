@@ -88,7 +88,7 @@ class SaleInvoiceHeaderGridType extends DataGridType
         }
         if (array_key_exists('mode', $options)) {
             if ($options['mode'] === 'payment') {
-                $criteria->andWhere($criteria->expr()->gt('grandTotalAfterDownpayment - totalPayment - totalReturn', 0));
+                $criteria->andWhere($criteria->expr()->gt('grandTotalAfterDownpayment - totalPayment - totalReturn', 10));
             } else if ($options['mode'] === 'receipt') {
                 $criteria->andWhere($criteria->expr()->eq('SIZE(saleReceiptDetails)', 0));
             }
