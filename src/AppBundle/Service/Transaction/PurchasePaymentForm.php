@@ -76,6 +76,9 @@ class PurchasePaymentForm
             }
             $purchaseInvoiceHeader->setTotalPayment($totalPayment);
             $purchaseInvoiceHeader->setRemaining($purchaseInvoiceHeader->getSyncRemaining());
+            if ($purchaseInvoiceHeader->remaining === '0.00') {
+                $purchaseInvoiceHeader->setIsPaymentCompleted(true);
+            }
         }
     }
     
@@ -120,7 +123,7 @@ class PurchasePaymentForm
     private function markAccountJournals(PurchasePaymentHeader $purchasePaymentHeader, $addForHeader)
     {
         $oldAccountJournals = $this->accountJournalRepository->findBy(array(
-            'transactionType' => AccountJournal::TRANSACTION_TYPE_SALE_PAYMENT,
+            'transactionType' => AccountJournal::TRANSACTION_TYPE_PURCHASE_PAYMENT,
             'codeNumberYear' => $purchasePaymentHeader->getCodeNumberYear(),
             'codeNumberMonth' => $purchasePaymentHeader->getCodeNumberMonth(),
             'codeNumberOrdinal' => $purchasePaymentHeader->getCodeNumberOrdinal(),
@@ -131,7 +134,7 @@ class PurchasePaymentForm
                 $accountJournal = new AccountJournal();
                 $accountJournal->setCodeNumber($purchasePaymentHeader->getCodeNumber());
                 $accountJournal->setTransactionDate($purchasePaymentHeader->getTransactionDate());
-                $accountJournal->setTransactionType(AccountJournal::TRANSACTION_TYPE_SALE_PAYMENT);
+                $accountJournal->setTransactionType(AccountJournal::TRANSACTION_TYPE_PURCHASE_PAYMENT);
                 $accountJournal->setTransactionSubject($purchasePaymentDetail->getMemo());
                 $accountJournal->setNote($purchasePaymentHeader->getNote());
                 $accountJournal->setDebit($purchasePaymentDetail->getAmount());
@@ -145,7 +148,7 @@ class PurchasePaymentForm
             $accountJournal = new AccountJournal();
             $accountJournal->setCodeNumber($purchasePaymentHeader->getCodeNumber());
             $accountJournal->setTransactionDate($purchasePaymentHeader->getTransactionDate());
-            $accountJournal->setTransactionType(AccountJournal::TRANSACTION_TYPE_SALE_PAYMENT);
+            $accountJournal->setTransactionType(AccountJournal::TRANSACTION_TYPE_PURCHASE_PAYMENT);
             $accountJournal->setTransactionSubject($purchasePaymentHeader->getSupplier()->getCompany());
             $accountJournal->setNote($purchasePaymentHeader->getNote());
             $accountJournal->setDebit(0);
