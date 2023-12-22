@@ -123,8 +123,9 @@ class PurchaseInvoiceHeader extends CodeNumberEntity
     private $isTax;
     /**
      * @ORM\Column(name="is_payment_completed", type="boolean")
+     * @Assert\NotNull()
      */
-    private $isPaymentCompleted;
+    private $isPaymentCompleted = false;
     /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Master\Supplier", inversedBy="purchaseInvoiceHeaders")
      * @Assert\NotNull()
