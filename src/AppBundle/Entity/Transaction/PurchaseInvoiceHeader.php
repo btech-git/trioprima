@@ -123,7 +123,6 @@ class PurchaseInvoiceHeader extends CodeNumberEntity
     private $isTax;
     /**
      * @ORM\Column(name="is_payment_completed", type="boolean")
-     * @Assert\NotNull()
      */
     private $isPaymentCompleted;
     /**
