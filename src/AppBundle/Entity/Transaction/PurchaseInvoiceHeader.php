@@ -265,7 +265,7 @@ class PurchaseInvoiceHeader extends CodeNumberEntity
         $downpaymentNominal = $this->getDownpaymentNominal();
         $this->grandTotalAfterDownpayment = $this->grandTotalBeforeDownpayment - $downpaymentNominal;
         $this->remaining = $this->getSyncRemaining();
-        $this->isPaymentCompleted = $this->setIsPaymentCompleted(false);
+        $this->setIsPaymentCompleted(false);
         
 //        if ($this->getRemaining() == 0) {
 //            $this->setIsPaymentCompleted(true);
