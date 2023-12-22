@@ -23,14 +23,16 @@
 
     {% set grandTotalBeforeDownpaymentSum = 0.00 %}
     {% set totalPaymentSum = 0.00 %}
+    {% set totalRemainingSum = 0.00 %}
     <table class="report-data">
         <thead class="border-top-solid-bold border-bottom-solid-bold">
             <tr>
                 <th class="text-center">Invoice #</th>
                 <th class="text-center">Tanggal</th>
                 <th class="text-center">Supplier</th>
-                <th class="text-center">Purchase</th>
+                <th class="text-center">Total</th>
                 <th class="text-center">Pelunasan</th>
+                <th class="text-center">Sisa</th>
             </tr>
         </thead>
         <tbody class="border-top-solid-bold border-bottom-solid-bold">
@@ -41,9 +43,11 @@
                     <td class="text-left">{{ purchaseInvoiceHeader.supplier.company|default }}</td>
                     <td class="text-right">{{ purchaseInvoiceHeader.grandTotalBeforeDownpayment|default|number_format(2) }}</td>
                     <td class="text-right">{{ purchaseInvoiceHeader.totalPayment|default|number_format(2) }}</td>
+                    <td class="text-right">{{ purchaseInvoiceHeader.remaining|default|number_format(2) }}</td>
                 </tr>
                 {% set grandTotalBeforeDownpaymentSum = grandTotalBeforeDownpaymentSum + purchaseInvoiceHeader.grandTotalBeforeDownpayment %}
                 {% set totalPaymentSum = totalPaymentSum + purchaseInvoiceHeader.totalPayment %}
+                {% set totalRemainingSum = totalRemainingSum + purchaseInvoiceHeader.totalRemainingSum %}
             {% endfor %}
         </tbody>
         <tfoot class="border-top-solid-bold border-bottom-solid-bold">
@@ -51,6 +55,7 @@
                 <td class="text-right" colspan="3"></td>
                 <td class="text-right">{{ grandTotalBeforeDownpaymentSum|default|number_format(2) }}</td>
                 <td class="text-right">{{ totalPaymentSum|default|number_format(2) }}</td>
+                <td class="text-right">{{ totalRemainingSum|default|number_format(2) }}</td>
             </tr>
         </tfoot>
     </table>

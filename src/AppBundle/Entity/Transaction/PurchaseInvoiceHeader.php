@@ -122,6 +122,11 @@ class PurchaseInvoiceHeader extends CodeNumberEntity
      */
     private $isTax;
     /**
+     * @ORM\Column(name="is_payment_completed", type="boolean")
+     * @Assert\NotNull()
+     */
+    private $isPaymentCompleted;
+    /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Master\Supplier", inversedBy="purchaseInvoiceHeaders")
      * @Assert\NotNull()
      */
@@ -222,6 +227,9 @@ class PurchaseInvoiceHeader extends CodeNumberEntity
     public function getIsTax() { return $this->isTax; }
     public function setIsTax($isTax) { $this->isTax = $isTax; }
     
+    public function getIsPaymentCompleted() { return $this->isPaymentCompleted; }
+    public function setIsPaymentCompleted($isPaymentCompleted) { $this->isPaymentCompleted = $isPaymentCompleted; }
+    
     public function getSupplier() { return $this->supplier; }
     public function setSupplier(Supplier $supplier = null) { $this->supplier = $supplier; }
     
@@ -257,6 +265,10 @@ class PurchaseInvoiceHeader extends CodeNumberEntity
         $downpaymentNominal = $this->getDownpaymentNominal();
         $this->grandTotalAfterDownpayment = $this->grandTotalBeforeDownpayment - $downpaymentNominal;
         $this->remaining = $this->getSyncRemaining();
+        
+        if ($this->remaining == 0) {
+            $this->setIsPaymentCompleted(true);
+        }
     }
     
     public function getDiscountPercentage()
