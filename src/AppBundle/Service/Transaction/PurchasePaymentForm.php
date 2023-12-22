@@ -76,7 +76,7 @@ class PurchasePaymentForm
             }
             $purchaseInvoiceHeader->setTotalPayment($totalPayment);
             $purchaseInvoiceHeader->setRemaining($purchaseInvoiceHeader->getSyncRemaining());
-            if ($purchaseInvoiceHeader->remaining === '0.00') {
+            if ($purchaseInvoiceHeader->remaining == 0) {
                 $purchaseInvoiceHeader->setIsPaymentCompleted(true);
             }
         }
