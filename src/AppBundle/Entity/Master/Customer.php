@@ -54,7 +54,7 @@ class Customer
      */
     private $email;
     /**
-     * @ORM\Column(name="tax_number", type="string", length=20)
+     * @ORM\Column(name="tax_number", type="string", length=21)
      * @Assert\NotNull()
      */
     private $taxNumber;
