@@ -51,16 +51,16 @@ class SaleInvoiceHeaderType extends AbstractType
                 'prototype_data' => new SaleInvoiceDetail(),
                 'label' => false,
             ))
-//            ->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $event) use ($options) {
-//                $saleInvoiceHeader = $event->getData();
-//                $options['service']->initialize($saleInvoiceHeader, $options['init']);
-//                $form = $event->getForm();
-//                $options = array();
-//                if (!empty($saleInvoiceHeader->getId())) {
-//                    $options['disabled'] = true;
-//                }
-//                $form->add('codeNumberOrdinal', null, $options);
-//            })
+            ->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $event) use ($options) {
+                $saleInvoiceHeader = $event->getData();
+                $options['service']->initialize($saleInvoiceHeader, $options['init']);
+                $form = $event->getForm();
+                $options = array();
+                if (!empty($saleInvoiceHeader->getId())) {
+                    $options['disabled'] = true;
+                }
+                $form->add('codeNumberOrdinal', null, $options);
+            })
             ->addEventListener(FormEvents::SUBMIT, function(FormEvent $event) use ($options) {
                 $saleInvoiceHeader = $event->getData();
                 $options['service']->finalize($saleInvoiceHeader);
