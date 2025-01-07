@@ -56,9 +56,9 @@ class SaleInvoiceHeaderType extends AbstractType
                 $options['service']->initialize($saleInvoiceHeader, $options['init']);
                 $form = $event->getForm();
                 $options = array();
-                if (!empty($saleInvoiceHeader->getId())) {
-                    $options['disabled'] = true;
-                }
+//                if (!empty($saleInvoiceHeader->getId())) {
+//                    $options['disabled'] = true;
+//                }
                 $form->add('codeNumberOrdinal', null, $options);
             })
             ->addEventListener(FormEvents::SUBMIT, function(FormEvent $event) use ($options) {
