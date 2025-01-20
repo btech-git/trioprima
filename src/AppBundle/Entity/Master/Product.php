@@ -29,7 +29,7 @@ class Product
      */
     private $name;
     /**
-     * @ORM\Column(name="size", type="string", length=20)
+     * @ORM\Column(name="size", type="string", length=60)
      * @Assert\NotNull()
      */
     private $size;
