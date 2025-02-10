@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TaxInvoiceBulk xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <TIN>1091031210912281</TIN>
+    <ListOfTaxInvoice>
+{% for saleInvoiceHeader in grid.data if (grid.extra['identities'] is defined and saleInvoiceHeader.id in grid.extra['identities']) %}
+        <TaxInvoice>
+            <TaxInvoiceDate>{{ saleInvoiceHeader.transactionDate|default ? saleInvoiceHeader.transactionDate|date('Y-m-d') }}</TaxInvoiceDate>
+            <TaxInvoiceOpt>Normal</TaxInvoiceOpt>
+            <TrxCode>04</TrxCode>
+            <AddInfo/>
+            <CustomDoc/>
+            <RefDesc>{{ saleInvoiceHeader.codeNumber|default }}</RefDesc>
+            <FacilityStamp/>
+            <SellerIDTKU>0031486434413000000000</SellerIDTKU>
+            <BuyerTin>{{ saleInvoiceHeader.customer.taxNumber|default }}</BuyerTin>
+            <BuyerDocument>TIN</BuyerDocument>
+            <BuyerCountry>IDN</BuyerCountry>
+            <BuyerDocumentNumber/>
+            <BuyerName>{{ saleInvoiceHeader.customer.company|default }}</BuyerName>
+            <BuyerAdress>{{ saleInvoiceHeader.customer.address|default }}</BuyerAdress>
+            <BuyerEmail>{{ saleInvoiceHeader.customer.email|default }}</BuyerEmail>
+            <BuyerIDTKU>{{ saleInvoiceHeader.customer.taxNumber|default }}000000</BuyerIDTKU>
+            <ListOfGoodService>
+{% for saleInvoiceDetail in saleInvoiceHeader.saleInvoiceDetails %}
+                <GoodService>
+                    <Opt>A</Opt>
+                    <Code>720000</Code>
+                    <Name>{{ saleInvoiceDetail.productName|default|raw }} - {{ saleInvoiceDetail.product.size|default|raw }}</Name>
+                    <Unit>UM.0003</Unit>
+                    <Price>{{ saleInvoiceDetail.unitPrice|default }}</Price>
+                    <Qty>{{ saleInvoiceDetail.quantity|default }}</Qty>
+                    <TotalDiscount>0.00</TotalDiscount>
+                    <TaxBase>{{ saleInvoiceDetail.total|default }}</TaxBase>
+                    <OtherTaxBase>{{ saleInvoiceDetail.total|default }}</OtherTaxBase>
+                    <VATRate>12</VATRate>
+                    <VAT>{{ saleInvoiceHeader.taxNominal|default }}</VAT>
+                    <STLGRate>0</STLGRate>
+                    <STLG>0.00</STLG>
+                </GoodService>
+{% endfor %}
+            </ListOfGoodService>
+        </TaxInvoice>
+{% endfor %}
+    </ListOfTaxInvoice>
+</TaxInvoiceBulk>

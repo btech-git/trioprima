@@ -172,17 +172,12 @@ class SaleInvoiceHeaderController extends Controller
         $grid = $this->get('lib.grid.datagrid');
         $grid->build(SaleInvoiceHeaderGridType::class, $repository, $request, array('em' => $em));
 
-        $excel = $this->get('phpexcel');
-        $excelXmlReader = $this->get('lib.excel.xml_reader');
-        $xml = $this->renderView('transaction/sale_invoice_header/export.xml.twig', array(
+        $response = $this->render('transaction/sale_invoice_header/export_coretax.xml.twig', array(
             'grid' => $grid->createView(),
         ));
-        $excelObject = $excelXmlReader->load($xml);
-        $writer = $excel->createWriter($excelObject, 'CSV');
-        $response = $excel->createStreamedResponse($writer);
 
-        $dispositionHeader = $response->headers->makeDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT, 'eFaktur.csv');
-        $response->headers->set('Content-Type', 'text/csv; charset=utf-8');
+        $dispositionHeader = $response->headers->makeDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT, 'eFaktur.xml');
+        $response->headers->set('Content-Type', 'text/xml; charset=utf-8');
         $response->headers->set('Pragma', 'public');
         $response->headers->set('Cache-Control', 'maxage=1');
         $response->headers->set('Content-Disposition', $dispositionHeader);

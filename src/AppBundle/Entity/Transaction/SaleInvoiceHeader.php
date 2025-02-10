@@ -295,6 +295,10 @@ class SaleInvoiceHeader extends CodeNumberEntity
         }
     }
     
+    public function getSubTotalCoretax() {
+        return $this->subTotal * 11 / 12;
+    }
+    
     public function getExcelTaxAmount()
     {
         $total = 0.00;
