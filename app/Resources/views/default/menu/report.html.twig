@@ -127,5 +127,9 @@
             <td>Penyesuaian Stok</td>
             <td>{{ include('action.html.twig', {'url': path('report_adjustment_stock_header_index'), 'label': 'Show', 'button': 'btn btn-info', 'icon': 'glyphicon glyphicon-info-sign'}) }}</td>
         </tr>
+        <tr>
+            <td>Nilai Stok Gudang</td>
+            <td>{{ include('action.html.twig', {'url': path('report_inventory_transaction_index'), 'label': 'Show', 'button': 'btn btn-info', 'icon': 'glyphicon glyphicon-info-sign'}) }}</td>
+        </tr>
     </table>
 {% endblock %}
