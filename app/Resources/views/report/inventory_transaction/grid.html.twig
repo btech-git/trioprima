@@ -32,19 +32,26 @@
                 <th class="border-left-solid-bold border-right-solid-bold text-center">Qty Out</th>
                 <th class="border-left-solid-bold border-right-solid-bold text-center">Stok</th>
                 <th class="border-left-solid-bold border-right-solid-bold text-center">Harga</th>
+                <th class="border-left-solid-bold border-right-solid-bold text-center">Total</th>
             </tr>
         </thead>
         <tbody class="border-top-solid-bold border-bottom-solid-bold">
             {% for product in grid.data %}
+                {% set quantityIn = inventoryRepository.getQuantityInByProduct(product, startDate, endDate) %}
+                {% set quantityOut = inventoryRepository.getQuantityOutByProduct(product, startDate, endDate) %}
+                {% set quantityStock = inventoryRepository.getStockByProduct(product, startDate, endDate) %}
+                {% set averagePrice = inventoryRepository.getTotalPriceByProduct(product, startDate, endDate) %}
+                {% set totalPrice = quantityStock * averagePrice %}
                 <tr class="border-top-solid-normal border-bottom-solid-normal" data-field-id="{{ product.id }}">
                     <td class="border-left-solid-bold border-right-solid-bold text-left">{{ product.name|default }}</td>
                     <td class="border-left-solid-bold border-right-solid-bold text-left">{{ product.size|default }}</td>
                     <td class="border-left-solid-bold border-right-solid-bold text-left">{{ product.brand.name|default }}</td>
                     <td class="border-left-solid-bold border-right-solid-bold text-left">{{ product.productCategory.name|default }}</td>
-                    <td class="border-left-solid-bold border-right-solid-bold text-center">{{ inventoryRepository.getQuantityInByProduct(product, startDate, endDate)|default|number_format(0) }}</td>
-                    <td class="border-left-solid-bold border-right-solid-bold text-center">{{ inventoryRepository.getQuantityOutByProduct(product, startDate, endDate)|default|number_format(0) }}</td>
-                    <td class="border-left-solid-bold border-right-solid-bold text-center">{{ inventoryRepository.getStockByProduct(product, startDate, endDate)|default|number_format(0) }}</td>
-                    <td class="border-left-solid-bold border-right-solid-bold text-right">{{ inventoryRepository.getTotalPriceByProduct(product, startDate, endDate)|default|number_format(2) }}</td>
+                    <td class="border-left-solid-bold border-right-solid-bold text-center">{{ quantityIn|default|number_format(0) }}</td>
+                    <td class="border-left-solid-bold border-right-solid-bold text-center">{{ quantityOut|default|number_format(0) }}</td>
+                    <td class="border-left-solid-bold border-right-solid-bold text-center">{{ quantityStock|default|number_format(0) }}</td>
+                    <td class="border-left-solid-bold border-right-solid-bold text-right">{{ averagePrice|default|number_format(2) }}</td>
+                    <td class="border-left-solid-bold border-right-solid-bold text-right">{{ totalPrice|default|number_format(2) }}</td>
                 </tr>
             {% endfor %}
         </tbody>

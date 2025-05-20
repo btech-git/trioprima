@@ -85,7 +85,7 @@ class InventoryTransactionGridType extends DataGridType
     {
         $criteria = Criteria::create();
 
-//        $criteria->andWhere($criteria->expr()->neq(':(SELECT COALESCE(SUM(t.quantityIn - t.quantityOut), 0) AS stock FROM AppBundle\Entity\Report\Inventory t WHERE t.product = {})', 0));
+        $criteria->andWhere($criteria->expr()->gt(':(SELECT COALESCE(SUM(i.quantityIn - i.quantityOut), 0) AS stock FROM AppBundle\Entity\Report\Inventory i WHERE i.product = {})', 0));
 
         $builder->processSearch(function($values, $operator, $field) use ($criteria) {
             $operator::search($criteria, $field, $values);
