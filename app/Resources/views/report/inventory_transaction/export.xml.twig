@@ -56,7 +56,7 @@
                 {% set quantityOut = inventoryRepository.getQuantityOutByProduct(product, startDate, endDate) %}
                 {% set quantityStock = inventoryRepository.getStockByProduct(product, startDate, endDate) %}
                 {% set averagePrice = inventoryRepository.getUnitPriceByProduct(product, startDate, endDate) %}
-                {% set totalPrice = inventoryRepository.getTotalPriceByProduct(product, startDate, endDate) %}
+                {% set totalPrice = quantityStock * averagePrice %}
                 <ss:Row ss:StyleID="Level1">
                     <ss:Cell ss:Index="1">
                         <ss:Data ss:Type="String">{{ product.name|default }}</ss:Data>

@@ -41,7 +41,7 @@
                 {% set quantityOut = inventoryRepository.getQuantityOutByProduct(product, startDate, endDate) %}
                 {% set quantityStock = inventoryRepository.getStockByProduct(product, startDate, endDate) %}
                 {% set averagePrice = inventoryRepository.getUnitPriceByProduct(product, startDate, endDate) %}
-                {% set totalPrice = inventoryRepository.getTotalPriceByProduct(product, startDate, endDate) %}
+                {% set totalPrice = quantityStock * averagePrice %}
                 <tr class="border-top-solid-normal border-bottom-solid-normal" data-field-id="{{ product.id }}">
                     <td class="border-left-solid-bold border-right-solid-bold text-left">{{ product.name|default }}</td>
                     <td class="border-left-solid-bold border-right-solid-bold text-left">{{ product.size|default }}</td>
