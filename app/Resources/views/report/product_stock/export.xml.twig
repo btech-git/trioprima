@@ -31,6 +31,12 @@
                 <ss:Cell>
                     <ss:Data ss:Type="String">Stok</ss:Data>
                 </ss:Cell>
+                <ss:Cell>
+                    <ss:Data ss:Type="String">Unit Price</ss:Data>
+                </ss:Cell>
+                <ss:Cell>
+                    <ss:Data ss:Type="String">Total</ss:Data>
+                </ss:Cell>
             </ss:Row>
             {% for product in grid.data %}
                 <ss:Row ss:StyleID="Level1">
@@ -48,6 +54,12 @@
                     </ss:Cell>
                     <ss:Cell>
                         <ss:Data ss:Type="Number">{{ inventoryRepository.getStockByProduct(product)|default }}</ss:Data>
+                    </ss:Cell>
+                    <ss:Cell>
+                        <ss:Data ss:Type="Number">{{ inventoryRepository.getUnitPriceByProduct(product)|default }}</ss:Data>
+                    </ss:Cell>
+                    <ss:Cell>
+                        <ss:Data ss:Type="Number">{{ inventoryRepository.getTotalPriceByProduct(product)|default }}</ss:Data>
                     </ss:Cell>
                 </ss:Row>
             {% endfor %}
