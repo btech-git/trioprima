@@ -17,7 +17,7 @@ class InventoryRepository extends EntityRepository
     
     public function getUnitPriceByProduct($product)
     {
-        $query = $this->_em->createQuery('SELECT COALESCE(SUM(t.unitPrice) / SUM(t.quantityIn - t.quantityOut), 0) AS stock FROM AppBundle\Entity\Report\Inventory t WHERE t.product = :product');
+        $query = $this->_em->createQuery('SELECT COALESCE(SUM(t.unitPrice) / SUM(t.quantityIn), 0) AS stock FROM AppBundle\Entity\Report\Inventory t WHERE t.product = :product AND t.quantityOut = 0');
         $query->setParameter('product', $product);
         $stock = $query->getSingleScalarResult();
         
