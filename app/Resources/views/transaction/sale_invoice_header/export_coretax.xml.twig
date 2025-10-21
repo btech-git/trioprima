@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <TaxInvoiceBulk xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-    <TIN>1091031210912281</TIN>
+    <TIN>0804927630032000</TIN>
     <ListOfTaxInvoice>
 {% for saleInvoiceHeader in grid.data if (grid.extra['identities'] is defined and saleInvoiceHeader.id in grid.extra['identities']) %}
         <TaxInvoice>
@@ -11,7 +11,7 @@
             <CustomDoc/>
             <RefDesc>{{ saleInvoiceHeader.codeNumber|default }}</RefDesc>
             <FacilityStamp/>
-            <SellerIDTKU>0031486434413000000000</SellerIDTKU>
+            <SellerIDTKU>0804927630032000000000</SellerIDTKU>
             <BuyerTin>{{ saleInvoiceHeader.customer.taxNumber|default }}</BuyerTin>
             <BuyerDocument>TIN</BuyerDocument>
             <BuyerCountry>IDN</BuyerCountry>
@@ -26,7 +26,7 @@
                     <Opt>A</Opt>
                     <Code>720000</Code>
                     <Name>{{ saleInvoiceDetail.productName|default|raw }} - {{ saleInvoiceDetail.product.size|default|raw }}</Name>
-                    <Unit>UM.0003</Unit>
+                    <Unit>UM.0021</Unit>
                     <Price>{{ saleInvoiceDetail.unitPrice|default }}</Price>
                     <Qty>{{ saleInvoiceDetail.quantity|default }}</Qty>
                     <TotalDiscount>0.00</TotalDiscount>
