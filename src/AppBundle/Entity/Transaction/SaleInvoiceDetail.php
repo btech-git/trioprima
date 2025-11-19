@@ -110,6 +110,6 @@ class SaleInvoiceDetail
     
     public function getCoretaxNominal()
     {
-        return $this->getTotal() * (11/12);
+        return round($this->getTotal() * (11/12), 0);
     }
 }
