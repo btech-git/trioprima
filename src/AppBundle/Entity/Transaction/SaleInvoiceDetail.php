@@ -107,4 +107,9 @@ class SaleInvoiceDetail
     {
         return $this->averagePurchasePrice * $this->quantity;
     }
+    
+    public function getCoretaxNominal()
+    {
+        return $this->getTotal() * (11/12);
+    }
 }
