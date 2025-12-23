@@ -33,7 +33,7 @@
                     <TaxBase>{{ saleInvoiceDetail.unitPriceAfterDiscount|default }}</TaxBase>
                     <OtherTaxBase>{{ saleInvoiceDetail.coretaxNominal|default }}</OtherTaxBase>
                     <VATRate>12</VATRate>
-                    <VAT>{{ saleInvoiceHeader.taxNominal|default }}</VAT>
+                    <VAT>{{ saleInvoiceDetail.taxNominal|default }}</VAT>
                     <STLGRate>0</STLGRate>
                     <STLG>0.00</STLG>
                 </GoodService>
