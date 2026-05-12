@@ -11,7 +11,7 @@
 <div class="report">
     <div class="report-header">
         <div class="report-title">PT. Trio Prima</div>
-        <div class="report-title">Laporan Inventory</div>
+        <div class="report-title">Laporan Nilai Stok Gudang</div>
         <div>
             {% set startDate = grid.searchVals['inventories']['transactionDate'][1]|default %}
             {% set endDate = grid.searchVals['inventories']['transactionDate'][2]|default %}
@@ -33,6 +33,8 @@
                 <th class="border-left-solid-bold border-right-solid-bold text-center">Stok</th>
                 <th class="border-left-solid-bold border-right-solid-bold text-center">Harga</th>
                 <th class="border-left-solid-bold border-right-solid-bold text-center">Total</th>
+                <th class="border-left-solid-bold border-right-solid-bold text-center">PPn</th>
+                <th class="border-left-solid-bold border-right-solid-bold text-center">Grand Total</th>
             </tr>
         </thead>
         <tbody class="border-top-solid-bold border-bottom-solid-bold">
@@ -42,6 +44,8 @@
                 {% set quantityStock = inventoryRepository.getStockByProduct(product, startDate, endDate) %}
                 {% set averagePrice = inventoryRepository.getUnitPriceByProduct(product, startDate, endDate) %}
                 {% set totalPrice = quantityStock * averagePrice %}
+                {% set taxAmount = totalPrice * 11/100 %}
+                {% set grandTotal = totalPrice + taxAmount %}
                 <tr class="border-top-solid-normal border-bottom-solid-normal" data-field-id="{{ product.id }}">
                     <td class="border-left-solid-bold border-right-solid-bold text-left">{{ product.name|default }}</td>
                     <td class="border-left-solid-bold border-right-solid-bold text-left">{{ product.size|default }}</td>
@@ -52,6 +56,8 @@
                     <td class="border-left-solid-bold border-right-solid-bold text-center">{{ quantityStock|default|number_format(0) }}</td>
                     <td class="border-left-solid-bold border-right-solid-bold text-right">{{ averagePrice|default|number_format(2) }}</td>
                     <td class="border-left-solid-bold border-right-solid-bold text-right">{{ totalPrice|default|number_format(2) }}</td>
+                    <td class="border-left-solid-bold border-right-solid-bold text-right">{{ taxAmount|default|number_format(2) }}</td>
+                    <td class="border-left-solid-bold border-right-solid-bold text-right">{{ grandTotal|default|number_format(2) }}</td>
                 </tr>
             {% endfor %}
         </tbody>

@@ -11,7 +11,7 @@
             </ss:Row>
             <ss:Row ss:AutoFitHeight="1" ss:StyleID="Title">
                 <ss:Cell ss:MergeAcross="5">
-                    <ss:Data ss:Type="String">Laporan Inventory</ss:Data>
+                    <ss:Data ss:Type="String">Laporan Nilai Stok Gudang</ss:Data>
                 </ss:Cell>
             </ss:Row>
             <ss:Row ss:AutoFitHeight="1" ss:StyleID="Title">
@@ -50,6 +50,12 @@
                 <ss:Cell>
                     <ss:Data ss:Type="String">Total</ss:Data>
                 </ss:Cell>
+                <ss:Cell>
+                    <ss:Data ss:Type="String">PPn</ss:Data>
+                </ss:Cell>
+                <ss:Cell>
+                    <ss:Data ss:Type="String">Grand Total</ss:Data>
+                </ss:Cell>
             </ss:Row>
             {% for product in grid.data %}
                 {% set quantityIn = inventoryRepository.getQuantityInByProduct(product, startDate, endDate) %}
@@ -57,6 +63,8 @@
                 {% set quantityStock = inventoryRepository.getStockByProduct(product, startDate, endDate) %}
                 {% set averagePrice = inventoryRepository.getUnitPriceByProduct(product, startDate, endDate) %}
                 {% set totalPrice = quantityStock * averagePrice %}
+                {% set taxAmount = totalPrice * 11/100 %}
+                {% set grandTotal = totalPrice + taxAmount %}
                 <ss:Row ss:StyleID="Level1">
                     <ss:Cell ss:Index="1">
                         <ss:Data ss:Type="String">{{ product.name|default }}</ss:Data>
@@ -84,6 +92,12 @@
                     </ss:Cell>
                     <ss:Cell>
                         <ss:Data ss:Type="Number">{{ totalPrice|default }}</ss:Data>
+                    </ss:Cell>
+                    <ss:Cell>
+                        <ss:Data ss:Type="Number">{{ taxAmount|default }}</ss:Data>
+                    </ss:Cell>
+                    <ss:Cell>
+                        <ss:Data ss:Type="Number">{{ grandTotal|default }}</ss:Data>
                     </ss:Cell>
                 </ss:Row>
             {% endfor %}
