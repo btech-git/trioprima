@@ -34,7 +34,8 @@
                 <th class="border-left-solid-bold border-right-solid-bold text-center">Harga</th>
                 <th class="border-left-solid-bold border-right-solid-bold text-center">Total</th>
                 <th class="border-left-solid-bold border-right-solid-bold text-center">PPn</th>
-                <th class="border-left-solid-bold border-right-solid-bold text-center">Grand Total</th>
+                <th class="border-left-solid-bold border-right-solid-bold text-center">Harga Setelah PPn</th>
+                <th class="border-left-solid-bold border-right-solid-bold text-center">Total Setelah PPn</th>
             </tr>
         </thead>
         <tbody class="border-top-solid-bold border-bottom-solid-bold">
@@ -44,7 +45,8 @@
                 {% set quantityStock = inventoryRepository.getStockByProduct(product, startDate, endDate) %}
                 {% set averagePrice = inventoryRepository.getUnitPriceByProduct(product, startDate, endDate) %}
                 {% set totalPrice = quantityStock * averagePrice %}
-                {% set taxAmount = totalPrice * 11/100 %}
+                {% set taxAmount = averagePrice * 11/100 %}
+                {% set priceAfterTax = averagePrice + taxAmount %}
                 {% set grandTotal = totalPrice + taxAmount %}
                 <tr class="border-top-solid-normal border-bottom-solid-normal" data-field-id="{{ product.id }}">
                     <td class="border-left-solid-bold border-right-solid-bold text-left">{{ product.name|default }}</td>
@@ -57,6 +59,7 @@
                     <td class="border-left-solid-bold border-right-solid-bold text-right">{{ averagePrice|default|number_format(2) }}</td>
                     <td class="border-left-solid-bold border-right-solid-bold text-right">{{ totalPrice|default|number_format(2) }}</td>
                     <td class="border-left-solid-bold border-right-solid-bold text-right">{{ taxAmount|default|number_format(2) }}</td>
+                    <td class="border-left-solid-bold border-right-solid-bold text-right">{{ priceAfterTax|default|number_format(2) }}</td>
                     <td class="border-left-solid-bold border-right-solid-bold text-right">{{ grandTotal|default|number_format(2) }}</td>
                 </tr>
             {% endfor %}

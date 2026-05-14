@@ -54,6 +54,9 @@
                     <ss:Data ss:Type="String">PPn</ss:Data>
                 </ss:Cell>
                 <ss:Cell>
+                    <ss:Data ss:Type="String">Harga PPn</ss:Data>
+                </ss:Cell>
+                <ss:Cell>
                     <ss:Data ss:Type="String">Grand Total</ss:Data>
                 </ss:Cell>
             </ss:Row>
@@ -63,7 +66,8 @@
                 {% set quantityStock = inventoryRepository.getStockByProduct(product, startDate, endDate) %}
                 {% set averagePrice = inventoryRepository.getUnitPriceByProduct(product, startDate, endDate) %}
                 {% set totalPrice = quantityStock * averagePrice %}
-                {% set taxAmount = totalPrice * 11/100 %}
+                {% set taxAmount = averagePrice * 11/100 %}
+                {% set priceAfterTax = averagePrice + taxAmount %}
                 {% set grandTotal = totalPrice + taxAmount %}
                 <ss:Row ss:StyleID="Level1">
                     <ss:Cell ss:Index="1">
@@ -95,6 +99,9 @@
                     </ss:Cell>
                     <ss:Cell>
                         <ss:Data ss:Type="Number">{{ taxAmount|default }}</ss:Data>
+                    </ss:Cell>
+                    <ss:Cell>
+                        <ss:Data ss:Type="Number">{{ priceAfterTax|default }}</ss:Data>
                     </ss:Cell>
                     <ss:Cell>
                         <ss:Data ss:Type="Number">{{ grandTotal|default }}</ss:Data>
