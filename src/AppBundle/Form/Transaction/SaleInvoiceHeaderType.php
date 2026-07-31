@@ -35,6 +35,10 @@ class SaleInvoiceHeaderType extends AbstractType
                 'choices' => ConstantValueList::get(SaleInvoiceHeader::class, 'DISCOUNT_TYPE'),
                 'choices_as_values' => true,
             ))
+            ->add('personInCharge', ChoiceType::class, array(
+                'choices' => ConstantValueList::get(SaleInvoiceHeader::class, 'PERSON_IN_CHARGE'),
+                'choices_as_values' => true,
+            ))
             ->add('discountValue')
             ->add('shippingFee')
             ->add('note')

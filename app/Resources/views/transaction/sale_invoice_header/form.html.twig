@@ -49,6 +49,7 @@
                 {{ form_row(form.customer, {'attr': {'readonly': true, 'data-toggle': 'modal', 'data-target': '#customer-dialog'} }) }}
                 <div class="form-group" id="customer-company">{{ saleInvoiceHeader.customer.company|default }}</div>
                 {{ form_row(form.customerInvoice, {'label': 'Customer PO'}) }}
+                {{ form_row(form.personInCharge, {'label': 'Penanggung Jawab'}) }}
             </div>
         </div>
             

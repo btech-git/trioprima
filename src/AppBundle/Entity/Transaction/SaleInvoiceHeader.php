@@ -22,6 +22,9 @@ class SaleInvoiceHeader extends CodeNumberEntity
     const DOWNPAYMENT_TYPE_PERCENTAGE = 'percentage';
     const DOWNPAYMENT_TYPE_NOMINAL = 'nominal';
     
+    const PERSON_IN_CHARGE_ASAM = 'Tjoe Jen Sen';
+    const PERSON_IN_CHARGE_ALVAN = 'Alvan Sumendong';
+    
     /**
      * @ORM\Column(name="id", type="integer") @ORM\Id @ORM\GeneratedValue
      */
@@ -122,6 +125,11 @@ class SaleInvoiceHeader extends CodeNumberEntity
      */
     private $isTax;
     /**
+     * @ORM\Column(name="person_in_charge", type="string", length=100)
+     * @Assert\NotBlank()
+     */
+    private $personInCharge;
+    /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Master\Customer", inversedBy="saleInvoiceHeaders")
      * @Assert\NotNull()
      */
@@ -218,6 +226,9 @@ class SaleInvoiceHeader extends CodeNumberEntity
     
     public function getNote() { return $this->note; }
     public function setNote($note) { $this->note = $note; }
+    
+    public function getPersonInCharge() { return $this->personInCharge; }
+    public function setPersonInCharge($personInCharge) { $this->personInCharge = $personInCharge; }
     
     public function getIsTax() { return $this->isTax; }
     public function setIsTax($isTax) { $this->isTax = $isTax; }
