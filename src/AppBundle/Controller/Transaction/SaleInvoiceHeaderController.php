@@ -160,6 +160,21 @@ class SaleInvoiceHeaderController extends Controller
     }
 
     /**
+     * @Route("/{id}/memo_decimal", name="transaction_sale_invoice_header_memo_decimal")
+     * @Method("GET")
+     * @Security("has_role('ROLE_TRANSACTION')")
+     */
+    public function memoDecimalAction(Request $request, SaleInvoiceHeader $saleInvoiceHeader)
+    {
+        $show = $request->query->getBoolean('show', false);
+
+        return $this->render('transaction/sale_invoice_header/memo_invoice_decimal.html.twig', array(
+            'saleInvoiceHeader' => $saleInvoiceHeader,
+            'show' => $show,
+        ));
+    }
+
+    /**
      * @Route("/export", name="transaction_sale_invoice_header_export")
      * @Method({"GET", "POST"})
      * @Security("has_role('ROLE_TRANSACTION')")

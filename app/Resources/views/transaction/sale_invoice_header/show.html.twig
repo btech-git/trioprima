@@ -102,4 +102,7 @@
     <a target="_blank" class="btn btn-info" href="{{ path('transaction_sale_invoice_header_memo', {'id': saleInvoiceHeader.id, 'type': 'invoice', 'show': false}) }}">
         <span class="glyphicon glyphicon-print"></span> Print Invoice Sederhana
     </a>
+    <a target="_blank" class="btn btn-info" href="{{ path('transaction_sale_invoice_header_memo_decimal', {'id': saleInvoiceHeader.id}) }}">
+        <span class="glyphicon glyphicon-print"></span> Print Invoice (desimal)
+    </a>
 {% endblock %}

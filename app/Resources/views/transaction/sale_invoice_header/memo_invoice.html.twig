@@ -90,7 +90,7 @@
                     </tr>
                     <tr>
                         <td colspan="5" class="label right">Grand Total</td>
-                        <td class="right">{{ saleInvoiceHeader.grandTotalBeforeDownpayment|default|number_format() }}</td>
+                        <td class="right">{{ saleInvoiceHeader.grandTotalBeforeDownpayment|default|number_format(0) }}</td>
                     </tr>
                     <tr>
                         <td colspan="5" class="label right">Uang Muka {{ saleInvoiceHeader.downpaymentPercentage|default|number_format(2) }}%</td>
